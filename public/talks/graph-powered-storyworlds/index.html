@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graph-Powered Storyworlds</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- ACT 1: THE PROBLEM                                             -->
+<!-- ============================================================ -->
+
+<!-- Slide 1: Title -->
+<section data-background-image="images/title-hero.png" data-background-size="cover" data-background-position="right center" style="text-align:left;">
+  <div class="title-slide" style="display:flex;flex-direction:column;justify-content:center;height:100%;max-width:70%;">
+    <h2 class="title-heading">Graph-Powered Storyworlds</h2>
+    <p class="subtitle">Using Neo4j To Keep 1M+ Word<br>LitRPG Epics Coherent With AI</p>
+    <div class="author-info">
+      <p><strong style="color:#fff;">Prem Chandrasekaran</strong></p>
+      <p class="author-role">Market Tech Director, Thoughtworks</p>
+      <p class="event-info">NODES AI 2026</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Hi, I'm Prem. I've been building an AI-assisted authoring platform for LitRPG novels. LitRPG is a genre where characters live inside game-like worlds — they have stats, skills, inventories, quest logs, level-ups — all embedded right in the prose. Think "Ready Player One" meets Dungeons and Dragons. The author writes the story — but they need AI to help keep it consistent across a million words. That's the challenge. Let me show you.
+  </aside>
+</section>
+
+<!-- Slide 2: The Promise -->
+<section>
+  <h3>The Promise</h3>
+  <div class="two-col">
+    <div class="col">
+      <p class="prompt-label">The prompt:</p>
+      <blockquote class="prompt">
+        "Help me finish this chapter. Marcus Stone enters the tavern and meets Elena..."
+      </blockquote>
+      <div class="fragment llm-output">
+        <p class="prompt-label">Claude writes:</p>
+        <blockquote>
+          "Marcus rested <span class="error-highlight">his right hand</span> on his sword hilt. Something feels wrong."
+        </blockquote>
+      </div>
+    </div>
+    <div class="col fragment">
+      <div class="reveal-box">
+        <p class="reveal-label">Chapter 1 established:</p>
+        <blockquote class="source-text">
+          "He'd lost <strong>his right arm</strong> in the Battle of Ashford. He lifted his mug with his remaining left hand."
+        </blockquote>
+        <p class="punchline">Marcus does not have a right hand.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    You ask the LLM to help you finish a chapter. It writes something perfectly reasonable...
+
+    [CLICK]
+
+    ...until you remember what happened 46 chapters ago.
+
+    [CLICK]
+
+    Marcus lost his right arm. The LLM forgot. This isn't hypothetical — it's from a test manuscript I built.
+  </aside>
+</section>
+
+<!-- Slide 3: The Scale -->
+<section>
+  <h3>The Scale of LitRPG</h3>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">300-500K</div>
+      <div class="stat-label">words per book</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">5-15</div>
+      <div class="stat-label">books per series</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">40+</div>
+      <div class="stat-label">named characters</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">200+</div>
+      <div class="stat-label">locations &amp; items</div>
+    </div>
+  </div>
+  <p class="fragment keynote">"Your readers have a better knowledge graph of your world than your LLM does."</p>
+  <aside class="notes">
+    This is why it matters. LitRPG is a genre built on precision — readers track stats, levels, inventories across millions of words. They'll catch what your LLM won't.
+
+    [CLICK]
+
+    Your readers literally have a better knowledge graph of your world than your LLM does. So how do you fix that?
+  </aside>
+</section>
+
+<!-- Slide 4: Context Windows != Memory -->
+<section>
+  <h3>Context Windows &ne; Memory</h3>
+  <div class="problem-list">
+    <div class="problem-item fragment" data-fragment-index="0">
+      <span class="problem-icon">50%</span>
+      <div>
+        <strong>Coherence collapses fast</strong>
+        <p>LLM memory coherence drops to ~50% after just 5 rounds of interaction</p>
+      </div>
+    </div>
+    <div class="problem-item fragment" data-fragment-index="1">
+      <span class="problem-icon">2/9</span>
+      <div>
+        <strong>Worldview is fragile</strong>
+        <p>Only 2 of 9 LLMs maintained a consistent fictional worldview</p>
+      </div>
+    </div>
+    <div class="problem-item fragment" data-fragment-index="2">
+      <span class="problem-icon">&#x221E;</span>
+      <div>
+        <strong>Multi-book state</strong>
+        <p>Series state spans beyond any context window</p>
+      </div>
+    </div>
+  </div>
+  <p class="fragment keynote" data-fragment-index="2">"Attention is not memory."</p>
+  <aside class="notes">
+    The obvious answer is: throw it all in the context window. But the research says otherwise.
+
+    [CLICK]
+
+    Coherence drops to 50% after just 5 interactions.
+
+    [CLICK]
+
+    Only 2 of 9 LLMs held a consistent worldview.
+
+    [CLICK]
+
+    Attention is not memory. So what about RAG?
+  </aside>
+</section>
+
+<!-- Slide 5: Vector Search != Consistency -->
+<section>
+  <h3>Vector Search &ne; Consistency</h3>
+  <div class="embedding-demo">
+    <div class="embedding-fact fact-blue">"Elena has <strong>blue</strong> eyes"</div>
+    <div class="embedding-fact fact-green">"Elena has <strong>green</strong> eyes"</div>
+    <div class="fragment">
+      <div class="embedding-score">cosine similarity: <strong>0.97</strong></div>
+      <p style="font-size:0.75em;margin-top:0.5em;">These facts are <em>semantically similar</em>. They are also <strong>contradictory</strong>.</p>
+    </div>
+  </div>
+  <div class="fragment benchmark-callout">
+    <p>On schema-heavy queries, vector RAG scores <strong class="error-highlight">0%</strong>.</p>
+  </div>
+  <p class="fragment keynote">"Similarity is not consistency."</p>
+  <aside class="notes">
+    Blue eyes and green eyes land in the same neighborhood in embedding space.
+
+    [CLICK]
+
+    Cosine similarity 0.97. Semantically similar — but contradictory. Vector search finds relevant context. It cannot find contradictions.
+
+    [CLICK]
+
+    And on structured queries like stat tracking, vector RAG scores literally zero.
+
+    [CLICK]
+
+    Similarity is not consistency. So we need something fundamentally different.
+  </aside>
+</section>
+
+<!-- Slide 6: The Insight -->
+<section data-background-color="#1a1a2e">
+  <h3>The Insight</h3>
+  <p class="insight-text">
+    What if we gave the LLM a memory that knows<br>
+    <span class="fragment highlight-blue">what is true</span>,
+    <span class="fragment highlight-blue">when it became true</span>,<br>
+    and <span class="fragment highlight-blue">what rules it must follow</span>?
+  </p>
+  <p class="fragment insight-sub">The graph becomes the immune system<br>that catches the failures LLMs inevitably produce.</p>
+  <aside class="notes">
+    What if the LLM had a memory that knows...
+
+    [CLICK]
+
+    ...what's true...
+
+    [CLICK]
+
+    ...when it became true...
+
+    [CLICK]
+
+    ...and what rules apply?
+
+    [CLICK]
+
+    Not a context window. Not a vector index. A knowledge graph. An immune system for your narrative.
+  </aside>
+</section>
+
+<!-- Slide 7: LitRPG = Structured Data in Disguise -->
+<section>
+  <h3>LitRPG: Structured Data in Disguise</h3>
+  <div class="two-col">
+    <div class="col">
+      <p class="col-label">Raw prose</p>
+      <pre class="litrpg-text compact-code"><code class="language-markdown">> **LEVEL UP!**
+> Level: 1 &rarr; 2
+> **Skill Unlocked:** *Fireball*
+> **Quest Accepted: *The Lost Caravan***
+
+**[STATUS - USER: ELENA BLACKWOOD]**
+| Stat     | Value |
+| HP       | 45/45 |
+| Mana     | 30/30 |
+| Strength | 8     |</code></pre>
+    </div>
+    <div class="col fragment">
+      <p class="col-label">Extracted data</p>
+      <pre class="compact-code"><code class="language-json">[
+  {"type": "LEVEL_UP",
+   "from": 1, "to": 2},
+  {"type": "SKILL_ACQUIRED",
+   "name": "Fireball"},
+  {"type": "QUEST_ACCEPTED",
+   "name": "The Lost Caravan"},
+  {"type": "STAT_BLOCK",
+   "entity": "Elena Blackwood",
+   "stats": {"HP": 45, "Mana": 30,
+             "Strength": 8}}
+]</code></pre>
+    </div>
+  </div>
+  <p class="fragment keynote">"Every LitRPG novel is secretly a database changelog wrapped in a story."</p>
+  <aside class="notes">
+    Here's what makes LitRPG the perfect domain for this. The game mechanics are right there in the prose — level-ups, stat blocks, quest updates.
+
+    [CLICK]
+
+    Regex pulls them out at 100% confidence. No LLM needed. Free facts.
+
+    [CLICK]
+
+    Every LitRPG novel is secretly a database changelog wrapped in a story. Now let me show you the full architecture.
+  </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- ACT 2: THE ARCHITECTURE                                       -->
+<!-- ============================================================ -->
+
+<!-- Slide 8: Architecture Overview -->
+<section>
+  <h3>Architecture</h3>
+  <div class="architecture-flow">
+    <div class="arch-box">
+      <div class="arch-icon">&#x1F4C4;</div>
+      <div class="arch-label">Manuscript</div>
+      <div class="arch-sub">DOCX / Markdown</div>
+    </div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box highlight-box">
+      <div class="arch-icon">&#x1F50D;</div>
+      <div class="arch-label">Extraction</div>
+      <div class="arch-sub">Facts in</div>
+      <div class="arch-patterns fragment" data-fragment-index="0">Query-Driven Ontology<br>Multi-Pass Extraction</div>
+    </div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box highlight-box">
+      <div class="arch-icon">&#x1F578;</div>
+      <div class="arch-label">Knowledge Graph</div>
+      <div class="arch-sub">Neo4j</div>
+      <div class="arch-patterns fragment" data-fragment-index="0">Cypher as Quality Rules<br>Causal Chains<br>Keeping the Graph in Sync</div>
+    </div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box highlight-box">
+      <div class="arch-icon">&#x1F916;</div>
+      <div class="arch-label">Agents</div>
+      <div class="arch-sub">Use the graph</div>
+      <div class="arch-patterns fragment" data-fragment-index="0">Graph as Agent Memory</div>
+    </div>
+    <div class="arch-arrow">&rarr;</div>
+    <div class="arch-box highlight-box">
+      <div class="arch-icon">&#x2705;</div>
+      <div class="arch-label">Validation</div>
+      <div class="arch-sub">Check output</div>
+    </div>
+  </div>
+  <aside class="notes">
+    The pipeline is simple. Manuscript goes in, knowledge graph comes out, agents use it, contradictions get caught.
+
+    [CLICK]
+
+    Each phase has patterns we needed to solve. Let me walk you through them. So — we had Neo4j. We had a manuscript. We just needed to... put the stuff in the graph. How hard could it be? Turns out, the first question isn't how to extract — it's what to extract.
+  </aside>
+</section>
+
+<!-- Query-Driven Ontology -->
+<section>
+  <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+  <h3 class="pattern-title">Query-Driven Ontology</h3>
+  <div class="ontology-flow">
+    <div class="ontology-inputs">
+      <div class="ontology-layer ontology-genre">
+        <div class="ontology-layer-header">Genre Ontology <span class="ontology-stable">stable</span></div>
+        <div class="ontology-layer-content">Character &bull; Location &bull; Fact &bull; Event &bull; Scene &bull; Skill</div>
+        <div class="ontology-layer-sub">curated with domain experts</div>
+      </div>
+      <div class="ontology-plus">+</div>
+      <div class="ontology-input-box">
+        <div class="ontology-source-label">Sample chapters</div>
+      </div>
+    </div>
+    <div class="ontology-arrow">&darr; <span class="ontology-arrow-label">SchemaFromTextExtractor</span></div>
+    <div class="ontology-source fragment">
+      <div class="ontology-source-stat">~18 entity types, ~30 relationships</div>
+    </div>
+    <div class="ontology-arrow fragment">&darr; <span class="ontology-arrow-label">author prunes</span></div>
+    <div class="ontology-layer ontology-book fragment">
+      <div class="ontology-layer-header">Book Ontology <span class="ontology-evolves">evolves per book</span></div>
+      <div class="ontology-layer-content">Custom factions &bull; stat names &bull; skill trees &bull; quest chains</div>
+    </div>
+  </div>
+  <p class="fragment keynote">"The machine proposes. The author disposes."</p>
+  <aside class="notes">
+    What nodes and relationships does the graph need? Or as the graph folks say — what's your ontology?
+
+    We worked with domain experts to define a genre-level schema — the stuff that's true for all LitRPG. Characters, locations, facts, events. One important decision here: facts are nodes, not properties. We'll see why in a minute.
+
+    We fed that plus a few sample chapters into Neo4j's SchemaFromTextExtractor.
+
+    [CLICK]
+
+    It came back with 18 entity types and 30 relationships. Thanks, but no thanks.
+
+    [CLICK]
+
+    So the author prunes. What survives is a book-specific schema — the custom factions, stat names, and skill trees that make their world unique.
+
+    [CLICK]
+
+    The machine proposes. The author disposes. Now — how do we actually get facts into those nodes?
+  </aside>
+</section>
+
+<!-- Multi-Pass Extraction -->
+<section>
+    <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+    <h3 class="pattern-title">Multi-Pass Extraction</h3>
+    <p class="problem-statement">"She grabbed her staff" &mdash; who is "she"?</p>
+    <div class="pipeline">
+      <div class="pipeline-step fragment">
+        <div class="step-header">
+          <span class="step-num">Pass 0</span>
+          <span class="step-label">Regex</span>
+          <span class="step-cost">~0ms</span>
+        </div>
+        <div class="step-detail"><span>Extract structured elements: stat blocks, level-ups, damage</span><span class="step-confidence">confidence: 1.0</span></div>
+      </div>
+      <div class="pipeline-step fragment">
+        <div class="step-header">
+          <span class="step-num">Pass 1</span>
+          <span class="step-label">Entity Discovery</span>
+          <span class="step-cost">LLM &asymp; LLMGraphTransformer</span>
+        </div>
+        <div class="step-detail"><span>Find all character names and mentions</span><span class="step-confidence">confidence: 0.7&ndash;1.0</span></div>
+      </div>
+      <div class="pipeline-step fragment">
+        <div class="step-header">
+          <span class="step-num">Pass 2</span>
+          <span class="step-label">Coreference Resolution</span>
+          <span class="step-cost">LLM</span>
+        </div>
+        <div class="step-detail"><span>"she" &rarr; Lyra, "the healer" &rarr; Siv, "him" &rarr; Kael</span><span class="step-confidence">confidence: 0.7&ndash;1.0</span></div>
+      </div>
+      <div class="pipeline-step fragment">
+        <div class="step-header">
+          <span class="step-num">Pass 3</span>
+          <span class="step-label">Attribute Extraction</span>
+          <span class="step-cost">LLM</span>
+        </div>
+        <div class="step-detail"><span>Extract facts using resolved entity names</span><span class="step-confidence">confidence: 0.7&ndash;1.0</span></div>
+      </div>
+    </div>
+    <p class="fragment keynote">Cheap deterministic passes seed expensive LLM passes.</p>
+    <aside class="notes">
+      "She grabbed her staff." Great. Who is "she"? That's the pronoun problem. You can't just throw the whole chapter at an LLM and pray. We solve it in four passes, each one feeding the next.
+
+      [CLICK]
+
+      Pass 0: regex. Remember those free facts from the LitRPG prose? We grab them here. Zero cost, 100% confidence. This gives the standard Neo4j GraphRAG pipeline a head start — entity names and structured data before the LLM even touches the text.
+
+      [CLICK]
+
+      Pass 1: entity discovery. This is roughly what LLMGraphTransformer gives you. Find all the names.
+
+      [CLICK]
+
+      Pass 2: coreference resolution. "She" becomes Lyra. "The healer" becomes Siv. "Him" becomes Kael. Now the LLM knows who everyone is.
+
+      [CLICK]
+
+      Pass 3: attribute extraction — but now with resolved names. Each extracted fact carries a confidence score. The LLM self-reports how sure it is.
+
+      [CLICK]
+
+      Cheap passes feed expensive passes. Okay — facts are in the graph. What can we do with them?
+    </aside>
+</section>
+
+<!-- Cypher as Quality Rules -->
+<section>
+  <!-- Two paths to quality rules -->
+  <section>
+    <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+    <h3 class="pattern-title">Cypher as Quality Rules</h3>
+    <div class="two-paths">
+      <div class="path-col">
+        <div class="path-header">Technical user</div>
+        <div class="path-desc">writes Cypher directly</div>
+      </div>
+      <div class="path-col">
+        <div class="path-header">Non-technical user</div>
+        <div class="path-desc">describes rule in English</div>
+        <div class="path-tool">Text2Cypher</div>
+      </div>
+    </div>
+    <div class="path-converge fragment">
+      <div class="path-converge-arrow">&darr;</div>
+      <div class="path-rules">Saved Rules</div>
+      <div class="path-converge-arrow">&darr;</div>
+      <div class="path-result">Run against graph &rarr; consistency results</div>
+    </div>
+    <aside class="notes">
+      Facts are in the graph. Now we need to check them. We let technical users — typically platform admins — write Cypher queries directly and save them as reusable rules. But authors aren't writing Cypher. So we let them describe rules in plain English — "flag me if a character's eye color changes" — and Neo4j's Text2Cypher translates that into Cypher.
+
+      [CLICK]
+
+      Either way, the rules get saved and run against the graph. Let me show you what some of these rules look like.
+    </aside>
+  </section>
+
+  <!-- Sub-slide: Fact conflict detection -->
+  <section>
+    <h3>Has This Character's Eye Color Changed?</h3>
+    <pre><code class="language-cypher">-- Cypher: detect_fact_conflicts()
+
+MATCH (f1:Fact), (f2:Fact)
+WHERE f1.entity_name = f2.entity_name
+  AND f1.fact_key    = f2.fact_key
+  AND toLower(f1.fact_value) &lt;&gt; toLower(f2.fact_value)
+  AND f1.is_stale = false
+  AND f2.is_stale = false
+  AND id(f1) &lt; id(f2)
+RETURN f1.entity_name as entity,
+       f1.fact_key as fact_type,
+       collect(DISTINCT f1.fact_value)
+         + collect(DISTINCT f2.fact_value) as values</code></pre>
+    <div class="query-result fragment">
+      <table>
+        <tr><th>entity</th><th>fact_type</th><th>values</th></tr>
+        <tr class="error-row"><td>elena blackwood</td><td>eye_color</td><td>["blue", "green", "brown"]</td></tr>
+        <tr class="error-row"><td>elena blackwood</td><td>staff_material</td><td>["oak", "maple", "pine"]</td></tr>
+      </table>
+      <p class="result-note">A continuity error detector in 12 lines of Cypher.</p>
+    </div>
+    <aside class="notes">
+      Here's what a rule looks like. Twelve lines of Cypher — find any two non-stale facts about the same entity and attribute with different values.
+
+      [CLICK]
+
+      Run it — Elena's eyes went from blue to green to brown. Staff went from oak to maple to pine. A continuity error detector you can write in minutes. What about temporal rules?
+    </aside>
+  </section>
+
+  <!-- Sub-slide: Dead character detection -->
+  <section>
+    <h3>Is a Dead Character Acting?</h3>
+    <div class="state-machine">
+      <div class="state state-alive">alive</div>
+      <div class="state-arrow valid-arrow">&rarr;</div>
+      <div class="state state-dead">dead</div>
+      <div class="state-arrow invalid-arrow fragment">&#x21A9; <span class="invalid-label">INVALID</span></div>
+    </div>
+    <pre><code class="language-python"># From validation/temporal.py
+
+class LifeStateMachine:
+    VALID_TRANSITIONS = {
+        "alive": {"dead", "unknown"},
+        "unknown": {"alive", "dead"},
+    }
+    # "dead" -> anything = CRITICAL violation
+    # (unless explicit resurrection mechanic)</code></pre>
+    <div class="fragment demo-case">
+      <p><strong>Chapter 2:</strong> Old Tom's body found in the forest</p>
+      <p><strong>Chapter 3:</strong> Old Tom emerges from the shadows, eyes glowing red</p>
+      <p class="result-note">System flags it. Author reviews. (It's a twin &mdash; intentional.)</p>
+    </div>
+    <aside class="notes">
+      We model life state as a state machine. Alive to dead — valid.
+
+      [CLICK]
+
+      Dead to alive — critical violation. Here's the code.
+
+      [CLICK]
+
+      In our test manuscript, Old Tom dies in chapter 2 and shows up in chapter 3. The system flags it. Turns out it's his twin — intentional. The graph flags. The human decides. What about subtler issues?
+    </aside>
+  </section>
+
+  <!-- Sub-slide: Stat drift without justification -->
+  <section>
+    <h3>Stats Changed Without a Reason?</h3>
+    <pre><code class="language-cypher">MATCH (c:Character)-[s1:HAS_STAT {name: 'strength'}]->(scene1:Scene),
+      (c)-[s2:HAS_STAT {name: 'strength'}]->(scene2:Scene)
+WHERE scene2.sequence = scene1.sequence + 1
+  AND s1.value <> s2.value
+  AND NOT EXISTS {
+    MATCH (c)-[:PARTICIPATES_IN]->(e:Event)
+          -[:MODIFIES_STAT]->(c)
+    WHERE e.scene = scene2.id AND e.stat = 'strength'
+  }
+RETURN c.name, s1.value, s2.value,
+       scene1.title, scene2.title</code></pre>
+    <p class="fragment result-note">Strength went from 12 to 15 between scenes &mdash; but nothing happened to cause it.</p>
+    <aside class="notes">
+      This one's my favorite for the Neo4j crowd. The query checks consecutive scenes for stat changes that have no triggering event in the graph.
+
+      [CLICK]
+
+      Strength jumped from 12 to 15 — but nothing in the event chain explains why. Here's another example from our test data.
+    </aside>
+  </section>
+
+  <!-- Sub-slide: Missing limb detection -->
+  <section>
+    <h3>Using a Missing Limb?</h3>
+    <div class="contradiction-demo">
+      <div class="source-quote">
+        <p class="chapter-ref">Chapter 1 establishes:</p>
+        <blockquote>"He'd lost <strong>his right arm</strong> in the Battle of Ashford."</blockquote>
+      </div>
+      <div class="violations fragment">
+        <p class="chapter-ref">Chapter 2 says:</p>
+        <blockquote>"adjusting his horse's saddle with <span class="error-highlight">both hands</span>"</blockquote>
+        <blockquote>"resting <span class="error-highlight">his right hand</span> on his sword hilt"</blockquote>
+      </div>
+      <div class="fragment">
+        <p class="chapter-ref">Chapter 3 says:</p>
+        <blockquote>"holding up <span class="error-highlight">his right arm</span> to stop her"</blockquote>
+        <blockquote>"the blade raised in <span class="error-highlight">both hands</span>"</blockquote>
+      </div>
+    </div>
+    <p class="result-note">4 violations caught automatically from a single established fact.</p>
+    <aside class="notes">
+      Chapter 1: Marcus lost his right arm.
+
+      [CLICK]
+
+      Chapter 2: adjusting his saddle with "both hands," resting "his right hand" on his sword.
+
+      [CLICK]
+
+      Chapter 3: holding up "his right arm," blade raised in "both hands." Four violations from a single established fact. The graph also tracks dynamic events.
+    </aside>
+  </section>
+</section>
+
+<!-- Causal Chains -->
+<section>
+  <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+  <h3 class="pattern-title">Causal Chains</h3>
+  <div class="two-col">
+    <div class="col">
+      <p class="col-label">Facts are static</p>
+      <pre><code class="language-cypher">(elena)-[:HAS_FACT]->
+  (:Fact {key: "eye_color",
+          value: "blue"})</code></pre>
+    </div>
+    <div class="col">
+      <p class="col-label">Events are dynamic</p>
+      <pre><code class="language-text">Kill Wolf
+  &darr; triggers
+XP Gain (+50)
+  &darr; triggers
+Level Up (2 &rarr; 3)
+  &darr; triggers
+Stat Increase (STR +2)</code></pre>
+    </div>
+  </div>
+  <div class="causal-types fragment">
+    <span class="causal-tag">triggers</span>
+    <span class="causal-tag">enables</span>
+    <span class="causal-tag">requires</span>
+    <span class="causal-tag">leads_to</span>
+    <span class="causal-tag">simultaneous</span>
+  </div>
+  <p class="keynote">"Causal chains are plot structure.<br>If you can extract causality, you can detect plot holes."</p>
+  <aside class="notes">
+    Same idea, different Cypher queries. Events in LitRPG form causal chains — kill a wolf, gain XP, level up, stats increase.
+
+    [CLICK]
+
+    If a reward shows up without a quest completion, the chain is broken. Another plot hole caught by the same rule engine. But authors rewrite. How do we keep all of this current?
+  </aside>
+</section>
+
+<!-- Keeping the Graph in Sync -->
+<section>
+  <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+  <h3 class="pattern-title">Keeping the Graph in Sync</h3>
+  <div class="sync-flow">
+    <div class="sync-step">
+      <div class="sync-icon">&#x270F;</div>
+      <p>Chapter edited</p>
+    </div>
+    <div class="sync-arrow">&rarr;</div>
+    <div class="sync-step">
+      <div class="sync-icon">&#x1F6A9;</div>
+      <p>Mark facts stale</p>
+    </div>
+    <div class="sync-arrow">&rarr;</div>
+    <div class="sync-step">
+      <div class="sync-icon">&#x1F504;</div>
+      <p>Re-extract</p>
+      <p class="sync-sub">incremental or full</p>
+    </div>
+    <div class="sync-arrow">&rarr;</div>
+    <div class="sync-step">
+      <div class="sync-icon">&#x1F5D1;</div>
+      <p>Delete stale</p>
+    </div>
+  </div>
+  <div class="sync-tradeoff fragment">
+    <div class="sync-option">
+      <strong>Incremental</strong>
+      <p>Re-extract edited chapter only. Fast, cheap. On every save.</p>
+    </div>
+    <div class="sync-option">
+      <strong>Full</strong>
+      <p>Re-extract entire book. Expensive, thorough. At milestones.</p>
+    </div>
+  </div>
+  <p class="fragment keynote">"The graph is a living document, not a one-time extraction."</p>
+  <aside class="notes">
+    So the graph has to keep up. We mark facts from the edited chapter as stale, re-extract, then clean up. But the re-extraction step is a trade-off.
+
+    [CLICK]
+
+    Incremental: just re-extract the chapter that changed. Fast, cheap, do it on every save. But you might miss cross-chapter impacts — an edit in chapter 5 could contradict something in chapter 2.
+
+    Full: re-extract the entire book. Expensive — remember, 3-4 LLM calls per chunk — but guaranteed consistency. You do this at milestones. Draft complete, structural rewrite, before sending to an editor.
+
+    [CLICK]
+
+    The graph is a living document. Now the graph is current — how do agents actually use it?
+  </aside>
+</section>
+
+<!-- Graph as Agent Memory -->
+<section>
+    <div class="arch-breadcrumb"><span class="ab-step">Manuscript</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Extraction</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Knowledge Graph</span><span class="ab-arrow">&rarr;</span><span class="ab-step ab-active">Agents</span><span class="ab-arrow">&rarr;</span><span class="ab-step">Validation</span></div>
+    <h3 class="pattern-title">Graph as Agent Memory</h3>
+    <div class="agent-flow">
+      <div class="agent-trigger">
+        <div class="agent-trigger-label">Author saves chapter</div>
+      </div>
+      <div class="agent-flow-arrow">&darr;</div>
+      <div class="agent-checks">
+        <div class="agent-check agent-static">
+          <strong>Static rules</strong>
+          <p>Saved Cypher queries run automatically</p>
+          <p class="agent-check-example">eye color drift, dead characters, missing limbs</p>
+        </div>
+        <div class="agent-check agent-dynamic fragment" data-fragment-index="0">
+          <strong>Dynamic queries</strong>
+          <p>LLM reads new text + graph schema &rarr; generates ad-hoc Cypher via Text2Cypher</p>
+          <p class="agent-check-example">catches what you didn't think to write rules for</p>
+        </div>
+      </div>
+      <div class="agent-flow-arrow fragment" data-fragment-index="1">&darr;</div>
+      <div class="agent-result fragment" data-fragment-index="1">
+        <span class="agent-result-label">Neo4j</span> &rarr; contradictions flagged inline
+      </div>
+    </div>
+    <aside class="notes">
+      When the author saves, a validation agent kicks off. It does two things.
+
+      First: the static rules we just saw — the saved Cypher queries — run automatically against the graph. Eye color drift, dead characters, missing limbs. The known problems.
+
+      [CLICK]
+
+      Second — and this is where it gets interesting — the LLM reads what the author just wrote, looks at the graph schema, and generates its own Cypher queries via Text2Cypher. It checks things you didn't think to write rules for. The unknown unknowns.
+
+      [CLICK]
+
+      Both layers hit Neo4j. Contradictions come back as inline comments. The graph turns 500K words of novel into about 2KB of targeted context for the LLM. And these patterns aren't limited to fiction.
+    </aside>
+</section>
+
+<!-- ============================================================ -->
+<!-- CLOSING                                                       -->
+<!-- ============================================================ -->
+
+<!-- Beyond Novels -->
+<section>
+  <h3>Beyond Novels</h3>
+  <p>The same pattern applies wherever content is<br><strong>long-lived, interconnected, and evolving</strong>:</p>
+  <div class="domain-grid fragment">
+    <div class="domain-card">Legal briefs</div>
+    <div class="domain-card">Medical records</div>
+    <div class="domain-card">Product documentation</div>
+    <div class="domain-card">Game design</div>
+    <div class="domain-card">Regulatory compliance</div>
+    <div class="domain-card">Screenplay writing</div>
+  </div>
+  <p class="fragment keynote">"If your system needs to remember, check,<br>or stay consistent &mdash; you need a graph."</p>
+  <aside class="notes">
+    We built this for LitRPG novels. But anywhere content is long-lived, interconnected, and evolving — you hit the same problem.
+
+    [CLICK]
+
+    Legal briefs that reference prior rulings. Medical records that span decades. Product docs that 50 engineers are editing simultaneously. Same problem, same solution.
+
+    [CLICK]
+
+    If your system needs to remember, check, or stay consistent — you need a graph.
+  </aside>
+</section>
+
+<!-- Honest Reflections -->
+<section>
+  <h3>What's Hard (Honestly)</h3>
+  <div class="honesty-list">
+    <div class="honesty-item">
+      <strong>Entity resolution</strong>
+      <p>"the healer" = "Lyra" = "she" = "her" &mdash; below 85% accuracy, the whole graph is unreliable</p>
+    </div>
+    <div class="honesty-item">
+      <strong>Extraction cost</strong>
+      <p>3-4 LLM calls per chunk per chapter &mdash; not cheap at scale</p>
+    </div>
+    <div class="honesty-item">
+      <strong>False positives</strong>
+      <p>The Tom twin scenario &mdash; intentional plot twists get flagged</p>
+    </div>
+    <div class="honesty-item">
+      <strong>Sync during rapid edits</strong>
+      <p>Authors rewrite fast &mdash; incremental vs full re-extract is a real trade-off</p>
+    </div>
+  </div>
+  <p class="fragment keynote">"The graph doesn't replace human judgment. It amplifies it."</p>
+  <aside class="notes">
+    Now let me be honest about what's hard — because if I don't tell you, you'll find out the hard way. Entity resolution is the one that'll hurt you first. "The healer," "Lyra," "she," "her" — if you can't resolve those below 85% accuracy, the graph is full of orphan facts and everything downstream is wrong.
+
+    Extraction is expensive. False positives are annoying — the system will flag your clever plot twists. And keeping the graph current when an author is rewriting furiously? Still an unsolved UX problem.
+
+    [CLICK]
+
+    But here's the thing. The graph doesn't replace human judgment. It amplifies it. And that's enough.
+  </aside>
+</section>
+
+<!-- Q&A -->
+<section data-background-color="#1a1a2e">
+  <h2>Questions?</h2>
+  <aside class="notes">
+    Thank you. I'd love to hear about your use cases — where else could this pattern apply? Questions?
+  </aside>
+</section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'slide',
+    plugins: [RevealHighlight, RevealNotes],
+    // Speaker notes: press 'S' to open
+  });
+</script>
+</body>
+</html>

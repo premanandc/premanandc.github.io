@@ -1,0 +1,993 @@
+/* ============================================================
+   LitQuest Presentation Theme
+   Dark, code-friendly, one-idea-per-slide
+   ============================================================ */
+
+:root {
+  --accent: #4fc3f7;
+  --accent-dim: #2196f3;
+  --error: #ef5350;
+  --error-bg: rgba(239, 83, 80, 0.15);
+  --warning: #ffa726;
+  --success: #66bb6a;
+  --fact-blue: #42a5f5;
+  --fact-green: #66bb6a;
+  --muted: #90a4ae;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ---- Global ---- */
+
+.reveal {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.reveal h2, .reveal h3 {
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.reveal h2 { font-size: 2em; }
+.reveal h3 { font-size: 1.4em; margin-bottom: 0.6em; }
+
+.reveal p { font-size: 0.75em; line-height: 1.5; }
+.reveal li { font-size: 0.75em; line-height: 1.6; }
+.reveal blockquote {
+  font-size: 0.75em;
+  border-left: 3px solid var(--accent);
+  padding: 0.3em 0.8em;
+  margin: 0.25em 0;
+  background: var(--surface);
+  text-align: left;
+  width: auto;
+}
+
+.reveal pre {
+  font-size: 0.48em;
+  width: 100%;
+  box-shadow: none;
+}
+
+.reveal code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ---- Title slide ---- */
+
+.title-slide {
+  margin-left: -2em !important;
+  padding-left: 0 !important;
+}
+
+.title-heading {
+  text-align: left;
+  font-size: 1.9em;
+  line-height: 1.05;
+  margin: 0 0 0.2em;
+}
+
+.subtitle {
+  font-size: 1em !important;
+  color: var(--accent);
+  margin-top: 0.3em;
+}
+
+.author-info {
+  margin-top: 1.5em;
+  font-size: 0.7em;
+  color: var(--muted);
+}
+
+.author-role {
+  font-size: 0.85em !important;
+  color: var(--muted);
+  margin-top: 0.1em !important;
+}
+
+.event-info {
+  font-size: 0.8em !important;
+  color: var(--accent);
+  margin-top: 0.3em !important;
+}
+
+/* ---- Two-column layout ---- */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+  text-align: left;
+}
+
+.col-label {
+  font-size: 0.65em !important;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3em;
+}
+
+/* ---- Keynote quotes ---- */
+
+.keynote {
+  font-size: 0.85em !important;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0.8em;
+}
+
+.keynote-small {
+  font-size: 0.7em !important;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+/* ---- Error highlighting ---- */
+
+.error-highlight {
+  color: var(--error);
+  font-weight: bold;
+  text-decoration: underline wavy var(--error);
+}
+
+.fact-blue { color: var(--fact-blue); font-weight: bold; }
+.fact-green { color: var(--fact-green); font-weight: bold; }
+
+/* ---- Slide 2: The Promise ---- */
+
+.prompt-label {
+  font-size: 0.6em !important;
+  color: var(--muted);
+  margin-bottom: 0.2em;
+}
+
+.prompt {
+  border-left-color: var(--muted) !important;
+}
+
+.llm-output blockquote {
+  border-left-color: var(--warning) !important;
+}
+
+.reveal-box {
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  padding: 1em;
+}
+
+.reveal-label {
+  font-size: 0.6em !important;
+  color: var(--error);
+  margin-bottom: 0.2em;
+}
+
+.punchline {
+  font-size: 0.9em !important;
+  color: var(--error);
+  font-weight: bold;
+  margin-top: 0.5em;
+  text-align: center;
+}
+
+/* ---- Slide 3: Stats grid ---- */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1em;
+  margin: 1em 0;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 1em 0.5em;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 0.6em;
+  color: var(--muted);
+  margin-top: 0.3em;
+}
+
+/* ---- Slide 4: Problem list ---- */
+
+.problem-list {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.problem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8em;
+  margin-bottom: 0.4em;
+  padding: 0.35em 0.5em;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.problem-icon {
+  font-size: 1.2em;
+  color: var(--warning);
+  min-width: 1.5em;
+  text-align: center;
+}
+
+.problem-item strong { font-size: 0.7em; }
+.problem-item p { font-size: 0.55em !important; margin: 0.1em 0 0; color: var(--muted); line-height: 1.3; }
+
+/* ---- Slide 5: Embedding demo ---- */
+
+.embedding-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  margin: 1em 0;
+}
+
+.embedding-fact {
+  font-size: 0.9em;
+  padding: 0.5em 1.2em;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+}
+
+.embedding-score {
+  font-size: 1.1em;
+  color: var(--warning);
+  margin-top: 0.5em;
+}
+
+/* ---- Slide 5: Benchmark callout ---- */
+
+.benchmark-callout {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.4em 0.8em;
+  margin-top: 0.3em;
+}
+
+.benchmark-callout p {
+  font-size: 0.7em !important;
+  margin: 0;
+}
+
+/* ---- Slide 6: Insight ---- */
+
+.insight-text {
+  font-size: 1.1em !important;
+  line-height: 1.8;
+}
+
+.insight-sub {
+  font-size: 1em !important;
+  color: var(--accent);
+  margin-top: 1em;
+}
+
+/* ---- Slide 8: Architecture flow ---- */
+
+.architecture-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  margin: 1.5em 0;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.4em 0.6em;
+  text-align: center;
+  min-width: 100px;
+}
+
+.highlight-box {
+  border-color: var(--accent-dim);
+}
+
+.arch-icon { font-size: 1.2em; }
+.arch-label { font-size: 0.65em; font-weight: bold; margin-top: 0.2em; }
+.arch-sub { font-size: 0.5em; color: var(--muted); }
+
+.arch-patterns {
+  font-size: 0.45em;
+  color: var(--accent);
+  margin-top: 0.3em;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+
+.arch-arrow {
+  font-size: 1.2em;
+  color: var(--accent);
+}
+
+
+
+/* ---- Slide 9: Design decision ---- */
+
+.design-decision {
+  font-size: 0.8em !important;
+  color: var(--accent);
+  margin-bottom: 0.5em;
+}
+
+.fact-benefits {
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+  margin-top: 0.5em;
+  flex-wrap: wrap;
+}
+
+.benefit-tag {
+  font-size: 0.6em;
+  padding: 0.3em 0.8em;
+  background: rgba(79, 195, 247, 0.15);
+  border: 1px solid var(--accent-dim);
+  border-radius: 16px;
+  color: var(--accent);
+}
+
+/* ---- Architecture breadcrumb ---- */
+
+.arch-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2em;
+  margin-bottom: 0.3em;
+  font-size: 0.4em;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.arch-breadcrumb .ab-step {
+  padding: 0.15em 0.5em;
+  border-radius: 3px;
+}
+
+.arch-breadcrumb .ab-arrow {
+  font-size: 0.8em;
+}
+
+.arch-breadcrumb .ab-active {
+  color: var(--accent);
+  background: rgba(79, 195, 247, 0.12);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  opacity: 1;
+}
+
+/* ---- Pattern title accent ---- */
+
+h3.pattern-title {
+  border-left: 4px solid var(--accent);
+  padding-left: 0.4em;
+}
+
+/* ---- Ontology slide ---- */
+
+.ontology-flow {
+  text-align: center;
+  margin-top: 0.3em;
+}
+
+.ontology-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.ontology-plus {
+  font-size: 1em;
+  color: var(--muted);
+}
+
+.ontology-input-box {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.5em 1em;
+}
+
+.ontology-source {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.3em 1em;
+  display: inline-block;
+}
+
+.ontology-source-label {
+  font-size: 0.6em;
+  font-weight: bold;
+  color: var(--muted);
+}
+
+.ontology-source-stat {
+  font-size: 0.6em;
+  color: var(--muted);
+}
+
+.ontology-layer-sub {
+  font-size: 0.5em;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0.15em;
+}
+
+.ontology-arrow {
+  font-size: 1em;
+  color: var(--accent);
+  margin: 0.3em 0;
+}
+
+.ontology-arrow-label {
+  font-size: 0.55em;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.ontology-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+.ontology-layer {
+  border-radius: 8px;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+.ontology-genre {
+  background: rgba(79, 195, 247, 0.1);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+}
+
+.ontology-book {
+  background: rgba(255, 167, 38, 0.1);
+  border: 1px solid rgba(255, 167, 38, 0.3);
+}
+
+.ontology-layer-header {
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+.ontology-stable {
+  font-size: 0.75em;
+  font-weight: normal;
+  color: var(--accent);
+  font-style: italic;
+  margin-left: 0.5em;
+}
+
+.ontology-evolves {
+  font-size: 0.75em;
+  font-weight: normal;
+  color: var(--warning);
+  font-style: italic;
+  margin-left: 0.5em;
+}
+
+.ontology-layer-content {
+  font-size: 0.55em;
+  color: var(--muted);
+  margin-top: 0.2em;
+}
+
+/* ---- Cypher two-path visual ---- */
+
+.two-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+  margin: 0.8em auto 0;
+  max-width: 600px;
+  text-align: center;
+}
+
+.path-col {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.5em 0.8em;
+}
+
+.path-header {
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+.path-desc {
+  font-size: 0.55em;
+  color: var(--muted);
+  margin-top: 0.2em;
+}
+
+.path-tool {
+  font-size: 0.55em;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.3em;
+  padding: 0.15em 0.5em;
+  background: rgba(79, 195, 247, 0.12);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.path-converge {
+  text-align: center;
+  margin-top: 0.3em;
+}
+
+.path-converge-arrow {
+  font-size: 0.9em;
+  color: var(--accent);
+  margin: 0.15em 0;
+}
+
+.path-rules {
+  font-size: 0.7em;
+  font-weight: bold;
+  color: var(--accent);
+  background: rgba(79, 195, 247, 0.12);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+  border-radius: 6px;
+  padding: 0.3em 1em;
+  display: inline-block;
+}
+
+.path-result {
+  font-size: 0.6em;
+  color: var(--muted);
+  margin-top: 0.1em;
+}
+
+/* ---- Slide 10: Pipeline ---- */
+
+.problem-statement {
+  font-size: 0.7em !important;
+  margin: 0 0 0.2em;
+}
+
+.pipeline {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pipeline-step {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.2em 0.8em;
+  margin-bottom: 0.2em;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.step-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.5em !important;
+  line-height: 1.3;
+  margin: 0.1em 0 0;
+  color: var(--muted);
+}
+
+.step-confidence {
+  font-size: 0.85em;
+  color: var(--success);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: 1em;
+  white-space: nowrap;
+}
+
+.step-num {
+  font-size: 0.55em;
+  font-weight: bold;
+  color: var(--accent);
+  background: rgba(79, 195, 247, 0.15);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+.step-label { font-size: 0.65em; font-weight: bold; }
+.step-cost {
+  font-size: 0.5em;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.pipeline-step p {
+  font-size: 0.5em !important;
+  line-height: 1.3;
+  margin: 0.1em 0 0;
+  margin: 0.2em 0 0 0;
+  color: var(--muted);
+}
+
+
+/* ---- Slide 11: Query results ---- */
+
+.query-result {
+  margin-top: 0.5em;
+}
+
+.query-result table {
+  font-size: 0.6em;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.query-result th {
+  background: var(--surface);
+  padding: 0.3em;
+  text-align: left;
+  border-bottom: 2px solid var(--surface-border);
+  color: var(--accent);
+}
+
+.query-result td {
+  padding: 0.3em;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.error-row { color: var(--error); }
+
+.result-note {
+  font-size: 0.7em !important;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+.result-sub {
+  font-size: 0.6em !important;
+  color: var(--muted);
+}
+
+.section-intro {
+  font-size: 0.9em !important;
+  color: var(--muted);
+}
+
+/* ---- Slide 11: State machine ---- */
+
+.state-machine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin: 0.5em 0;
+}
+
+.state {
+  font-size: 0.9em;
+  padding: 0.4em 1em;
+  border-radius: 24px;
+  font-weight: bold;
+}
+
+.state-alive {
+  background: rgba(102, 187, 106, 0.2);
+  border: 2px solid var(--success);
+  color: var(--success);
+}
+
+.state-dead {
+  background: rgba(239, 83, 80, 0.2);
+  border: 2px solid var(--error);
+  color: var(--error);
+}
+
+.state-arrow { font-size: 1.5em; color: var(--muted); }
+.valid-arrow { color: var(--success); }
+.invalid-arrow { color: var(--error); }
+.invalid-label { font-size: 0.5em; }
+
+/* ---- Slide 11: Contradiction demo ---- */
+
+.contradiction-demo {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.source-quote, .violations {
+  margin-bottom: 0.3em;
+}
+
+.chapter-ref {
+  font-size: 0.55em !important;
+  color: var(--muted);
+  margin-bottom: 0.1em !important;
+  margin-bottom: 0.2em;
+}
+
+.demo-case {
+  text-align: left;
+  max-width: 600px;
+  margin: 0.3em auto;
+  padding: 0.4em 0.8em;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.demo-case p {
+  font-size: 0.55em !important;
+  margin: 0.1em 0;
+}
+
+/* ---- Agent memory visual ---- */
+
+.agent-flow {
+  text-align: center;
+  margin-top: 0.3em;
+}
+
+.agent-trigger {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.3em 1em;
+}
+
+.agent-trigger-label {
+  font-size: 0.65em;
+  font-weight: bold;
+}
+
+.agent-flow-arrow {
+  font-size: 0.9em;
+  color: var(--accent);
+  margin: 0.2em 0;
+}
+
+.agent-checks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.agent-check {
+  border-radius: 8px;
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+
+.agent-static {
+  background: rgba(79, 195, 247, 0.1);
+  border: 1px solid rgba(79, 195, 247, 0.3);
+}
+
+.agent-dynamic {
+  background: rgba(255, 167, 38, 0.1);
+  border: 1px solid rgba(255, 167, 38, 0.3);
+}
+
+.agent-check strong {
+  font-size: 0.65em;
+}
+
+.agent-check p {
+  font-size: 0.5em !important;
+  color: var(--muted);
+  margin: 0.15em 0 0;
+}
+
+.agent-check-example {
+  font-style: italic;
+  color: var(--accent) !important;
+}
+
+.agent-dynamic .agent-check-example {
+  color: var(--warning) !important;
+}
+
+.agent-result {
+  font-size: 0.65em;
+  color: var(--muted);
+}
+
+.agent-result-label {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* ---- Slide 13: LangGraph workflow ---- */
+
+/* ---- Causal types ---- */
+
+.causal-types {
+  display: flex;
+  gap: 0.4em;
+  justify-content: center;
+  margin-top: 0.5em;
+  flex-wrap: wrap;
+}
+
+.causal-tag {
+  font-size: 0.6em;
+  padding: 0.3em 0.7em;
+  background: rgba(255, 167, 38, 0.15);
+  border: 1px solid var(--warning);
+  border-radius: 16px;
+  color: var(--warning);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ---- Slide 15: Sync flow ---- */
+
+.sync-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  margin: 0.5em 0;
+}
+
+.sync-step {
+  text-align: center;
+  padding: 0.3em;
+}
+
+.sync-icon { font-size: 1.3em; }
+.sync-step p { font-size: 0.6em !important; margin-top: 0.2em; }
+
+.sync-sub {
+  font-size: 0.45em !important;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 0 !important;
+}
+
+.sync-tradeoff {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+  max-width: 600px;
+  margin: 0.3em auto 0;
+}
+
+.sync-option {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.3em 0.7em;
+}
+
+.sync-option strong {
+  font-size: 0.65em;
+}
+
+.sync-option p {
+  font-size: 0.5em !important;
+  color: var(--muted);
+  margin: 0.15em 0 0;
+}
+.sync-arrow { font-size: 1.2em; color: var(--accent); }
+
+/* ---- Domain grid ---- */
+
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6em;
+  max-width: 600px;
+  margin: 1em auto;
+}
+
+.domain-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 0.6em;
+  font-size: 0.7em;
+  text-align: center;
+}
+
+/* ---- Slide 20: Honesty list ---- */
+
+.honesty-list {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.honesty-item {
+  margin-bottom: 0.25em;
+  padding: 0.3em 0.5em;
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+.honesty-item strong { font-size: 0.65em; }
+.honesty-item p { font-size: 0.5em !important; color: var(--muted); margin: 0; line-height: 1.4; }
+
+/* ---- Slide 21: Resources ---- */
+
+.resources-list {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto 1em;
+}
+
+.resource-item {
+  margin-bottom: 0.5em;
+}
+
+.resource-item strong { font-size: 0.75em; }
+.resource-item p { font-size: 0.65em !important; color: var(--muted); margin: 0.1em 0 0; }
+
+.contact-info {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid var(--surface-border);
+}
+
+.contact-info p {
+  font-size: 0.7em !important;
+  color: var(--muted);
+}
+
+/* ---- LitRPG text styling ---- */
+
+.litrpg-text code {
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.compact-code {
+  font-size: 0.4em !important;
+  margin-top: 0.2em !important;
+}
+
+.compact-code code {
+  line-height: 1.25;
+}
+
+/* ---- Responsive adjustments ---- */
+
+@media (max-width: 800px) {
+  .two-col { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .domain-grid { grid-template-columns: repeat(2, 1fr); }
+  .architecture-flow { flex-direction: column; }
+}

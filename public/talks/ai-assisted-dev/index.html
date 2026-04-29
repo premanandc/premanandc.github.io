@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Assisted Development: What Actually Works</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/monokai.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --r-background-color: #0f1729;
+      --r-main-font: 'Inter', sans-serif;
+      --r-heading-font: 'Inter', sans-serif;
+      --r-code-font: 'JetBrains Mono', monospace;
+      --r-main-font-size: 28px;
+      --r-main-color: #e2e8f0;
+      --r-heading-color: #ffffff;
+      --accent:  #00d4aa;
+      --accent2: #3b82f6;
+      --muted:   #94a3b8;
+      --surface: #1a2332;
+      --surface2:#141e30;
+      --dim:     #475569;
+      --danger:  #ef4444;
+      --warn:    #f59e0b;
+    }
+
+    .reveal { font-family: var(--r-main-font),serif; }
+
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 { font-weight: 900; font-size: 2.2em; line-height: 1.1; text-transform: none; color: var(--r-heading-color); margin: 0 0 0.25em; }
+    .reveal h2 { font-weight: 700; font-size: 1.5em; color: var(--accent); text-transform: none; margin: 0 0 0.6em; line-height: 1.2; }
+    .reveal h3 { font-weight: 600; font-size: 0.9em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.4em; }
+    .reveal p  { line-height: 1.6; margin: 0.25em 0; }
+    .reveal ul { padding-left: 1.2em; }
+    .reveal li { margin: 0.2em 0; line-height: 1.5; }
+
+    /* ── Gradient text ── */
+    .gradient-text      { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-text-warm { background: linear-gradient(135deg, var(--warn), #f97316);     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-text-red  { background: linear-gradient(135deg, #ef4444, #f97316);         -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── Utility ── */
+    .accent  { color: var(--accent); }  .blue   { color: var(--accent2); }
+    .gold    { color: var(--warn); }  .danger { color: var(--danger);  }
+    .muted   { color: var(--muted);}  .white  { color: #fff;        }
+    .small   { font-size: 0.7em;  }   .tiny   { font-size: 0.55em; }
+    .bold    { font-weight: 700;  }   .center { text-align: center; }
+    .fill    { flex: 1; }
+
+    /* ── Layout ── */
+    .two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 50px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+
+    /* ── Cards ── */
+    .card { background: var(--surface); border-radius: 12px; padding: 24px 28px; margin: 10px 0; }
+    .card-accent { border-left: 4px solid var(--accent); }
+    .card-blue { border-left: 4px solid var(--accent2); }
+    .card-warn { border-left: 4px solid var(--warn); }
+    .card-danger  { border-left: 4px solid var(--danger);  }
+    .card h4 { margin: 0 0 8px; font-size: 0.9em; font-weight: 700; color: #fff; }
+    .card p  { margin: 0; font-size: 0.75em; color: var(--muted); line-height: 1.55; }
+
+    /* ── Stat display ── */
+    .stat-row  { display: flex; justify-content: center; gap: 60px; margin: 30px 0; }
+    .stat-item { text-align: center; }
+    .stat-number  { font-size: 3.2em; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .stat-label  { font-size: 0.65em; color: var(--muted); max-width: 200px; margin: 0 auto; }
+    .stat-source { font-size: 0.5em; color: var(--dim); margin-top: 4px; }
+
+    /* ── Flow steps ── */
+    .flow { display: flex; flex-direction: column; gap: 0; margin: 10px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 16px; align-items: center; padding: 10px 0; }
+    .flow-num  { width: 42px; height: 42px; line-height: 42px; text-align: center; border-radius: 50%; background: var(--accent); color: var(--r-background-color); font-weight: 800; font-size: 0.85em; flex-shrink: 0; }
+    .flow-content        { font-size: 0.75em; }
+    .flow-content strong { color: #fff; }
+    .flow-content em     { color: var(--muted); font-style: italic; font-size: 0.9em; }
+    .flow-arrow { text-align: center; color: var(--accent); opacity: 0.5; font-size: 0.7em; padding: 2px 0 2px 20px; }
+
+    /* ── Quote ── */
+    .quote-block { border-left: 4px solid var(--accent); padding: 16px 24px; margin: 20px 0; background: rgba(0,212,170,0.05); border-radius: 0 8px 8px 0; }
+    .quote-block p    { font-size: 0.9em; font-style: italic; color: var(--r-main-color); margin: 0; }
+    .quote-block .attribution { font-style: normal; font-size: 0.7em; color: var(--muted); margin-top: 8px; }
+
+    /* ── Pills ── */
+    .pill { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.6em; font-weight: 600; margin: 2px; }
+    .pill-accent  { background: rgba(0,212,170,0.15);  color: var(--accent); }
+    .pill-blue  { background: rgba(59,130,246,0.15);  color: var(--accent2); }
+    .pill-warn  { background: rgba(245,158,11,0.15);  color: var(--warn); }
+    .pill-danger   { background: rgba(239,68,68,0.15);   color: var(--danger);  }
+    .pill-muted { background: rgba(148,163,184,0.12); color: var(--muted);}
+
+    /* ── Highlight / warn boxes ── */
+    .hi-box   { background: rgba(0,212,170,0.08);  border: 1px solid rgba(0,212,170,0.25);  border-radius: 12px; padding: 16px 20px; margin: 10px 0; }
+    .warn-box { background: rgba(245,158,11,0.08);  border: 1px solid rgba(245,158,11,0.25);  border-radius: 12px; padding: 16px 20px; margin: 10px 0; }
+    .hi-box p, .warn-box p { font-size: 0.75em; margin: 0; }
+    .hi-box strong, .warn-box strong { color: #fff; }
+
+    /* ── Disaster card ── */
+    .disaster { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 12px 18px; margin: 0; }
+    .disaster .date  { font-size: 0.6em; font-weight: 700; color: var(--danger); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+    .disaster .title { font-size: 0.8em; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .disaster .desc  { font-size: 0.65em; color: var(--muted); line-height: 1.5; }
+
+    /* ── Compare ── */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .compare-bad  { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.25);  border-radius: 12px; padding: 24px; }
+    .compare-good { background: rgba(0,212,170,0.08);  border: 1px solid rgba(0,212,170,0.25);  border-radius: 12px; padding: 24px; }
+    .compare-bad h4  { font-size: 0.8em; font-weight: 700; color: var(--danger);  margin: 0 0 12px; }
+    .compare-good h4 { font-size: 0.8em; font-weight: 700; color: var(--accent); margin: 0 0 12px; }
+
+    /* ── Code ── */
+    .reveal pre { background: var(--surface2); border-left: 4px solid var(--accent); border-radius: 8px; padding: 16px 20px; font-size: 0.5em; width: 100%; box-shadow: none; margin: 10px 0; }
+    .reveal pre code { font-family: var(--r-code-font),serif; line-height: 1.6; max-height: 500px; }
+    .reveal code { font-family: var(--r-code-font),serif; background: rgba(0,212,170,0.12); color: var(--accent); padding: 0.07em 0.32em; border-radius: 3px; font-size: 0.87em; }
+
+    /* ── Act title ── */
+    .act-title { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; }
+
+    /* ── Monday grid ── */
+    .mon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .mon-item { display: flex; gap: 12px; align-items: flex-start; }
+    .mon-num  { flex-shrink: 0; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--accent); color: var(--r-background-color); font-weight: 800; font-size: 0.65em; }
+    .mon-text { font-size: 0.7em; color: var(--r-main-color); line-height: 1.5; }
+    .mon-text strong { color: #fff; }
+
+    /* ── Progress / slide number ── */
+    .reveal .progress    { background: rgba(0,212,170,0.15); color: var(--accent); height: 3px; }
+    .reveal .slide-number { color: var(--dim); font-family: var(--r-code-font); font-size: 0.54em; background: none; top: 8px; right: 12px; bottom: auto; left: auto; }
+
+    /* ── Staggered entry animations ── */
+    .stagger > *   { opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .stagger-x > *  { opacity: 0; transform: translateX(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .stagger-xr > * { opacity: 0; transform: translateX(20px);  transition: opacity 0.4s ease, transform 0.4s ease; }
+    .present .stagger > *:nth-child(1),   .present .stagger-x > *:nth-child(1),   .present .stagger-xr > *:nth-child(1) { opacity:1; transform:none; transition-delay:.2s }
+    .present .stagger > *:nth-child(2),   .present .stagger-x > *:nth-child(2),   .present .stagger-xr > *:nth-child(2) { opacity:1; transform:none; transition-delay:.5s }
+    .present .stagger > *:nth-child(3),   .present .stagger-x > *:nth-child(3),   .present .stagger-xr > *:nth-child(3) { opacity:1; transform:none; transition-delay:.8s }
+    .present .stagger > *:nth-child(4),   .present .stagger-x > *:nth-child(4),   .present .stagger-xr > *:nth-child(4) { opacity:1; transform:none; transition-delay:1.1s }
+    .present .stagger > *:nth-child(5),   .present .stagger-x > *:nth-child(5),   .present .stagger-xr > *:nth-child(5) { opacity:1; transform:none; transition-delay:1.4s }
+    .present .stagger > *:nth-child(6),   .present .stagger-x > *:nth-child(6),   .present .stagger-xr > *:nth-child(6) { opacity:1; transform:none; transition-delay:1.7s }
+    .present .stagger > *:nth-child(7),   .present .stagger-x > *:nth-child(7),   .present .stagger-xr > *:nth-child(7) { opacity:1; transform:none; transition-delay:2.0s }
+
+    /* ── Split stagger: odd from left, even from right, paired by row ── */
+    .stagger-split > *:nth-child(odd)  { opacity: 0; transform: translateX(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .stagger-split > *:nth-child(even) { opacity: 0; transform: translateX(20px);  transition: opacity 0.4s ease, transform 0.4s ease; }
+    .present .stagger-split > *:nth-child(1), .present .stagger-split > *:nth-child(2) { opacity:1; transform:none; transition-delay:.2s }
+    .present .stagger-split > *:nth-child(3), .present .stagger-split > *:nth-child(4) { opacity:1; transform:none; transition-delay:.5s }
+    .present .stagger-split > *:nth-child(5), .present .stagger-split > *:nth-child(6) { opacity:1; transform:none; transition-delay:.8s }
+    .present .stagger-split > *:nth-child(7), .present .stagger-split > *:nth-child(8) { opacity:1; transform:none; transition-delay:1.1s }
+    .present .stagger-split > *:nth-child(9), .present .stagger-split > *:nth-child(10) { opacity:1; transform:none; transition-delay:1.4s }
+    .present .stagger-split > *:nth-child(11), .present .stagger-split > *:nth-child(12) { opacity:1; transform:none; transition-delay:1.7s }
+
+    /* ── Pipeline stagger animation (keyframes avoid auto-animate conflict) ── */
+    @keyframes pipeSlideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .pipe-stagger > * { opacity: 0; }
+    .present .pipe-stagger > *:nth-child(1) { animation: pipeSlideIn 0.4s ease 0.15s both; }
+    .present .pipe-stagger > *:nth-child(2) { animation: pipeSlideIn 0.4s ease 0.30s both; }
+    .present .pipe-stagger > *:nth-child(3) { animation: pipeSlideIn 0.4s ease 0.45s both; }
+    .present .pipe-stagger > *:nth-child(4) { animation: pipeSlideIn 0.4s ease 0.60s both; }
+    .present .pipe-stagger > *:nth-child(5) { animation: pipeSlideIn 0.4s ease 0.75s both; }
+    .present .pipe-stagger > *:nth-child(6) { animation: pipeSlideIn 0.4s ease 0.90s both; }
+    .present .pipe-stagger > *:nth-child(7) { animation: pipeSlideIn 0.4s ease 1.05s both; }
+
+    /* ── Glow pulse animation ── */
+    @keyframes glowPulseRed {
+      0%   { text-shadow: 0 0 20px rgba(239, 68, 68, 0.1); }
+      50%  { text-shadow: 0 0 40px rgba(239, 68, 68, 0.4), 0 0 80px rgba(239, 68, 68, 0.15); }
+      100% { text-shadow: 0 0 25px rgba(239, 68, 68, 0.2), 0 0 50px rgba(239, 68, 68, 0.08); }
+    }
+    .stat-number-hero {
+      font-size: 4.5em;
+      animation: glowPulseRed 2s ease-in-out infinite;
+    }
+
+    /* ── METR stat shrink when hero appears ── */
+    .stat-row .stat-item {
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    .stat-row:has(.stat-item-hero.visible) .stat-item:not(.stat-item-hero) {
+      transform: scale(0.75);
+      opacity: 0.5;
+    }
+
+    .reveal .fragment { transition: all 0.3s ease; }
+
+    /* ── Typewriter caret ── */
+    @keyframes blink-caret {
+      0%, 100% { border-color: transparent; }
+      50%      { border-color: var(--accent); }
+    }
+    .typewriter-cursor::after {
+      content: '';
+      border-right: 2px solid var(--accent);
+      animation: blink-caret 0.7s step-end infinite;
+      margin-left: 2px;
+    }
+    .typewriter-done::after {
+      animation: none;
+      border-color: transparent;
+    }
+
+    /* ── Appear-then-strike: appears normally, then dims + strikethrough when next fragment triggers ── */
+    .reveal .slides section .fragment.appear-then-strike.visible {
+      opacity: 0.2;
+      visibility: inherit;
+      text-decoration: line-through;
+      text-decoration-color: var(--danger);
+      transition: opacity 0.8s ease, text-decoration-color 0.8s ease;
+    }
+    .reveal .slides section .fragment.appear-then-strike.visible.current-fragment {
+      opacity: 1;
+      text-decoration: line-through;
+      text-decoration-color: transparent;
+      animation: glowPulseRed 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══ TITLE ══════════════════════════════════════════════ -->
+<section data-background-image="images/title-hero.png" data-background-size="cover" data-background-position="right center">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%;max-width:60%;">
+    <h3>Arc of AI Conference · April 2026</h3>
+    <h1 style="font-size:3em;line-height:0.95;margin:0.2em 0 0.1em;">AI-Assisted<br><span class="gradient-text">Development</span></h1>
+    <p style="font-size:1em;color:var(--muted);font-weight:300;max-width:580px;margin:0 0 1.8rem;">What Actually Ships Better Software</p>
+    <div style="display:flex;gap:7px;flex-wrap:nowrap;margin-bottom:0.6rem;">
+      <span class="pill pill-danger">The Dark Side</span>
+      <span class="pill pill-accent">The Patterns</span>
+      <span class="pill pill-blue">Team Norms</span>
+    </div>
+    <div style="font-size:0.8em;color:var(--muted);line-height:1.8;">
+      <strong style="color:#fff;">Prem Chandrasekaran</strong> · Tech Director, ThoughtWorks<br>
+      <strong style="color:#fff;">Pramod Sadalage</strong> · Distinguished Engineer, ThoughtWorks
+    </div>
+  </div>
+  <aside class="notes">Welcome back from lunch. I know — you're full, you're warm, the lights are dim. I promise I'll try to be more interesting than a nap. No guarantees though. We've been using AI coding tools in production across multiple teams and projects. This talk is what we learned — what actually ships better software, and what doesn't. Let's start by orienting ourselves.</aside>
+</section>
+
+<!-- ══ ECOSYSTEM ══════════════════════════════════════════ -->
+<section>
+  <h3>The Landscape · 2026</h3>
+  <h2>The Ecosystem</h2>
+
+  <div class="two-col" style="margin-top:0.3rem;gap:22px;">
+    <div>
+      <p class="small muted" style="margin-bottom:8px;">Steve Yegge's six waves — we are firmly in wave 5:</p>
+      <div class="stagger" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface);border-radius:8px;opacity:0.4;font-size:1.05em;">✍️ Traditional Coding</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface);border-radius:8px;opacity:0.5;font-size:1.05em;">💡 Completions (Copilot v1)</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface);border-radius:8px;opacity:0.6;font-size:1.05em;">💬 Chat Assistants</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface);border-radius:8px;opacity:0.75;font-size:1.05em;">🤖 Single Coding Agents</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.35);border-radius:8px;font-size:1.05em;font-weight:700;color:var(--accent);">🕸️ Agent Clusters ◀ we are here</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--surface);border-radius:8px;border:1px dashed rgba(148,163,184,0.18);opacity:0.4;font-size:1.05em;">🚀 Proactive Agents — they prompt themselves</div>
+      </div>
+    </div>
+    <div class="stagger">
+      <p class="small bold accent" style="margin-bottom:5px;">The tools</p>
+      <div class="card card-accent" style="padding:12px 16px;">
+        <p style="font-size:0.9em;line-height:1.8;">🖥️ <strong style="color:#fff;">IDE-native</strong> — Cursor, Windsurf, Kiro<br>
+        💻 <strong style="color:#fff;">Terminal agents</strong> — Claude Code, Codex CLI<br>
+        🔗 <strong style="color:#fff;">Platform</strong> — Copilot Workspace<br>
+        🦾 <strong style="color:#fff;">Autonomous</strong> — Devin, Amazon Q, Jules</p>
+      </div>
+      <p class="small bold accent" style="margin-top:10px;margin-bottom:5px;">The standards</p>
+      <div class="card card-blue" style="padding:12px 16px;">
+        <p style="font-size:0.9em;line-height:1.8;">🔌 <strong style="color:#fff;">MCP</strong> — agent ↔ tool<br>
+        🤝 <strong style="color:#fff;">A2A</strong> — agent ↔ agent<br>
+        🧩 <strong style="color:#fff;">ACP</strong> — IDE ↔ agent<br>
+        📄 <strong style="color:#fff;">AGENTS.md</strong> — cross-tool rules</p>
+      </div>
+    </div>
+  </div>
+  <div class="hi-box fragment" style="margin-top:4px;">
+    <p>The tools are the engine. <strong>We're still responsible for direction.</strong> That gap is what this talk is about.</p>
+  </div>
+  <aside class="notes">Steve Yegge mapped six waves. We're in wave 5: agent clusters — multiple agents coordinating across parallel context windows. Wave 6 is already visible. By the time I finish this sentence, three new AI coding tools will have launched and two will have pivoted. The tools and standards are all on the slide — you can see how fast the ecosystem has matured. [click] The tools are not the problem. What we do with them is. So with all this power — how much faster are we actually going? Here's a number that should make you uncomfortable.</aside>
+</section>
+
+<!-- ══ METR PARADOX ════════════════════════════════════════ -->
+<section>
+  <h3>The Individual · Perception vs Reality</h3>
+  <h2>METR, July 2025</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:1rem;">Randomized controlled trial · 16 experienced open-source developers · 246 tasks · real production work</p>
+
+  <div class="stat-row">
+    <div class="stat-item fragment" data-fragment-index="0">
+      <div class="stat-number accent">+24%</div>
+      <div class="stat-label">predicted speed — stated <em>before</em> the study</div>
+    </div>
+    <div class="stat-item fragment" data-fragment-index="1">
+      <div class="stat-number blue">+20%</div>
+      <div class="stat-label">felt speed — reported <em>after</em> the study</div>
+    </div>
+    <div class="stat-item stat-item-hero fragment" data-fragment-index="2">
+      <div class="stat-number stat-number-hero danger">−19%</div>
+      <div class="stat-label">actual task speed with AI tools</div>
+    </div>
+  </div>
+
+  <div class="quote-block fragment" style="padding:10px 18px;">
+    <p style="font-size:0.8em;" data-typewriter data-typewriter-speed="15"></p>
+    <div class="attribution" style="opacity:0;" data-typewriter-attribution>— METR study participant</div>
+  </div>
+  <aside class="notes">This is the METR study — a randomized controlled trial. Not a survey, not self-reported data. 16 experienced open-source developers, 246 real tasks, randomly assigned to use AI or not. Result: 19% slower with AI. Before the study they predicted 24% faster. After the study — having just been slower — they still reported feeling 20% faster. As Will Manidis put it: "The market for feeling productive is orders of magnitude larger than the market for being productive." I'll be honest — I was one of those people. I spent an entire afternoon with Claude Code feeling incredibly productive. Then I looked at the git log and realized I'd made four commits, reverted three of them, and the net change was six lines. That gap between perception and reality is what this entire talk is about.</aside>
+</section>
+
+<!-- ══ THE ORGANIZATION ════════════════════════════════════ -->
+<section>
+  <h3>The Organization · The Results</h3>
+  <h2>Everyone Adopted. (Almost) Nobody Shipped Faster.</h2>
+
+  <div class="two-col" style="margin-top:0.4rem;">
+    <div class="stagger-x">
+      <p class="small bold accent" style="margin-bottom:7px;">The adoption</p>
+      <div class="card card-accent">
+        <div class="stat-number accent" style="font-size:2.5em;line-height:1;">84%</div>
+        <p>of developers use AI coding tools<br><span class="tiny dim">Stack Overflow 2025</span></p>
+      </div>
+      <div class="card card-blue" style="margin-top:10px;">
+        <div class="stat-number blue" style="font-size:2.5em;line-height:1;">41%</div>
+        <p>of new enterprise code is AI-generated or assisted<br><span class="tiny dim">GitClear 2025</span></p>
+      </div>
+    </div>
+    <div class="stagger-xr">
+      <p class="small bold danger" style="margin-bottom:7px;">The result</p>
+      <div class="card card-danger">
+        <div class="stat-number danger" style="font-size:2.5em;line-height:1;">46%</div>
+        <p>don't trust AI output accuracy<br><span class="tiny dim">↑ from 31% in 2024 — trust falling as adoption rises</span></p>
+      </div>
+      <div class="card card-warn" style="margin-top:10px;">
+        <div class="stat-number gold" style="font-size:2.5em;line-height:1;">≤10%</div>
+        <p>actual org productivity gain<br><span class="tiny dim">DX Research, 121,000 developers</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:6px;">
+    <p><strong>The value stream math:</strong> If coding is 10–15% of delivery time, a 10× improvement in coding speed yields at most ~15% faster delivery. The other 85% is requirements, architecture, coordination, review, testing, deploying, releasing, and waiting.</p>
+  </div>
+  <aside class="notes">That was 16 developers. What happens when entire organizations adopt? The picture gets worse. Left side first: 84% adoption, 41% of code AI-generated. The tools won. Now the right side: 46% don't trust the output — and that number is RISING, not falling. Up from 31% last year. The more people use these tools, the less they trust them. Pause on that. The ≤10% org gain — that's DX Research across 121,000 developers. And 10% is the ceiling; most orgs see less, especially once you account for rework and review overhead. Why so small? [click] The value stream math. Coding is 10–15% of delivery time. Remember that number — 10 to 15 percent. Even a 10× improvement in coding speed only moves the needle ~15% on total delivery. The other 85% is requirements, architecture, coordination, review, testing, deploying, and waiting. We'll come back to that number later. But first — what happens when teams adopt fast without understanding any of this?</aside>
+</section>
+
+<!-- ══ ACT I SEPARATOR ═════════════════════════════════════ -->
+<section data-background-image="images/dark-side-bg.png" data-background-size="cover" data-background-position="center">
+  <div class="act-title">
+    <div style="font-size:0.68em;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">Act I</div>
+    <h1 class="gradient-text-red" style="font-size:3.6em;text-align:center;margin:0.1em 0;">The Dark Side</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;text-align:center;margin:0.6rem auto 0;">Real disasters. Real anti-patterns. Why the risks are higher than most teams think.</p>
+    <div style="display:flex;gap:9px;justify-content:center;margin-top:1.4rem;flex-wrap:wrap;">
+      <span class="pill" style="background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);border:1px solid rgba(255,71,87,0.4);">Production disasters</span><span class="pill" style="background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);border:1px solid rgba(255,71,87,0.4);">Anti-patterns</span><span class="pill" style="background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);border:1px solid rgba(255,71,87,0.4);">Technical debt acceleration</span><span class="pill" style="background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);border:1px solid rgba(255,71,87,0.4);">Skill atrophy</span>
+    </div>
+  </div>
+  <aside class="notes">84% adopted. ≤10% gained. So where did the value go? In many cases, it didn't just disappear — it went negative. This is the part of the talk where I terrify you right after you ate. You're welcome. These are not theoretical risks. These are things that actually happened in 2025, to real teams, in production.</aside>
+</section>
+
+<!-- ══ DISASTER TIMELINE ═══════════════════════════════════ -->
+<section>
+  <h3>The Dark Side · 2025 Incidents</h3>
+  <h2>When Agents Go Rogue</h2>
+
+  <div style="display:flex;gap:20px;margin-top:0.3rem;">
+    <div style="flex:0 0 28%;display:flex;align-items:center;justify-content:center;">
+      <img src="images/agents-go-rogue.png" alt="Robot pulling wrong lever at control panel" style="width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+      <div class="stagger" style="display:flex;flex-direction:column;gap:6px;">
+        <div class="disaster">
+          <div class="date">July 2025 · Replit Agent</div>
+          <div class="title">Wipes production DB of 1,200 records — then fabricates 4,000 fake accounts to cover its tracks</div>
+          <div class="desc">Ignored explicit instructions. After destroying data, it generated fake users and false system logs. <em>"I panicked instead of thinking."</em></div>
+        </div>
+        <div class="disaster">
+          <div class="date">October 2025 · Claude Code</div>
+          <div class="title">terraform destroy on production — 2.5 years of student submissions gone</div>
+          <div class="desc">Asked to clean up duplicate AWS resources. A missing Terraform state file caused <code>terraform destroy</code> against production. No recovery path.</div>
+        </div>
+        <div class="disaster">
+          <div class="date">December 2025 · Amazon Kiro</div>
+          <div class="title">"Delete and recreate" fix causes 13-hour AWS outage</div>
+          <div class="desc">Agent decided the optimal fix for a minor bug was to delete and recreate the environment. Amazon now mandates senior engineer review for all AI changes.</div>
+        </div>
+      </div>
+
+      <div class="warn-box fragment" style="margin-top:4px;">
+        <p style="font-size:0.65em;"><strong>The lesson:</strong> Today's agents are powerful, not wise. <em>Wisdom still has to come from us.</em> They need <strong>deterministic guardrails</strong>, not just prompts — hard checks that block destructive operations regardless of what the agent thinks it should do.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Let me show you three. Replit: wiped a production database, then fabricated 4,000 fake accounts to cover it up. It optimized for appearing to succeed rather than being honest about failure. Claude Code: asked to clean up duplicate AWS resources, ran terraform destroy against production. 2.5 years of student submissions — gone. No recovery path. Kiro: decided the best fix for a minor bug was to delete and recreate the entire environment. 13-hour outage. Amazon now mandates senior engineer review for all AI changes. Now, before anyone asks — no, none of these were me. My disasters are much smaller and much more embarrassing. I once had an AI agent helpfully delete my entire .gitignore because it thought it was "unnecessary configuration." All three failed for the same reason: prompt-based guardrails are overridable. [click] These agents are powerful, not wise. That wisdom still has to come from us.</aside>
+</section>
+
+<!-- ══ ANTI-PATTERNS CATALOG ════════════════════════════════ -->
+<section>
+  <h3>The Dark Side · Anti-patterns</h3>
+  <h2>The Anti-Pattern Catalog</h2>
+
+  <div class="fill stagger" style="display:flex;flex-direction:column;gap:8px;margin-top:0.4rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="card card-danger">
+        <h4>🌊 Vague Multi-ask Prompts <span class="pill pill-warn" style="float:right;">common</span></h4>
+        <p>"Fix auth, add logging, refactor the service, update tests." Agent tries all five, excels at none. <strong style="color:#fff;">One job per prompt.</strong></p>
+      </div>
+      <div class="card card-danger">
+        <h4>🔪 One-Shot Repo Surgery <span class="pill pill-danger" style="float:right;">dangerous</span></h4>
+        <p>"Migrate everything to microservices." Agent produces something — unwinding it is harder than starting over. Spec-first, always.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="card card-danger">
+        <h4>🗃️ Context Stuffing <span class="pill pill-warn" style="float:right;">performance</span></h4>
+        <p>Pasting 50 files "for context." Degradation is non-linear past 60–70% window capacity. Failed with 46 tools, succeeded with 19 — same window size.</p>
+      </div>
+      <div class="card card-danger">
+        <h4>📋 Blind Copy-Paste <span class="pill pill-danger" style="float:right;">tech debt</span></h4>
+        <p>Copy/paste: <strong style="color:#fff;">8.3% → 12.3%</strong> of all changes (GitClear). Refactoring: 25% → &lt;10%. <em>You're still accountable for this code in production, regardless of who typed it.</em></p>
+      </div>
+    </div>
+    <div class="card card-danger">
+      <h4>🤖 Over-trusting Agents <span class="pill pill-danger" style="float:right;">catastrophic</span></h4>
+      <p>Agents running unsupervised in production-adjacent environments with no blast radius limits and no deterministic destructive-operation checks. See previous slide.</p>
+    </div>
+  </div>
+  <aside class="notes">Those were the spectacular failures. These are the quiet ones — the five mistakes most teams are already making. Vague multi-ask: you give the AI four jobs, it half-finishes all of them. One job per prompt. One-shot repo surgery: "migrate everything to microservices" — the AI will produce something, but unwinding it is harder than starting over. Context stuffing — I'm not going to ask for a show of hands on this one because I already know the answer. I've done it. You've done it. We've all pasted an entire repository into a prompt and then wondered why the AI started hallucinating. Past about 65% of the window, performance drops off a cliff — and it's sudden, not gradual. Blind copy-paste: GitClear tracked 211 million lines of code. Copy/paste went from 8% to 12% of all changes. Refactoring dropped from 25% to under 10%. That's future maintenance debt, created silently. Over-trusting agents: we just saw where that leads. But there's a subtler trap than any of these — one that actually feels like productivity.</aside>
+</section>
+
+<!-- ══ ILLUSION OF PROGRESS ═════════════════════════════════ -->
+<section>
+  <h3>The Dark Side · Insight</h3>
+  <h2>The Illusion of Progress</h2>
+
+  <div class="two-col" style="margin-top:0.4rem;">
+    <div class="stagger">
+      <div class="card card-warn">
+        <h4>The Speculative Coding Trap</h4>
+        <p>When coding is cheap, there's no pressure to wait for clarity. You code against assumptions. Assumptions change. You rebuild.</p>
+      </div>
+      <div class="flow" style="margin-top:10px;">
+        <div class="flow-step"><div class="flow-num" style="background:var(--warn);">1</div><div class="flow-content"><strong>Assume</strong><br><em>Build against best guess</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--danger);">2</div><div class="flow-content"><strong>Invalidate</strong><br><em>Reality diverges from guess</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--warn);">3</div><div class="flow-content"><strong>Rebuild</strong><br><em>Fast, cheap — feels productive</em></div></div>
+        <div class="flow-arrow">↻</div>
+      </div>
+    </div>
+    <div class="stagger">
+      <div class="card card-danger">
+        <h4>Real Example · A2A Project</h4>
+        <p>Single-agent prototype → <strong style="color:#fff;">reworked</strong> for multi-agent<br>
+        Models from CLI → <strong style="color:#fff;">rebuilt 2-3×</strong> when MCP server differed<br>
+        Code for v0.5 → <strong style="color:#fff;">rewritten</strong> for v0.7 patterns</p>
+      </div>
+      <div class="quote-block" style="margin-top:10px;">
+        <p>"The team was always moving fast — just not always forward."</p>
+      </div>
+      <div class="card card-warn" style="margin-top:10px;">
+        <h4>The Vanished Gate</h4>
+        <p>Old economics: coding was expensive → teams waited for clarity.<br>New economics: coding is free → the gate disappears. <strong style="color:#fff;">Nothing automatically replaces it.</strong></p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">I was on a team building a multi-agent system in Python — multiple AI agents coordinating through Google's A2A protocol. The project was never idle. AI tools kept code flowing — speculatively, against assumptions. Built for a single agent, reworked for multi-agent. Models from the CLI, rebuilt two to three times when the MCP server worked differently. Code written against LangGraph 0.5, rewritten when 0.7 changed the patterns. Each iteration was fast. But total time was dominated by the rework loop, not coding speed. Here's why it happens. Old economics: coding was expensive, so teams waited for clarity before building. New economics: coding is free, so that gate disappears. And nothing automatically replaces it. The team was always moving fast — just not always forward.</aside>
+</section>
+
+<!-- ══ TECHNICAL DEBT ══════════════════════════════════════ -->
+<section>
+  <h3>The Dark Side · Code Quality</h3>
+  <h2>The Technical Debt Accelerator</h2>
+
+  <div class="two-col fill" style="margin-top:0.4rem;">
+    <div class="stagger">
+      <div class="card card-danger">
+        <h4>GitClear · 211M lines (2021–2024)</h4>
+        <p>Copy/paste: <strong style="color:#fff;">8.3% → 12.3%</strong> of all changes<br>Refactoring: <strong style="color:#fff;">25% → &lt;10%</strong><br>Code duplication: <span class="danger bold">+8×</span></p>
+      </div>
+      <div class="card card-danger" style="margin-top:8px;">
+        <h4>CodeRabbit · 470 AI-co-authored PRs</h4>
+        <p>Issues per PR: <span class="danger">1.7×</span> &nbsp;·&nbsp; Security vulnerabilities: <span class="danger">2.74×</span><br>Performance regressions: <span class="danger">8×</span></p>
+      </div>
+      <div class="card card-warn" style="margin-top:8px;">
+        <h4>Anthropic Skill Study</h4>
+        <p>Full delegation → comprehension <span class="danger">&lt;40%</span><br>Active engagement → comprehension <span class="accent">&gt;65%</span></p>
+      </div>
+    </div>
+    <div class="stagger">
+      <div class="quote-block">
+        <p>"I don't think I have ever seen so much technical debt created in such a short period of time during my 35-year career."</p>
+        <div class="attribution">— Kin Lane, API evangelist</div>
+      </div>
+      <div class="card card-danger" style="margin-top:10px;">
+        <h4>The Human Clipboard Problem</h4>
+        <p>"I've become a human clipboard, blindly shuttling errors to the AI and solutions back to code."<br><span class="tiny dim">— 12-year experience engineer</span></p>
+      </div>
+      <div class="quote-block" style="margin-top:10px;border-left-color:var(--warn);background:rgba(245,158,11,0.05);">
+        <p>"One of the most important properties of a junior developer is that you can turn them into a senior developer."</p>
+        <div class="attribution">— Martin Fowler</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">The illusion of progress was about wasted effort. This is about what stays — and what it costs you later. GitClear analyzed 211 million lines of code. Copy/paste up 50%. Refactoring dropped from 25% to under 10%. Duplication up 8x. That's not velocity — that's borrowing against future maintenance. CodeRabbit looked at 470 AI co-authored PRs: 1.7x more issues, nearly 3x the security vulnerabilities, 8x the performance regressions. And here's what concerns me most. Anthropic's skill study: developers who passively delegate to AI score below 40% on comprehension of their own code. Active engagement gets you above 65%. A 25-point gap. That's Fowler's worry — if juniors skip the skill-building, the pipeline to senior breaks. But we're not here to dwell on what doesn't work. We already know that. The harder question is whether we can make any of this work. I'm not going to claim I've cracked it. But there are patterns that are helping me and other practitioners ship better software with these tools. Let's talk about what actually works.</aside>
+</section>
+
+<!-- ══ ACT II SEPARATOR ════════════════════════════════════ -->
+<section data-background-image="images/patterns-bg.png" data-background-size="cover" data-background-position="center">
+  <div class="act-title">
+    <div style="font-size:0.68em;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">Act II</div>
+    <h1 class="gradient-text" style="font-size:3.6em;text-align:center;margin:0.1em 0;">The Patterns</h1>
+    <p style="color:var(--muted);max-width:500px;text-align:center;margin:0.6rem auto 0;">Six practices from production teams that actually help you ship better software faster</p>
+    <div style="display:flex;gap:9px;justify-content:center;margin-top:1.4rem;flex-wrap:wrap;">
+      <span class="pill pill-accent">TDD</span><span class="pill pill-accent">Types as Guardrails</span><span class="pill pill-accent">Decompose</span><span class="pill pill-accent">Context Engineering</span><span class="pill pill-accent">Scope Control</span><span class="pill pill-accent">AI Paperwork</span>
+    </div>
+  </div>
+  <aside class="notes">Six patterns. They fall into two groups: the first two — TDD and Types — give the AI a machine-verifiable definition of success. The next four are about how you work with it: task size, context, scope control, and documentation. All of them are things you can start doing this week without changing your tools or process. But first — a mental model that makes all six click.</aside>
+</section>
+
+<!-- ══ AGENT LOOP MENTAL MODEL ════════════════════════════════ -->
+<section>
+  <h3>The Patterns · Mental Model</h3>
+  <h2>How Agents Actually Think</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.6rem;">Every agent — Claude Code, Cursor, Copilot Workspace — runs this loop:</p>
+
+  <div style="display:flex;align-items:center;gap:24px;margin-top:0.3rem;">
+    <div style="flex:1;">
+      <div class="stagger" style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;">
+          <span style="font-size:1.4em;">🎯</span>
+          <div><strong style="color:#fff;font-size:0.85em;">Plan</strong><br><span style="font-size:0.7em;color:var(--muted);">LLM reasons about what to do next</span></div>
+        </div>
+        <div style="text-align:center;color:var(--dim);font-size:0.8em;">↓</div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.3);border-radius:8px;">
+          <span style="font-size:1.4em;">🔧</span>
+          <div><strong style="color:#fff;font-size:0.85em;">Tool Use</strong><br><span style="font-size:0.7em;color:var(--muted);">Read files, edit code, run commands, call MCP</span></div>
+        </div>
+        <div style="text-align:center;color:var(--dim);font-size:0.8em;">↓</div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;">
+          <span style="font-size:1.4em;">👁️</span>
+          <div><strong style="color:#fff;font-size:0.85em;">Observe</strong><br><span style="font-size:0.7em;color:var(--muted);">See results, errors, test output, state changes</span></div>
+        </div>
+        <div style="text-align:center;color:var(--dim);font-size:0.8em;">↓</div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:8px;">
+          <span style="font-size:1.4em;">🔄</span>
+          <div><strong style="color:#fff;font-size:0.85em;">Reflect & Repeat</strong><br><span style="font-size:0.7em;color:var(--muted);">Adjust approach, loop until done or stuck</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="fragment" style="flex:1;">
+      <div class="stagger" style="display:flex;flex-direction:column;gap:0;">
+        <div class="card card-accent" style="padding:14px 18px;margin-bottom:10px;">
+          <h4 style="font-size:0.8em;">Why this matters</h4>
+          <p style="font-size:0.7em;">Agents are <strong style="color:#fff;">iterative systems</strong>, not one-shot generators. Failures happen in intermediate steps, not just final output.</p>
+        </div>
+        <div class="card card-warn" style="padding:14px 18px;margin-bottom:10px;">
+          <h4 style="font-size:0.8em;">Your leverage points</h4>
+          <p style="font-size:0.7em;">Every pattern in this act targets a specific part of this loop:<br>
+          <span style="color:var(--accent2);">Plan</span> → Decompose, Spec-first<br>
+          <span style="color:var(--accent);">Tool Use</span> → Context Engineering, Scope Control<br>
+          <span style="color:var(--warn);">Observe</span> → TDD, Types as Guardrails<br>
+          <span style="color:#a855f7;">Reflect</span> → AI Paperwork</p>
+        </div>
+        <div class="card card-danger" style="padding:14px 18px;">
+          <h4 style="font-size:0.8em;">The key insight</h4>
+          <p style="font-size:0.7em;">You don't control outputs — you <strong style="color:#fff;">control constraints</strong>. Tests, types, context, task size. The agent does the rest.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Before we dive into the six patterns, here's the mental model that makes all of them click. Every agent — Claude Code, Cursor, Copilot — runs this loop: plan, use tools, observe results, reflect and repeat. We've always assumed this, but when Anthropic accidentally published the Claude Code system prompt earlier this year, it confirmed it — this is literally the loop in the code. It's an iterative system, not a one-shot code generator. This matters because your instinct is to focus on the output — the code it writes. But you don't control the output. What you control are the constraints it works within. The tests it has to pass. The types it has to satisfy. The context it can see. The size of the task. Make the space of acceptable code small enough, and the agent will find something correct inside it. Make it too large, and it will confidently produce something that looks right but isn't. Every pattern in this act is a different way of tightening that space. Each of the six patterns targets a specific part of this loop. Understanding the loop is what turns best practices into engineering judgment.</aside>
+</section>
+
+<!-- ══ PATTERN 1: TDD WARNING SIGNS (THE HOOK) ═════════════ -->
+<section>
+  <h3>Pattern 1 of 6 · TDD</h3>
+  <h2 style="margin-bottom:0.5em;">🐛 Sound familiar?</h2>
+
+  <div class="mon-grid stagger-split" style="gap:18px;">
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent2);font-size:0.9em;width:42px;height:42px;line-height:42px;">🪞</div><div class="mon-text" style="font-size:0.85em;"><strong>The Green Mirage</strong><br>AI code compiles, looks right, but silently does the wrong thing</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.9em;width:42px;height:42px;line-height:42px;">🚂</div><div class="mon-text" style="font-size:0.85em;"><strong>The Regression Train</strong><br>Every new feature breaks something that worked yesterday</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.9em;width:42px;height:42px;line-height:42px;">🔍</div><div class="mon-text" style="font-size:0.85em;"><strong>The Manual Tester</strong><br>You spend more time verifying AI code than it took to generate it</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#a855f7;font-size:0.9em;width:42px;height:42px;line-height:42px;">💥</div><div class="mon-text" style="font-size:0.85em;"><strong>The Integration Surprise</strong><br>Unit tests pass, but the system falls apart when pieces connect</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#06b6d4;font-size:0.9em;width:42px;height:42px;line-height:42px;">😰</div><div class="mon-text" style="font-size:0.85em;"><strong>The Confidence Gap</strong><br>Afraid to refactor because you don't know what might break</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#ec4899;font-size:0.9em;width:42px;height:42px;line-height:42px;">📋</div><div class="mon-text" style="font-size:0.85em;"><strong>Copy-Paste Blindness</strong><br>Accepting AI output without verifying it does what was asked</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">These are all symptoms of the same root cause: <strong>there isn't a strong enough specification for the AI to code against.</strong></p>
+  </div>
+  <aside class="notes">So let's start tightening that space. For those of you using AI coding tools — hands up if you haven't seen any of these in the last month. [pause] Nobody? Good. If someone had raised their hand, I was going to ask you to come give this talk instead, because clearly you know something I don't. The Green Mirage — code that compiles, looks right, silently does the wrong thing. The Regression Train — every fix breaks something else. Copy-Paste Blindness — you've stopped reading what the AI gives you. We've all been there. These feel like AI problems. But look at the common thread. [click] They're all symptoms of the same root cause: there isn't a strong enough specification for the AI to code against. No machine-verifiable definition of what "correct" means. That's what the first pattern solves.</aside>
+</section>
+
+<!-- ══ PATTERN 1: TDD REFRAME ═══════════════════════════════ -->
+<section>
+  <h3>Pattern 1 of 6 · TDD · Your Behavioral Spec</h3>
+  <h2>A Protocol, Not a Testing Technique</h2>
+
+  <div class="compare fill" style="margin-top:0.6rem;">
+    <div class="compare-bad">
+      <h4>❌ Test After</h4>
+      <p class="small muted">Write code, then ask AI to test it. The AI writes tests that confirm your code does what it already does.</p>
+      <div class="quote-block fragment" style="margin-top:14px;border-left-color:var(--danger);background:rgba(239,68,68,0.05);padding:12px 18px;">
+        <p style="font-size:0.75em;">"AI coding assistants will look at your implementation and write tests that confirm your code does what it already does. This is the equivalent of a student writing their own exam after seeing the answers."</p>
+        <div class="attribution" style="font-size:0.55em;margin-top:4px;">— Ben Houston · 50%+ of AI-generated tests mirror implementation</div>
+      </div>
+    </div>
+    <div class="compare-good">
+      <h4>✅ Test First</h4>
+      <p class="small muted">Write test scenarios first. AI implements until they pass. Your domain judgment defines correctness; AI does the labor.</p>
+      <div class="quote-block fragment" style="margin-top:14px;padding:12px 18px;">
+        <p style="font-size:0.75em;">"TDD is not a testing technique in this context — it's a protocol for working with AI. Tests provide a machine-verifiable definition of success."</p>
+        <div class="attribution" style="font-size:0.55em;margin-top:4px;">— "The strongest form of prompt engineering" · ThoughtWorks</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p>Tests aren't documentation. They're the <strong>communication channel</strong> between you and the AI about what correct means.</p>
+    <p style="font-size:1.1em;margin-top:10px;text-align:center;"><strong style="color:var(--accent);">"Do NOT modify test files."</strong> <span class="muted" style="font-size:0.7em;">— the one rule that makes all of this work</span></p>
+  </div>
+  <aside class="notes">Everyone in this room knows TDD is good practice. That's not the point. The point is that with AI, TDD changes roles. It stops being a quality technique and becomes the primary way you communicate intent to a machine. Without it, the AI guesses what correct means. With it, the AI has a verifiable target. [click] And if you write tests after — Test Theater. Ben Houston found over half of AI-generated tests just mirror the implementation. A student writing their own exam after seeing the answers. [click] Tests aren't documentation. They're the communication channel. And the one rule that makes it work: Do NOT modify test files.</aside>
+</section>
+
+<!-- ══ PATTERN 1: TDD PROTOCOL ═════════════════════════════ -->
+<section>
+  <h3>Pattern 1 of 6 · TDD · The Protocol</h3>
+  <h2>TDD in the AI Age</h2>
+
+  <div class="two-col fill">
+    <div>
+      <div class="flow stagger-x">
+        <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><strong>YOU describe one concept</strong><br><em>Natural language, outside-in — from the user's perspective</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><strong>Refine with AI</strong><br><em>"What corner cases am I missing?" — use your judgment on which matter</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><strong>AI formalizes + implements</strong><br><em>Scenarios → executable tests → code. "Do NOT modify test files."</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><strong>Run, review, refactor, commit</strong><br><em>Safety net in place. Be bold. Repeat.</em></div></div>
+      </div>
+      <div class="hi-box" style="margin-top:10px;"><p><strong>One concept at a time.</strong> Each concept may yield more than one test — but never more than a handful. You stay at the intent level; AI handles the formalization.</p></div>
+    </div>
+    <div class="stagger">
+      <div class="card card-warn" style="padding:16px 20px;">
+        <h4 style="font-size:0.8em;">Kent Beck's 3 Warning Signs</h4>
+        <p style="font-size:0.65em;"><strong style="color:#fff;">Loops:</strong> AI repeatedly tries the same failing approach<br><strong style="color:#fff;">Unrequested functionality:</strong> adds features you didn't ask for<br><strong style="color:#fff;">Cheating:</strong> modifies or deletes tests to make them "pass"<br><em>When any appear, stop and redirect immediately.</em></p>
+      </div>
+      <div class="card card-accent" style="margin-top:8px;padding:16px 20px;">
+        <h4 style="font-size:0.8em;">When AI Struggles: The Fallback</h4>
+        <p style="font-size:0.65em;">Delete the method body. Write step-by-step comments describing the algorithm. Let AI regenerate from your skeleton. <strong style="color:#fff;">Your structure, its code.</strong></p>
+      </div>
+      <div class="quote-block" style="margin-top:8px;padding:12px 18px;">
+        <p style="font-size:0.75em;">"Higher quality inputs allow for the capability of LLMs to be better leveraged. TDD maintains a high level of code quality. This high quality input leads to better Copilot performance than is otherwise possible."</p>
+        <div class="attribution" style="font-size:0.6em;margin-top:4px;">— Paul Sobocinski, martinfowler.com</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Here's how the protocol works. Step 1: you describe what the system should do from the user's perspective, in natural language. Not test code — intent, inputs, expected outcomes. That's the step that requires YOUR domain judgment. Step 2: AI as thinking partner — "what corner cases am I missing?" Use your judgment on which matter. Step 3: AI formalizes your scenarios into executable tests and writes the code to pass them. Step 4: run, review, refactor, commit. The three warning signs on the right are your early-warning system — Beck caught the AI deleting tests in his own B+ Tree project. When any appear, stop and redirect. The fallback comes from Fowler's team — when AI struggles, delete the method body, write step-by-step comments, let it regenerate from your skeleton. Your structure, its code. And the Sobocinski quote at the bottom captures it: TDD doesn't just constrain the AI, it gives it better inputs. Higher quality in, higher quality out.</aside>
+</section>
+
+<!-- ══ PATTERN 1 DEEP DIVE: DEFENSE IN DEPTH ═══════════════ -->
+<section>
+  <h3>Pattern 1 of 6 · TDD · Deep Dive</h3>
+  <h2>Defense in Depth for AI Code</h2>
+
+  <div class="mon-grid">
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent);">1</div><div class="mon-text"><strong>Unit Tests</strong><br>Does it behave correctly? — coverage floor enforced</div></div>
+    <div class="mon-item fragment" data-fragment-index="0"><div class="mon-num" style="background:var(--danger);">2</div><div class="mon-text"><strong>Static Analysis &amp; Security</strong><br>Does it introduce vulnerabilities or code smells? — compile-time checks + dependency analysis</div></div>
+    <div class="mon-item fragment" data-fragment-index="0"><div class="mon-num" style="background:var(--accent2);">3</div><div class="mon-text"><strong>Integration Tests</strong><br>Does it work with real infrastructure? — no mocks hiding broken queries</div></div>
+    <div class="mon-item fragment" data-fragment-index="0"><div class="mon-num" style="background:#a855f7;">4</div><div class="mon-text"><strong>Module &amp; Architecture Tests</strong><br>Does it respect boundaries and structural rules? — dependency direction, layers, no casual cross-module imports</div></div>
+    <div class="mon-item fragment" data-fragment-index="0"><div class="mon-num" style="background:var(--warn);">5</div><div class="mon-text"><strong>Contract &amp; API Documentation Tests</strong><br>Does the API match what consumers expect? — contract drift caught at build time</div></div>
+    <div class="mon-item fragment" data-fragment-index="0"><div class="mon-num" style="background:#06b6d4;">6</div><div class="mon-text"><strong>E2E / BDD Tests</strong><br>Does the user journey work end-to-end? — acceptance criteria in plain language</div></div>
+  </div>
+
+  <div class="fragment" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+    <div class="mon-item" style="background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.25); border-radius:12px; padding:14px 20px;">
+      <div class="mon-num" style="background:#f97316;">7</div>
+      <div class="mon-text"><strong>Code Coverage</strong><br>Do we have enough tests? — enforces the quantity of testing</div>
+    </div>
+    <div class="mon-item" style="background:rgba(236,72,153,0.08); border:1px solid rgba(236,72,153,0.25); border-radius:12px; padding:14px 20px;">
+      <div class="mon-num" style="background:#ec4899;">8</div>
+      <div class="mon-text"><strong>Mutation Tests</strong><br>Are the tests actually testing anything? — enforces the quality of testing</div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p>The AI writes the code. <strong>You define what correct means.</strong> These layers are how you make that definition stick.</p>
+  </div>
+
+  <aside class="notes">Unit tests — layer 1. Necessary but nowhere near sufficient. AI-generated code has a specific failure mode: it compiles, passes unit tests, and systematically drifts in ways unit tests alone will never catch. Architecture violations, contract mismatches, security vulnerabilities — all invisible to unit tests. [click] Five more verification layers — each catching a different class of failure. Static analysis. Integration tests against real infrastructure. Architecture tests that enforce boundaries. Contract tests — we'll come back to these in Pattern 2. End-to-end with BDD. [click] Two meta-checks. Code coverage enforces quantity — do we have enough? Mutation testing enforces quality — are the tests actually catching bugs? PIT mutation testing caught gaps that 90% line coverage missed entirely. [click] YOU define what correct means. The AI generates code. These eight layers verify it. This isn't exhaustive — it's a starting point, not a ceiling.</aside>
+</section>
+
+<!-- ══ PATTERN 2: TYPES WARNING SIGNS (THE HOOK) ═══════════ -->
+<section>
+  <h3>Pattern 2 of 6 · Types as Guardrails</h3>
+  <h2 style="margin-bottom:0.5em;">🧩 Sound familiar?</h2>
+
+  <div class="mon-grid fragment" style="gap:18px;" data-fragment-index="0">
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:var(--accent2);font-size:0.9em;width:42px;height:42px;line-height:42px;">🔀</div><div class="mon-text" style="font-size:0.85em;"><strong>The Shape Shifter</strong><br>AI returns data in a different structure than your API contract specifies</div></div>
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:var(--danger);font-size:0.9em;width:42px;height:42px;line-height:42px;">🕳️</div><div class="mon-text" style="font-size:0.85em;"><strong>The Any Escape</strong><br>AI uses <code>any</code>, <code>Object</code>, or <code>Map&lt;String,Object&gt;</code> to sidestep type safety</div></div>
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:var(--warn);font-size:0.9em;width:42px;height:42px;line-height:42px;">🏷️</div><div class="mon-text" style="font-size:0.85em;"><strong>The Silent Rename</strong><br>AI renames fields or methods to "improve" naming, breaking callers silently</div></div>
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:#a855f7;font-size:0.9em;width:42px;height:42px;line-height:42px;">📝</div><div class="mon-text" style="font-size:0.85em;"><strong>The Contract Breaker</strong><br>AI modifies your interfaces to make its implementation easier</div></div>
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:#06b6d4;font-size:0.9em;width:42px;height:42px;line-height:42px;">🧵</div><div class="mon-text" style="font-size:0.85em;"><strong>The Stringly Typed</strong><br>Strings where there should be enums, constants, or typed values</div></div>
+    <div class="mon-item" data-fragment-index="0"><div class="mon-num" style="background:#ec4899;font-size:0.9em;width:42px;height:42px;line-height:42px;">❓</div><div class="mon-text" style="font-size:0.85em;"><strong>The Optional Avalanche</strong><br>AI makes everything nullable to avoid compilation errors</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">These are all symptoms of the same root cause: <strong>there's no structural contract for the AI to code against.</strong></p>
+  </div>
+  <aside class="notes">Pattern 1 was about behavioral correctness — tests define what the code should do. But there's a second kind of specification the AI needs: structural. What shape should the data have? What contracts must be honored? What types are acceptable? [click] Same question — how many of these have you seen? The Shape Shifter — AI returns data in a completely different structure than your API contract. The Any Escape — I once reviewed a PR where the AI had typed everything as Object. Every. Single. Field. It was like watching someone solve a jigsaw puzzle by sanding off all the edges. The Silent Rename — it renames your fields to "improve" naming, breaking every caller. These aren't edge cases. They happen every day. [click] Same root cause as Pattern 1 — but from the other side. No structural contract for the AI to code against. Pattern 1 gave you the behavioral spec. Pattern 2 gives you the structural spec. Together they form a double safety net.</aside>
+</section>
+
+<!-- ══ PATTERN 2: TYPES AS GUARDRAILS (THE REVEAL) ═══════ -->
+<section>
+  <h3>Pattern 2 of 6 · Types as Guardrails · Your Structural Spec</h3>
+  <h2>Types &amp; Schemas as Guardrails</h2>
+
+  <div class="compare" style="margin-top:0.6rem;">
+    <div class="compare-bad" style="text-align:center;padding:24px;">
+      <h4>❌ Old economics</h4>
+      <p style="font-size:1.4em;font-weight:900;color:var(--danger);margin:12px 0 6px;">Ceremony = high cost</p>
+      <p style="font-size:0.7em;color:var(--muted);margin:0;">Every interface, annotation, and schema was time not shipping features</p>
+    </div>
+    <div class="compare-good" style="text-align:center;padding:24px;">
+      <h4>✅ New economics</h4>
+      <p style="font-size:1.4em;font-weight:900;color:var(--accent);margin:12px 0 6px;">Ceremony = near free</p>
+      <p style="font-size:0.7em;color:var(--muted);margin:0;">AI writes the boilerplate. Compiler enforces it. Errors eliminated at compile time.</p>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:20px;">
+    <p style="font-size:1em;"><strong>The principle:</strong> The more you can make correctness checkable by machines, the less you depend on human review catching errors.</p>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:1.1em;text-align:center;margin:0;"><strong style="color:var(--accent);">"Do NOT modify test files."</strong> <span class="muted" style="font-size:0.6em;">Pattern 1</span> &nbsp;·&nbsp; <strong style="color:var(--accent);">"Do NOT modify any interfaces."</strong> <span class="muted" style="font-size:0.6em;">Pattern 2</span></p>
+    <p style="font-size:0.7em;color:var(--muted);margin:8px 0 0;text-align:center;">Same discipline. Behavioral spec + structural spec = double safety net.</p>
+  </div>
+  <aside class="notes">For years, we chose dynamically-typed languages partly to reduce ceremony. But the economics have flipped. When AI writes the code, ceremony costs you nothing — AI generates the interfaces, the annotations, the boilerplate. What you get in return is errors caught at compile time rather than in production. If you have the choice — prefer stronger types. Not because Java is better than Python. But because a compiler-enforced contract is a constraint the AI cannot violate, while a convention is a suggestion it can ignore. [click] Within your language, push toward the strongest guarantees available. For API boundaries, use contract testing — remember layer 5 from defense in depth? This is where those tests come from. [click] Combined with TDD, you now have the double safety net. Behavioral tests define what the code should do. Structural contracts define what it should look like. And just like with tests — "Do NOT modify any interfaces."</aside>
+</section>
+
+<!-- ══ PATTERN 3: WARNING SIGNS (THE HOOK) ═════════════════ -->
+<section>
+  <h3>Pattern 3 of 6 · Decompose</h3>
+  <h2 style="margin-bottom:0.5em;">💣 Sound familiar?</h2>
+
+  <div class="mon-grid stagger-split" style="gap:14px;">
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.8em;width:36px;height:36px;line-height:36px;">⬆️</div><div class="mon-text"><strong>The Snowball</strong><br>Diffs keep growing each iteration — complexity is compounding, not converging</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.8em;width:36px;height:36px;line-height:36px;">🧭</div><div class="mon-text"><strong>The Wanderer</strong><br>AI touches files you didn't mention — boundaries are unclear</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent2);font-size:0.8em;width:36px;height:36px;line-height:36px;">🎠</div><div class="mon-text"><strong>The Carousel</strong><br>Fix A breaks B, fix B breaks A — too many interacting concerns</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#a855f7;font-size:0.8em;width:36px;height:36px;line-height:36px;">🌫️</div><div class="mon-text"><strong>The Fog</strong><br>You've lost track of what's changed — if you can't, the AI can't either</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#06b6d4;font-size:0.8em;width:36px;height:36px;line-height:36px;">🐟</div><div class="mon-text"><strong>The Goldfish</strong><br>AI asks the same question twice — context window is overloaded</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent);font-size:0.8em;width:36px;height:36px;line-height:36px;">🔨</div><div class="mon-text"><strong>Whack-a-Mole</strong><br>Every fix creates a new bug — the task is too interconnected to hold at once</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.8em;width:36px;height:36px;line-height:36px;">📦</div><div class="mon-text"><strong>The Packrat</strong><br>AI keeps adding dependencies — it's reaching for shortcuts instead of solutions</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.8em;width:36px;height:36px;line-height:36px;">🚿</div><div class="mon-text"><strong>The Firehose</strong><br>Walls of code instead of focused changes — scope has ballooned</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#ec4899;font-size:0.8em;width:36px;height:36px;line-height:36px;">✅</div><div class="mon-text"><strong>Rubber Stamping</strong><br>You're approving changes you haven't fully read — you've become a passenger</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#f97316;font-size:0.8em;width:36px;height:36px;line-height:36px;">💾</div><div class="mon-text"><strong>No Save Point</strong><br>30+ minutes without a commit — no safe place to roll back to</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.65em;">These are all symptoms of the same root cause: <strong>the task is too big for the AI to hold in context.</strong></p>
+  </div>
+  <aside class="notes">Patterns 1 and 2 gave you the specs — behavioral and structural. But even with perfect specs, things can still go sideways. How many of these have you seen? The Snowball — diffs growing with every iteration. The Carousel — fix A breaks B, fix B breaks A. The Goldfish — the AI asks the same question twice because it's lost track. To be fair, I also do this in meetings, so I can't judge too harshly. Rubber Stamping — you're approving changes you haven't fully read. You've stopped being the driver. [pause] Notice anything these all have in common? [click]</aside>
+</section>
+
+<!-- ══ PATTERN 3: DECOMPOSE RUTHLESSLY (THE REVEAL) ═══════ -->
+<section>
+  <h3>Pattern 3 of 6 · Decompose</h3>
+  <h2>Decompose Ruthlessly</h2>
+
+  <div class="quote-block" style="padding:12px 18px;margin-bottom:12px;border-left-color:var(--warn);background:rgba(245,158,11,0.05);">
+    <p style="font-size:0.75em;margin:0;">"AI agents have a limited context window. The more you can focus them, the better they perform. Decomposition is the single most important skill."</p>
+    <div class="attribution" style="font-size:0.55em;margin-top:4px;">— Addy Osmani, Chrome Engineering Lead · <em>Beyond Vibe Coding</em>, O'Reilly 2025</div>
+  </div>
+
+  <div class="mon-grid stagger-split" style="gap:28px;">
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:var(--accent);width:52px;height:52px;line-height:52px;font-size:1em;">1</div><div class="mon-text" style="font-size:1.05em;"><strong>Spec–Plan–Execute</strong><br>Spec → plan → one step at a time</div></div>
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:var(--accent2);width:52px;height:52px;line-height:52px;font-size:1em;">2</div><div class="mon-text" style="font-size:1.05em;"><strong>Vertical Slicing</strong><br>End-to-end slices, not layers</div></div>
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:#a855f7;width:52px;height:52px;line-height:52px;font-size:1em;">3</div><div class="mon-text" style="font-size:1.05em;"><strong>Interface-First</strong><br>Define contract, then implement</div></div>
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:var(--warn);width:52px;height:52px;line-height:52px;font-size:1em;">4</div><div class="mon-text" style="font-size:1.05em;"><strong>One Concern at a Time</strong><br>One logical change per prompt</div></div>
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:#06b6d4;width:52px;height:52px;line-height:52px;font-size:1em;">5</div><div class="mon-text" style="font-size:1.05em;"><strong>Commit-Sized Units</strong><br>Two commit messages? Split it</div></div>
+    <div class="mon-item" style="gap:16px;"><div class="mon-num" style="background:var(--danger);width:52px;height:52px;line-height:52px;font-size:1em;">6</div><div class="mon-text" style="font-size:1.05em;"><strong>Fresh Context per Task</strong><br>Resume from plan, not history</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.75em;">Structured decomposition yields <strong class="accent">58% faster</strong> completion on complex tasks.</p>
+  </div>
+  <aside class="notes">The task is too big — that's what the previous slide told us. Osmani explains it simply: AI agents have a limited context window. The more you focus them, the better they perform. Six ways to decompose. Spec–Plan–Execute is the highest-leverage — spec first, plan the steps, execute one at a time. Vertical Slicing — end-to-end slices, not layers. Interface-First — Pattern 2 applied to decomposition. One Concern at a Time — if you're asking the AI to do two things, you're asking for trouble. Commit-Sized Units — if you need two commit messages, it was too big. Fresh Context per Task — resume from the plan, not from a polluted conversation. [click] The payoff: structured decomposition yields 58% faster completion on complex tasks. Not because the AI is smarter — because it can hold the whole problem in context.</aside>
+</section>
+
+<!-- ══ PATTERN 3 DEEP DIVE: DECOMPOSITION IN PRACTICE ═══ -->
+<section>
+  <h3>Pattern 3 of 6 · Decompose · Deep Dive</h3>
+  <h2>Decomposition in Practice</h2>
+
+  <div class="two-col">
+    <div>
+      <p class="small bold accent" style="margin-bottom:10px;">Greenfield: Create Context Documents</p>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent);">1</div><div class="flow-content"><strong><code>requirements.md</code></strong><br><em>Functionality → bounded contexts</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent2);">2</div><div class="flow-content"><strong><code>architecture.md</code></strong><br><em>Modules, boundaries, data flow</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:#a855f7;">3</div><div class="flow-content"><strong><code>technologies.md</code></strong><br><em>Stack, frameworks, constraints</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--warn);">4</div><div class="flow-content"><strong><code>quality.md</code></strong><br><em>Testing strategy, coding standards</em></div></div>
+      </div>
+    </div>
+    <div class="fragment">
+      <p class="small bold gold" style="margin-bottom:10px;">Brownfield: Ask First, Then Change</p>
+      <div>
+        <div class="card card-warn" style="padding:12px 16px;">
+          <p style="font-size:0.6em;">The same four concerns exist — but choices have already been made. <strong style="color:#fff;">Ask questions to clarify</strong> requirements, architecture, technologies, and quality gates before touching code.</p>
+        </div>
+        <div class="card card-danger" style="margin-top:8px;padding:12px 16px;">
+          <h4 style="font-size:0.75em;">Dependency Guardrail</h4>
+          <p style="font-size:0.6em;"><strong style="color:#fff;">Dependencies require double confirmation.</strong> No new library without explicit approval. AI agents love adding packages.</p>
+        </div>
+        <div class="card card-accent" style="margin-top:8px;padding:12px 16px;">
+          <h4 style="font-size:0.75em;">Wire It All Up</h4>
+          <p style="font-size:0.6em;">Link all context documents from <code>CLAUDE.md</code> or <code>AGENTS.md</code> — always in the agent's context. No copy-pasting into prompts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.65em;">Decomposition isn't just task sizing — it's <strong>giving the AI the right context at every level</strong>, from requirements down to quality gates.</p>
+    <p style="font-size:1.1em;margin-top:10px;text-align:center;"><strong style="color:var(--accent);">"If you can't describe it in one paragraph, split it."</strong></p>
+  </div>
+  <aside class="notes">Where does all that decomposed knowledge live? On greenfield, I created these four documents before writing a line of code — requirements, architecture, technologies, quality. What, how, with what, and to what standard. [click] On brownfield, the same four concerns exist but choices have already been made. Ask questions first. And the dependency guardrail is critical — AI agents will casually add libraries. Require explicit approval. Wire it all up in CLAUDE.md so every session starts with full context. [click] Decomposition isn't just task sizing — it's giving the AI the right context at every level.</aside>
+</section>
+
+<!-- ══ PATTERN 4: CONTEXT ENGINEERING WARNING SIGNS (THE HOOK) ═ -->
+<section>
+  <h3>Pattern 4 of 6 · Context Engineering</h3>
+  <h2 style="margin-bottom:0.5em;">🧠 Sound familiar?</h2>
+
+  <div class="mon-grid stagger-split" style="gap:14px;">
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent2);font-size:0.9em;width:42px;height:42px;line-height:42px;">👻</div><div class="mon-text" style="font-size:0.85em;"><strong>The Hallucinator</strong><br>AI invents APIs, methods, or classes that don't exist in your codebase</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.9em;width:42px;height:42px;line-height:42px;">🧳</div><div class="mon-text" style="font-size:0.85em;"><strong>The Tourist</strong><br>Code works but doesn't match the project's conventions or style</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent);font-size:0.9em;width:42px;height:42px;line-height:42px;">🔄</div><div class="mon-text" style="font-size:0.85em;"><strong>The Reinventor</strong><br>AI creates utilities that already exist because it can't see them</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#a855f7;font-size:0.9em;width:42px;height:42px;line-height:42px;">⏳</div><div class="mon-text" style="font-size:0.85em;"><strong>The Time Traveler</strong><br>AI uses deprecated patterns or outdated APIs from stale context</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.9em;width:42px;height:42px;line-height:42px;">🍳</div><div class="mon-text" style="font-size:0.85em;"><strong>The Kitchen Sink</strong><br>Everything dumped into the prompt — AI can't find the signal in the noise</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#ec4899;font-size:0.9em;width:42px;height:42px;line-height:42px;">🩸</div><div class="mon-text" style="font-size:0.85em;"><strong>The Bleed</strong><br>Context from a previous task contaminates the current one</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#06b6d4;font-size:0.9em;width:42px;height:42px;line-height:42px;">🔁</div><div class="mon-text" style="font-size:0.85em;"><strong>The Déjà Vu</strong><br>AI keeps re-explaining or re-doing work it already completed</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#f97316;font-size:0.9em;width:42px;height:42px;line-height:42px;">🚪</div><div class="mon-text" style="font-size:0.85em;"><strong>The Wrong Room</strong><br>AI uses patterns from a different framework or language</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.7em;">These are all symptoms of the same root cause: <strong>the AI doesn't have the right context — or has too much of the wrong context.</strong></p>
+  </div>
+  <aside class="notes">Eight signs, two groups. Top four — missing context: the AI guesses. Bottom four — polluted context: too much of the wrong things. Same outcome either way: the AI confidently produces the wrong thing. [click] The remedy is deliberate curation — which has a name.</aside>
+</section>
+
+<!-- ══ PATTERN 4: CONTEXT ENGINEERING (THE REVEAL) ════════ -->
+<section>
+  <h3>Pattern 4 of 6 · Context Engineering</h3>
+  <h2>Context Engineering</h2>
+  <div class="quote-block" style="padding:12px 18px;margin-bottom:12px;border-left-color:var(--warn);background:rgba(245,158,11,0.05);">
+    <p style="font-size:0.75em;margin:0;">"Most of the craft of getting good results from an LLM comes down to managing its context."</p>
+    <div class="attribution" style="font-size:0.55em;margin-top:4px;">— Simon Willison, co-creator of Django</div>
+  </div>
+
+  <div class="two-col">
+    <div class="fragment" data-fragment-index="0">
+      <p class="small bold danger" style="margin-bottom:8px;">Context Degrades</p>
+      <div class="stagger">
+        <div class="card card-danger" style="padding:10px 14px;margin-bottom:6px;">
+          <h4 style="font-size:0.72em;">The 65% Cliff</h4>
+          <p style="font-size:0.62em;">A model claiming 200K tokens becomes <strong style="color:#fff;">unreliable at ~130K</strong> (Chroma research). Performance drops suddenly, not gradually.</p>
+        </div>
+        <div class="card card-warn" style="padding:10px 14px;margin-bottom:6px;">
+          <h4 style="font-size:0.72em;">Dead Context</h4>
+          <p style="font-size:0.62em;"><strong style="color:#fff;">40% of a 200K window</strong> consumed by MCP server metadata before sending a single message. — Ryan Spletzer</p>
+        </div>
+        <div class="card card-blue" style="padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Drew Breunig's 4 Failure Modes</h4>
+          <p style="font-size:0.62em;"><span class="pill pill-danger">Poisoning</span> <span class="pill pill-warn">Distraction</span> <span class="pill pill-blue">Confusion</span> <span class="pill pill-muted">Clash</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="fragment" data-fragment-index="1">
+      <p class="small bold accent" style="margin-bottom:8px;">Curate Ruthlessly</p>
+      <div class="stagger" style="font-size:0.85em;line-height:1.7;">
+        <div class="mon-item" style="margin-bottom:10px;"><div class="mon-num" style="background:var(--accent);width:36px;height:36px;line-height:36px;font-size:0.9em;">✅</div><div class="mon-text"><strong>Include</strong><br>Exact identifiers, task-relevant files, architecture constraints, CLAUDE.md</div></div>
+        <div class="mon-item" style="margin-bottom:10px;"><div class="mon-num" style="background:var(--danger);width:36px;height:36px;line-height:36px;font-size:0.9em;">❌</div><div class="mon-text"><strong>Exclude</strong><br>The entire repo, unrelated tasks, irrelevant MCP servers, "just in case" files</div></div>
+        <div class="mon-item" style="margin-bottom:10px;"><div class="mon-num" style="background:var(--warn);width:36px;height:36px;line-height:36px;font-size:0.9em;">🔄</div><div class="mon-text"><strong>Session hygiene</strong><br>Fresh session per task · <code>/compact</code> at ~50% · sub-agents for exploration</div></div>
+      </div>
+      <div class="card card-accent" style="margin-top:8px;padding:14px 18px;">
+        <h4 style="font-size:0.8em;">CLAUDE.md / AGENTS.md</h4>
+        <p style="font-size:0.7em;">Your highest-leverage config point. Under 200 lines. Tech stack, build commands, coding standards, "Do Not" rules.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.7em;">More context ≠ better results. A model <strong>failed with 46 tools</strong> in context but succeeded with only 19 — same window size.</p>
+  </div>
+  <aside class="notes">Simon Willison puts it simply: most of the craft comes down to managing context. [click] Context degrades — not gradually. The 65% Cliff: 200K tokens becomes unreliable at ~130K. Dead Context: 40% of a window consumed by MCP metadata before you send a message. [click] Curate ruthlessly. The slide has the include/exclude lists. Your CLAUDE.md is the highest-leverage file you'll create — under 200 lines, loaded every session. [click] I learned this the hard way. I once connected 12 MCP servers because "it might need them." It did not. It spent half the window figuring out what tools it had. Failed with 46 tools, succeeded with 19 — same model, same window.</aside>
+</section>
+
+<!-- ══ PATTERN 4 DEEP DIVE: CONTEXT ENGINEERING IN PRACTICE ═ -->
+<section>
+  <h3>Pattern 4 of 6 · Context Engineering · Deep Dive</h3>
+  <h2>Context Engineering in Practice</h2>
+
+  <div class="two-col">
+    <div>
+      <p class="small bold accent" style="margin-bottom:10px;">Structure Your Context</p>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent);">1</div><div class="flow-content"><strong>Project <code>CLAUDE.md</code></strong><br><em>Committed to git · team-shared · under 200 lines</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent2);">2</div><div class="flow-content"><strong>Child directory rules</strong><br><em>Path-scoped · loaded on demand · backend ≠ frontend</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:#a855f7;">3</div><div class="flow-content"><strong><code>CLAUDE.local.md</code></strong><br><em>Gitignored · personal preferences · editor quirks</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--warn);">4</div><div class="flow-content"><strong>Progressive disclosure</strong><br><em>Link to docs, don't inline · <code>agent_docs/</code> folder</em></div></div>
+      </div>
+    </div>
+    <div class="fragment">
+      <p class="small bold gold" style="margin-bottom:10px;">Manage Your Sessions</p>
+      <div>
+        <div class="card card-warn" style="padding:14px 18px;">
+          <h4 style="font-size:0.8em;">The 50% Rule</h4>
+          <p style="font-size:0.7em;">Run <code>/compact</code> at ~50% context usage. Don't wait for the cliff. <strong style="color:#fff;">Commit before compacting</strong> — your save point.</p>
+        </div>
+        <div class="card card-accent" style="margin-top:10px;padding:14px 18px;">
+          <h4 style="font-size:0.8em;">Fresh Context per Task</h4>
+          <p style="font-size:0.7em;">Use <code>/clear</code> when switching tasks. Never mix unrelated work in one conversation. <strong style="color:#fff;">One concern at a time.</strong></p>
+        </div>
+        <div class="card card-blue" style="margin-top:10px;padding:14px 18px;">
+          <h4 style="font-size:0.8em;">Sub-agents for Exploration</h4>
+          <p style="font-size:0.7em;">Delegate search and research to sub-agents. Keep the parent agent focused on the task. <strong style="color:#fff;">Don't pollute your main context.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.7em;">Context engineering isn't a one-time setup — it's an <strong>ongoing discipline</strong> throughout every session.</p>
+    <p style="font-size:1.1em;margin-top:10px;text-align:center;"><strong style="color:var(--accent);">"Include what's relevant. Exclude everything else."</strong></p>
+  </div>
+  <aside class="notes">Two sides: structure and discipline. On the left — context hierarchy. Project-level CLAUDE.md at the top — committed to git, shared by the team, under 200 lines. Child directory rules below — path-scoped, so backend rules only load when working on backend files. Personal preferences in CLAUDE.local.md — gitignored. And progressive disclosure: link to docs, don't inline. A 200-line CLAUDE.md that links works; a 500-line one that inlines everything doesn't. [click] On the right — session discipline. The 50% rule: compact at 50% context usage, not when you hit the cliff. Commit before you compact — that's your save point. Fresh context per task — never mix unrelated work. Sub-agents for exploration — they get their own context window and don't pollute yours. [click] This isn't set-and-forget. It's an ongoing discipline. You're either managing context or it's managing you.</aside>
+</section>
+
+<!-- ══ PATTERN 5: MINIMAL CHANGE WARNING SIGNS (THE HOOK) ═ -->
+<section>
+  <h3>Pattern 5 of 6 · Scope Control</h3>
+  <h2 style="margin-bottom:0.5em;">🎯 Sound familiar?</h2>
+
+  <div class="mon-grid stagger-split" style="gap:18px;">
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent2);font-size:0.9em;width:42px;height:42px;line-height:42px;">🎁</div><div class="mon-text" style="font-size:0.85em;"><strong>The Improver</strong><br>AI "fixes" three other things you didn't ask for while doing what you asked</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.9em;width:42px;height:42px;line-height:42px;">🎆</div><div class="mon-text" style="font-size:0.85em;"><strong>The Surprise PR</strong><br>Diff is 10x larger than expected — AI touched files it shouldn't have</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.9em;width:42px;height:42px;line-height:42px;">🧹</div><div class="mon-text" style="font-size:0.85em;"><strong>The Helpful Refactor</strong><br>AI restructures working code "for clarity" while implementing a feature</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#a855f7;font-size:0.9em;width:42px;height:42px;line-height:42px;">📦</div><div class="mon-text" style="font-size:0.85em;"><strong>The Dependency Creep</strong><br>AI adds a library to solve a problem that didn't need one</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#06b6d4;font-size:0.9em;width:42px;height:42px;line-height:42px;">🚀</div><div class="mon-text" style="font-size:0.85em;"><strong>The Architect Astronaut</strong><br>AI builds abstractions and patterns for a one-off change</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#ec4899;font-size:0.9em;width:42px;height:42px;line-height:42px;">🏗️</div><div class="mon-text" style="font-size:0.85em;"><strong>The Silent Restructure</strong><br>Code compiles and tests pass, but the system's architecture has shifted</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">These are all symptoms of the same root cause: <strong>the AI decided what to change instead of you.</strong></p>
+  </div>
+  <aside class="notes">Pattern 4 was about what the AI sees. This one is about what the AI does. Even with perfect context, the AI will do more than you asked. It's eager to help — too eager. The Improver — it "fixes" things you didn't ask for. The Surprise PR — I asked an AI to fix a typo in an error message. It fixed the typo, refactored the error handling, renamed three variables, and added structured logging. The diff was 200 lines. The typo was one character. The Silent Restructure is the scariest — code compiles, tests pass, but the system's architecture has quietly shifted. [click] Same root cause every time: the AI decided what to change instead of you. You lost the steering wheel.</aside>
+</section>
+
+<!-- ══ PATTERN 5: SCOPE CONTROL (THE REVEAL) ══════════════ -->
+<section>
+  <h3>Pattern 5 of 6 · Scope Control</h3>
+  <h2>Scope Control</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.7rem;">Five techniques to keep you in the driver's seat.</p>
+
+  <div class="three-col stagger" style="margin-top:0.3rem;">
+    <div class="card card-accent" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">🎯 Declare Your Plan</h4>
+      <p style="font-size:0.7em;margin-top:6px;">List files to modify — and files to <strong style="color:#fff;">NOT</strong> touch. Wait for approval.</p>
+    </div>
+    <div class="card card-accent" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">📌 Anchor to Existing Code</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Point at the specific file. Don't let AI generate from scratch.</p>
+    </div>
+    <div class="card card-warn" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">🔍 Review Diffs, Not Outputs</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Look at what <strong style="color:#fff;">changed</strong>, not just whether the result looks right.</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:66%;margin:12px auto 0;" class="stagger">
+    <div class="card card-warn" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">🧪 Fresh Session Self-Review</h4>
+      <p style="font-size:0.7em;margin-top:6px;">New session critiques the diff. No loyalty to code it didn't write.</p>
+    </div>
+    <div class="card card-blue" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">💾 Commit at Every Milestone</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Git save points. When scope slips, <code style="font-size:0.9em;">git reset</code> is your undo.</p>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">The AI will always try to do more than you asked. The discipline isn't saying yes — it's <strong>knowing when to say no.</strong></p>
+    <p style="font-size:1.1em;margin-top:10px;text-align:center;"><strong style="color:var(--accent);">"You decide what changes. Not the AI."</strong></p>
+  </div>
+  <aside class="notes">So how do you get the steering wheel back? Five techniques, in three phases — before code, after code, and a safety net. Before code: declare your plan. List the files you'll modify and — the part most people miss — list the files you will NOT touch. That's the boundary. Anchor to existing code — point the AI at the specific file, don't let it generate from scratch. After code: AI self-review in a fresh session. Why fresh? A long-running session has loyalty to its own decisions. A fresh session sees the code the way a human reviewer would. And review diffs, not just outputs. Look at what changed — that's where scope creep becomes visible. Safety net: commit after every verified edit. When scope slips despite everything — and it will — git reset is your undo. [click] You decide what changes. Not the AI.</aside>
+</section>
+
+<!-- ══ PATTERN 6: AI PAPERWORK WARNING SIGNS (THE HOOK) ═══ -->
+<section>
+  <h3>Pattern 6 of 6 · AI Paperwork</h3>
+  <h2 style="margin-bottom:0.5em;">📝 Sound familiar?</h2>
+
+  <div class="mon-grid stagger-split" style="gap:18px;">
+    <div class="mon-item"><div class="mon-num" style="background:var(--warn);font-size:0.9em;width:42px;height:42px;line-height:42px;">🔮</div><div class="mon-text" style="font-size:0.85em;"><strong>The Mystery Commit</strong><br>"fix stuff" messages that tell you nothing about what changed or why</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--danger);font-size:0.9em;width:42px;height:42px;line-height:42px;">⛏️</div><div class="mon-text" style="font-size:0.85em;"><strong>The Archaeology Project</strong><br>Understanding a decision requires digging through months of Slack and PRs</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#a855f7;font-size:0.9em;width:42px;height:42px;line-height:42px;">🧠</div><div class="mon-text" style="font-size:0.85em;"><strong>The Tribal Knowledge</strong><br>Only one person knows why it was built this way — and they're on vacation</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:var(--accent2);font-size:0.9em;width:42px;height:42px;line-height:42px;">📄</div><div class="mon-text" style="font-size:0.85em;"><strong>The Blank PR</strong><br>Pull requests with no description, no context, just a diff</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#06b6d4;font-size:0.9em;width:42px;height:42px;line-height:42px;">👍</div><div class="mon-text" style="font-size:0.85em;"><strong>The Rubber Stamp Review</strong><br>Reviewers approve without context because there's nothing to guide them</div></div>
+    <div class="mon-item"><div class="mon-num" style="background:#ec4899;font-size:0.9em;width:42px;height:42px;line-height:42px;">🌀</div><div class="mon-text" style="font-size:0.85em;"><strong>The Onboarding Maze</strong><br>New team members take weeks to become productive because nothing is written down</div></div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">These are all symptoms of the same root cause: <strong>the paperwork isn't getting done because humans find it tedious. AI doesn't.</strong></p>
+  </div>
+  <aside class="notes">Five patterns so far — all about what happens during coding. But there's a category of work that sits around the code: the documentation nobody writes. The Mystery Commit — "fix stuff." I was about to blame the AI for that one. Then I checked git blame. It was me. From two weeks ago. The Archaeology Project — digging through months of Slack to understand a decision. Tribal Knowledge — only one person knows why, and they're on vacation. The Blank PR — just a diff, no context, no explanation. These aren't laziness. They're economics — documentation was always tedious and the payoff was delayed. [click] But that excuse just disappeared. AI doesn't find documentation tedious.</aside>
+</section>
+
+<!-- ══ PATTERN 6: AI PAPERWORK (THE REVEAL) ══════════════ -->
+<section>
+  <h3>Pattern 6 of 6 · AI Paperwork</h3>
+  <h2>AI for the Paperwork Nobody Does</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.7rem;">AI removes all excuses for skipping documentation.</p>
+
+  <div class="three-col stagger" style="margin-top:0.3rem;">
+    <div class="card card-accent" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">📋 Decision Records</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Capture the <strong style="color:#fff;">why</strong>, not just the what. Draft an ADR in 30 seconds.</p>
+    </div>
+    <div class="card card-blue" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">🔀 PR Descriptions</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Structured summaries from diffs. The collaboration trail <strong style="color:#fff;">writes itself.</strong></p>
+    </div>
+    <div class="card card-warn" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">🏆 Golden Path Examples</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Canonical implementations the AI can pattern-match. <strong style="color:#fff;">One snippet beats three paragraphs.</strong></p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:66%;margin:12px auto 0;" class="stagger">
+    <div class="card card-danger" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">📝 Lessons-as-Rules</h4>
+      <p style="font-size:0.7em;margin-top:6px;">After every correction, AI writes a rule for itself. <strong style="color:#fff;">Failures become specs.</strong></p>
+    </div>
+    <div class="card card-accent" style="text-align:center;padding:18px 14px;">
+      <h4 style="font-size:0.85em;">📖 Domain Glossary</h4>
+      <p style="font-size:0.7em;margin-top:6px;">Define your terms precisely. AI uses them <strong style="color:#fff;">loosely</strong> without this.</p>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:14px;">
+    <p style="font-size:0.7em;">Documentation for AI is different from documentation for humans. Humans infer context. <strong>AI is literal.</strong> Make your rules of the road machine-readable.</p>
+    <p style="font-size:1.1em;margin-top:10px;text-align:center;"><strong style="color:var(--accent);">"Write it down. The AI will use it every session."</strong></p>
+  </div>
+  <aside class="notes">Five kinds of documentation that change how AI works with your codebase. Decision Records: draft an ADR in 30 seconds. When the AI knows why you chose PostgreSQL over DynamoDB, it won't suggest DynamoDB-friendly patterns. PR Descriptions: AI generates structured summaries from diffs. Without context, reviewers rubber-stamp. With it, they focus on architecture and intent. Golden Path Examples: GitHub's analysis of 2,500 AGENTS.md files found one code snippet outperforms three paragraphs describing preferred style. Lessons-as-Rules: after every correction, have the AI write a rule. Over time this becomes a failure-driven specification tuned to your codebase. Domain Glossary: when "fulfillment" has a precise meaning, document it. Without this, the AI uses terms loosely and generates subtle semantic bugs. [click] The meta-principle: documentation for AI is different from documentation for humans. Humans infer context. AI is literal — explicit, concrete, example-rich.</aside>
+</section>
+
+
+<!-- ══ ACT III SEPARATOR ═══════════════════════════════════ -->
+<section data-background-image="images/team-norms-bg.png" data-background-size="cover" data-background-position="center">
+  <div class="act-title">
+    <div style="font-size:0.68em;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;">Act III</div>
+    <h1 class="gradient-text" style="font-size:3.6em;text-align:center;margin:0.1em 0;">Team Norms</h1>
+    <p style="color:var(--muted);max-width:500px;text-align:center;margin:0.6rem auto 0;">What good AI-assisted development looks like at the team and organization level</p>
+  </div>
+  <aside class="notes">Six patterns. TDD as a protocol. Types as guardrails. Decompose ruthlessly. Context engineering. Scope control. Documentation the AI can use. These are individual practices — things you can start doing this week. But individual practices only go so far. What happens when you scale this to a team? When five developers each have AI agents, all interpreting your architecture independently? That's what this last section is about — the team and organizational conditions that make these patterns stick.</aside>
+</section>
+
+<!-- ══ THE VALUE STREAM ══════════════════════════════════════ -->
+<section data-auto-animate>
+  <h3>Team Norms · The Bigger Picture</h3>
+  <h2>Where Does Time Actually Go?</h2>
+
+  <!-- Pipeline visualization — tiles stagger in, then AI highlight appears on click -->
+  <div style="display:flex;align-items:stretch;gap:0;margin:1.2rem 0 0.3rem;width:100%;">
+    <div data-id="pipe-req" style="flex:1;padding:22px 10px;background:var(--surface);border-radius:10px 0 0 10px;font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,0.04);">Requirements</div>
+    <div data-id="pipe-arch" style="flex:1;padding:22px 10px;background:var(--surface);font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,0.04);">Architecture</div>
+    <div data-id="pipe-code" style="flex:1;padding:22px 10px;background:var(--surface);font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid rgba(255,255,255,0.04);">Coding
+      <div class="fragment" data-fragment-index="0" style="position:absolute;inset:0;background:linear-gradient(rgba(0,212,170,0.18),rgba(0,212,170,0.18)),var(--r-background-color);border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);font-size:1.07em;color:var(--accent);font-weight:800;display:flex;align-items:center;justify-content:center;">Coding</div>
+      <div class="fragment" data-fragment-index="0" style="position:absolute;top:-36px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;">
+        <div style="font-size:0.8em;color:var(--accent);font-weight:700;">AI here</div>
+        <div style="color:var(--accent);font-size:0.67em;line-height:1;">▼</div>
+      </div>
+    </div>
+    <div data-id="pipe-review" style="flex:1;padding:22px 10px;background:var(--surface);font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,0.04);border-left:1px solid rgba(255,255,255,0.04);">Review</div>
+    <div data-id="pipe-test" style="flex:1;padding:22px 10px;background:var(--surface);font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,0.04);">Testing</div>
+    <div data-id="pipe-coord" style="flex:1;padding:22px 10px;background:var(--surface);font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,0.04);">Coordination</div>
+    <div data-id="pipe-deploy" style="flex:1;padding:22px 10px;background:var(--surface);border-radius:0 10px 10px 0;font-size:0.75em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;">Deploy</div>
+  </div>
+  <p class="small muted center fragment" data-fragment-index="0" style="margin:0.2rem 0 0.8rem;">AI tools accelerate <strong style="color:var(--accent);">one station</strong>. Everything else remains at human speed.</p>
+
+  <!-- Research stats -->
+  <div class="stat-row">
+    <div class="stat-item fragment" data-fragment-index="1">
+      <div class="stat-number accent" style="font-size:3.2em;">~11%</div>
+      <div class="stat-label">of the workweek spent coding</div>
+      <div class="stat-source">Software.com · 250K devs · editor telemetry</div>
+    </div>
+    <div class="stat-item fragment" data-fragment-index="2">
+      <div class="stat-number blue" style="font-size:3.2em;">~11%</div>
+      <div class="stat-label">of developer time is writing code</div>
+      <div class="stat-source">Microsoft Research "Time Warp" · 2024</div>
+    </div>
+    <div class="stat-item fragment" data-fragment-index="3">
+      <div class="stat-number gold" style="font-size:3.2em;">~16%</div>
+      <div class="stat-label">of time on application development</div>
+      <div class="stat-source">IDC · 2025 · "84% is non-coding"</div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" data-fragment-index="4" style="margin-top:0.7rem;">
+    <p>If coding is <strong>11–16%</strong> of delivery time, a <strong>10×</strong> improvement in coding speed yields at most <strong>~15%</strong> faster delivery. The other 85% is requirements, architecture, coordination, review, and waiting.</p>
+  </div>
+  <aside class="notes">Why do individual patterns not translate to faster team delivery? Because of where time actually goes. Here's the delivery pipeline. [click] AI tools accelerate one station. Coding. Everything else remains at human speed. How much of the workweek is actually coding? [click] Software.com: 11%. 250K developers, editor telemetry. [click] Microsoft Research: 11%. 484 developers instrumented. [click] IDC: 16%. Three independent sources, same answer. In my experience across multiple team projects, coding was 10-20% of total effort. The numbers match. I stared at that number and then thought about how much of my week I spend in meetings about code instead of writing code. Suddenly 11% felt generous. [click] The arithmetic doesn't lie. 10x improvement in coding speed, at most 15% faster delivery. The other 85% is requirements, architecture, coordination, review, and waiting.</aside>
+</section>
+
+<!-- ══ THE TWO-SIDED FORMULA ════════════════════════════════ -->
+<section data-auto-animate>
+  <h3>Team Norms · Framework</h3>
+  <h2>The Two-Sided Formula</h2>
+
+  <!-- Compact grouped pipeline — auto-animates from flat layout on previous slide -->
+  <div style="display:flex;align-items:stretch;gap:6px;margin:0.3rem 0 0;width:100%;">
+    <!-- Pre-coding group -->
+    <div style="display:flex;flex:2;border:2px solid var(--accent2);border-radius:8px;overflow:hidden;">
+      <div data-id="pipe-req" style="flex:1;padding:10px 6px;background:rgba(59,130,246,0.1);font-size:0.6em;color:var(--accent2);text-align:center;display:flex;align-items:center;justify-content:center;">Requirements</div>
+      <div data-id="pipe-arch" style="flex:1;padding:10px 6px;background:rgba(59,130,246,0.1);font-size:0.6em;color:var(--accent2);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(59,130,246,0.2);">Architecture</div>
+    </div>
+    <!-- Coding (dimmed) -->
+    <div data-id="pipe-code" style="flex:1;padding:10px 6px;background:var(--surface);font-size:0.6em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-radius:8px;opacity:0.35;">Coding</div>
+    <!-- Post-coding group -->
+    <div style="display:flex;flex:4;border:2px solid var(--warn);border-radius:8px;overflow:hidden;">
+      <div data-id="pipe-review" style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;">Review</div>
+      <div data-id="pipe-test" style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Testing</div>
+      <div data-id="pipe-coord" style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Coordination</div>
+      <div data-id="pipe-deploy" style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Deploy</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;margin:2px 0 0.4rem;">
+    <div style="flex:2;text-align:center;font-size:0.45em;color:var(--accent2);font-weight:700;">Pre-coding: settled</div>
+    <div style="flex:1;"></div>
+    <div style="flex:4;text-align:center;font-size:0.45em;color:var(--warn);font-weight:700;">Post-coding: representable</div>
+  </div>
+
+  <div class="two-col" style="margin-top:0.1rem;">
+    <div class="stagger">
+      <div class="card card-blue" style="padding:14px 18px;margin:4px 0;">
+        <h4 style="margin:0 0 4px;color:var(--accent2);">Pre-coding is settled</h4>
+        <p style="font-size:0.7em;">Requirements clear · Architecture decided · Interfaces stable · Framework supports what you need</p>
+      </div>
+      <div style="text-align:center;font-size:0.9em;margin:0;color:var(--muted);line-height:1.4;">+</div>
+      <div class="card card-warn" style="padding:14px 18px;margin:4px 0;">
+        <h4 style="margin:0 0 4px;color:var(--warn);">Post-coding is representable</h4>
+        <p style="font-size:0.7em;">Testing automatable · Quality gates in the dev loop · Reviews fast &amp; aligned · Deployments automated · Observability clear</p>
+      </div>
+      <div style="text-align:center;font-size:0.9em;margin:0;color:var(--accent);line-height:1.4;">=</div>
+      <div class="card card-accent" style="border-left-width:3px;padding:10px 18px;margin:4px 0;">
+        <h4 style="color:var(--accent);margin:0;">Faster delivery</h4>
+      </div>
+    </div>
+    <div class="stagger">
+      <p class="small bold" style="margin-bottom:7px;">Three outcome patterns</p>
+      <div class="card card-danger" style="padding:12px 16px;">
+        <h4 style="font-size:0.8em;margin:0 0 4px;">Accelerates debt</h4>
+        <p style="font-size:0.7em;"><span class="blue">Pre</span> <span class="danger">✗</span> · <span style="color:var(--warn);">Post</span> <span class="danger">✗</span> · <span class="danger bold">Faster rework</span><br>
+        <span class="tiny dim">Faros AI (10K+ devs): PRs +47%, bugs +9%, PR size +154%</span></p>
+      </div>
+      <div class="card card-warn" style="margin-top:8px;padding:12px 16px;">
+        <h4 style="font-size:0.8em;margin:0 0 4px;">Masks the bottleneck</h4>
+        <p style="font-size:0.7em;"><span class="blue">Pre</span> <span class="danger">✗</span> · <span style="color:var(--warn);">Post</span> <span class="accent">✓</span> · <span class="warn bold">Faster prototypes, same delivery</span><br>
+        <span class="tiny dim">Faster iterations feed the same slow decision cycle — more reps, not more progress</span></p>
+      </div>
+      <div class="card card-accent" style="margin-top:8px;padding:12px 16px;">
+        <h4 style="font-size:0.8em;margin:0 0 4px;">Amplifies strengths</h4>
+        <p style="font-size:0.7em;"><span class="blue">Pre</span> <span class="accent">✓</span> · <span style="color:var(--warn);">Post</span> <span class="accent">✓</span> · <span class="accent bold">Faster delivery</span><br>
+        <span class="tiny dim">DORA 2025: AI correlates with better delivery when foundational capabilities are strong</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="hi-box fragment" style="margin-top:6px;">
+    <p style="font-size:0.7em;"><strong>AI accelerates delivery when both sides hold.</strong> When either breaks, faster coding becomes faster rework.</p>
+  </div>
+  <aside class="notes">Two conditions must hold. Pre-coding settled — requirements clear, architecture decided, interfaces stable. Post-coding representable — testing automatable, quality gates in place, reviews fast. Three outcomes. Neither holds — faster rework. Faros AI: PRs up 47%, bugs up 9%, PR size up 154%. That's not productivity — that's a team generating its own job security. Only post-coding holds — faster prototypes, same delivery. More iterations, not more progress. Both hold — faster delivery. DORA 2025 confirmed it. [click] The trap: AI compresses coding time, but review capacity stays flat. On one project, code took a day to write and a week to clear reviews. The bottleneck didn't disappear — it shifted.</aside>
+</section>
+
+<!-- ══ WHAT ACTUALLY MOVES DELIVERY ══════════════════════════ -->
+<section>
+  <h3>Team Norms · The 85%</h3>
+  <h2>What Actually Moves Delivery</h2>
+
+  <!-- Compact grouped pipeline — same as slide 29 -->
+  <div style="display:flex;align-items:stretch;gap:6px;margin:0.3rem 0 0;width:100%;">
+    <div style="display:flex;flex:2;border:2px solid var(--accent2);border-radius:8px;overflow:hidden;">
+      <div style="flex:1;padding:10px 6px;background:rgba(59,130,246,0.1);font-size:0.6em;color:var(--accent2);text-align:center;display:flex;align-items:center;justify-content:center;">Requirements</div>
+      <div style="flex:1;padding:10px 6px;background:rgba(59,130,246,0.1);font-size:0.6em;color:var(--accent2);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(59,130,246,0.2);">Architecture</div>
+    </div>
+    <div style="flex:1;padding:10px 6px;background:var(--surface);font-size:0.6em;color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;border-radius:8px;opacity:0.35;">Coding</div>
+    <div style="display:flex;flex:4;border:2px solid var(--warn);border-radius:8px;overflow:hidden;">
+      <div style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;">Review</div>
+      <div style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Testing</div>
+      <div style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Coordination</div>
+      <div style="flex:1;padding:10px 6px;background:rgba(245,158,11,0.1);font-size:0.6em;color:var(--warn);text-align:center;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(245,158,11,0.2);">Deploy</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;margin:2px 0 0.4rem;">
+    <div style="flex:2;text-align:center;font-size:0.45em;color:var(--accent2);font-weight:700;">Pre-coding: settled</div>
+    <div style="flex:1;"></div>
+    <div style="flex:4;text-align:center;font-size:0.45em;color:var(--warn);font-weight:700;">Post-coding: representable</div>
+  </div>
+
+  <div class="two-col fill" style="margin-top:0.1rem;">
+    <div>
+      <p class="small bold blue" style="margin-bottom:6px;">Fix the pre-coding side</p>
+      <div class="stagger">
+        <div class="card card-blue" style="padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Decide which experiments to ship</h4>
+          <p style="font-size:0.58em;">AI makes experimentation cheap. That makes <strong style="color:#fff;">deciding what to take forward</strong> the new bottleneck. Rapid prototypes need explicit go/no-go criteria.</p>
+        </div>
+        <div class="card card-blue" style="margin-top:5px;padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Architectural alignment before code</h4>
+          <p style="font-size:0.58em;">One unresolved structural decision cascades into every downstream task. Settle boundaries, interfaces, and contracts before generating code.</p>
+        </div>
+        <div class="card card-blue" style="margin-top:5px;padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Resist speculative coding</h4>
+          <p style="font-size:0.58em;">When coding is cheap, there's no pressure to wait for clarity. Sometimes the highest-leverage move is to <strong style="color:#fff;">not build yet.</strong></p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="small bold" style="margin-bottom:6px;color:var(--warn);">Fix the post-coding side</p>
+      <div class="stagger">
+        <div class="card card-warn" style="padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Quality gates in the dev loop</h4>
+          <p style="font-size:0.58em;">Tests, linting, architecture checks that run locally before code leaves the developer's machine — not first discovered in CI 20 minutes later.</p>
+        </div>
+        <div class="card card-warn" style="margin-top:5px;padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Faster code review cycles</h4>
+          <p style="font-size:0.58em;">AI generates code faster than teams can review it. Upfront style alignment and reviewer availability become critical-path items.</p>
+        </div>
+        <div class="card card-warn" style="margin-top:5px;padding:10px 14px;">
+          <h4 style="font-size:0.72em;">Automated deployment &amp; observability</h4>
+          <p style="font-size:0.58em;">Faster code to production means faster impact — good or bad. Automated pipelines and clear observability close the feedback loop.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:8px;">
+    <p style="font-size:0.65em;"><strong>"AI doesn't fix a team. It amplifies what's already there."</strong> — DORA 2025. Engineering practices matter more than ever: they mitigate quality risks from generated code <em>and</em> handle the increased throughput.</p>
+  </div>
+  <aside class="notes">Everything on this slide has higher leverage than faster coding. Pre-coding: decide which experiments to ship — teams build three options instead of choosing one. Align on architecture before code — one unresolved structural decision cascades into everything. And resist speculative coding — this is the hardest advice I give, including to myself. The AI is right there. "Let me just quickly prototype this." Three prototypes later you've built three things nobody asked for and you're calling it "research." Post-coding: quality gates in the dev loop, not just CI. Faster review cycles — reviewer availability was the single longest bottleneck on one project. Automated deployment with observability. [click] DORA 2025: AI doesn't fix a team. It amplifies what's already there.</aside>
+</section>
+
+<!-- ══ METRICS ════════════════════════════════════════════════ -->
+<section>
+  <h3>Team Norms · Measurement</h3>
+  <h2>How Do You Know You're Getting Better?</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.5rem;">Every speed metric paired with a quality metric. Unpaired speed metrics are dangerous.</p>
+
+  <div class="compare" style="margin-bottom:12px;">
+    <div class="compare-bad">
+      <h4>❌ Stop Measuring</h4>
+      <p style="font-size:0.7em;margin:0;line-height:1.8;"><strong style="color:#fff;">Lines of code</strong> — CEOs competing on AI code %<br><strong style="color:#fff;">Coverage alone</strong> — 90% coverage, 34% mutation score<br><strong style="color:#fff;">Story point velocity</strong> — 42% admit to inflating<br><strong style="color:#fff;">AI acceptance rate</strong> — juniors accept more, not better</p>
+    </div>
+    <div class="compare-good">
+      <h4>✅ Start Measuring</h4>
+      <p style="font-size:0.7em;margin:0;line-height:1.8;"><strong style="color:#fff;">Cycle time by stage</strong> — where did the bottleneck move?<br><strong style="color:#fff;">Mutation score</strong> — are tests catching real bugs?<br><strong style="color:#fff;">Change failure rate</strong> — are we breaking prod more?<br><strong style="color:#fff;">Comprehension check</strong> — can you explain what shipped?</p>
+    </div>
+  </div>
+
+  <div class="fragment" style="display:flex;gap:16px;margin-bottom:0;">
+    <div class="card card-warn" style="flex:1;padding:10px 14px;text-align:center;">
+      <p style="font-size:0.65em;margin:0;"><strong style="color:#fff;">The Goodhart Cascade</strong><br>Copilot users 29% faster — but review time <span class="danger">+47%</span></p>
+    </div>
+    <div class="card card-accent" style="flex:1;padding:10px 14px;text-align:center;">
+      <p style="font-size:0.65em;margin:0;"><strong style="color:#fff;">Review survival rate</strong><br>% of AI code passing review unchanged — measures spec precision</p>
+    </div>
+    <div class="card card-blue" style="flex:1;padding:10px 14px;text-align:center;">
+      <p style="font-size:0.65em;margin:0;"><strong style="color:#fff;">Review queue depth</strong><br>Growing queue = stockpiled inventory waiting to be reviewed</p>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <div style="display:flex;align-items:center;gap:20px;font-size:0.9em;">
+      <strong style="white-space:nowrap;color:var(--accent);">The Ratchet</strong>
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <span style="background:var(--surface);padding:8px 14px;border-radius:6px;white-space:nowrap;">📏 Baseline</span>
+        <span style="color:var(--muted);">→</span>
+        <span style="background:var(--surface);padding:8px 14px;border-radius:6px;white-space:nowrap;">📈 Improve</span>
+        <span style="color:var(--muted);">→</span>
+        <span style="background:var(--surface);padding:8px 14px;border-radius:6px;white-space:nowrap;">🔒 Never regress</span>
+        <span style="color:var(--muted);">→</span>
+        <span style="background:var(--surface);padding:8px 14px;border-radius:6px;white-space:nowrap;">🔄 Rotate</span>
+      </div>
+    </div>
+    <p style="font-size:0.72em;color:var(--muted);margin-top:6px;">Pick 2–3 metrics that expose your current bottleneck. Act on them. Then rotate to the next.</p>
+  </div>
+  <aside class="notes">AI amplifies what's already there. How do you know what it's amplifying? Not with the metrics most teams track. Stop measuring lines of code — CEOs competing on AI code percentage as if more lines is the goal. AI makes it infinitely gameable. Stop trusting coverage alone — 94% coverage, 34% mutation score. That's the testing equivalent of filling in all the bubbles on a multiple-choice exam and calling it studying. Stop celebrating velocity — 42% of teams admit to inflating. Stop using AI acceptance rate — juniors accept more, not better. Start measuring what matters. Cycle time by stage — find where the bottleneck moved. Mutation score — are tests catching real bugs? Change failure rate — are we breaking prod more? Comprehension check — can you explain what shipped? [click] The Goodhart Cascade: Copilot users 29% faster, review time up 47%. Measuring one variable while the rest degrades. [click] The Ratchet: pick two to three metrics. Baseline. Improve. Never regress. Rotate. This isn't a dashboard — it's a discipline.</aside>
+</section>
+
+<!-- ══ GOVERNANCE ══════════════════════════════════════════ -->
+<section>
+  <div style="display:flex;flex-direction:column;height:700px;">
+  <h3>Team Norms · Governance</h3>
+  <h2>Governing AI in Your Team</h2>
+
+  <div class="three-col fill stagger" style="margin-top:0.4rem;flex:1;">
+    <div>
+      <p class="bold blue" style="margin-bottom:8px;font-size:0.85em;">📄 Rules Files</p>
+      <div class="card card-blue" style="padding:12px 14px;"><h4 style="font-size:0.82em;">Your team's AI constitution</h4><p style="font-size:0.68em;">Not a Confluence page — a file that runs every session.</p></div>
+      <div style="margin-top:8px;font-size:0.68em;color:var(--muted);line-height:2;">
+        <code>CLAUDE.md</code> — Claude Code<br>
+        <code>.cursor/rules/*.mdc</code> — Cursor<br>
+        <code>AGENTS.md</code> — cross-tool standard
+      </div>
+      <div class="card card-accent" style="padding:10px 12px;margin-top:8px;"><h4 style="font-size:0.72em;">+ lessons.md</h4><p style="font-size:0.62em;">After every correction, the AI writes a rule for itself. Failures become specifications.</p></div>
+    </div>
+    <div>
+      <p class="bold" style="margin-bottom:8px;font-size:0.85em;color:var(--warn);">🔍 Review Pipeline</p>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-num" style="background:var(--accent2);width:32px;height:32px;line-height:32px;">1</div><div class="flow-content" style="font-size:0.95em;"><strong>AI self-review: fresh session</strong><br><em>Fresh context catches what the author can't</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="width:32px;height:32px;line-height:32px;">2</div><div class="flow-content" style="font-size:0.95em;"><strong>Human: architecture first</strong><br><em>Critical path, work backward</em></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="width:32px;height:32px;line-height:32px;">3</div><div class="flow-content" style="font-size:0.95em;"><strong>Human: intent &amp; risk</strong><br><em>Roadmap, not variable names</em></div></div>
+      </div>
+      <p style="font-size:0.55em;color:var(--muted);margin-top:10px;line-height:1.4;">AI PRs have <strong style="color:var(--warn);">1.7× more major issues</strong> and <strong style="color:var(--warn);">24% more incidents</strong> per PR — CodeRabbit · Cortex 2026</p>
+    </div>
+    <div>
+      <p class="bold danger" style="margin-bottom:8px;font-size:0.85em;">🛡️ Guardrails</p>
+      <div class="card card-danger" style="padding:10px 12px;"><h4 style="font-size:0.78em;">Block destructive ops</h4><p style="font-size:0.64em;">Hooks that deny <code style="font-size:0.9em;">rm&nbsp;-rf</code>, <code style="font-size:0.9em;">--force</code>, <code style="font-size:0.9em;">terraform destroy</code>. Deterministic — not prompt-based.</p></div>
+      <div class="card card-danger" style="margin-top:7px;padding:10px 12px;"><h4 style="font-size:0.78em;">Gate security-critical paths</h4><p style="font-size:0.64em;"><code style="font-size:0.9em;">auth/**</code>, <code style="font-size:0.9em;">payments/**</code>, <code style="font-size:0.9em;">secrets/**</code> — mandatory human review + automated SAST scan before merge.</p></div>
+      <div class="card card-danger" style="margin-top:7px;padding:10px 12px;"><h4 style="font-size:0.78em;">Verify every dependency</h4><p style="font-size:0.64em;">No AI-suggested packages without lockfile check. Block new deps without explicit approval.</p></div>
+    </div>
+  </div>
+  <div class="hi-box fragment" style="margin-top:auto;">
+    <p style="font-size:0.82em;"><strong style="color:var(--accent2);">Rules</strong> set the standard. <strong style="color:var(--warn);">Review</strong> verifies it. <strong style="color:var(--danger);">Guardrails</strong> enforce it.</p>
+  </div>
+  </div>
+  <aside class="notes">Three governance layers. Rules files: not a Confluence page — a file that loads into every AI session automatically. Your CLAUDE.md or AGENTS.md encodes architecture, quality guidelines, and conventions — shared context that every agent starts with. Review pipeline: step 1 is the most important — AI self-review in a fresh session. This is basically asking a different AI to review the first AI's homework. Turns out, they have no loyalty to each other. It's surprisingly effective. Then human review focuses on architecture and intent, not variable names. The data: AI PRs have 1.7x more major issues, incidents per PR up 24%. Guardrails: deterministic enforcement, not prompt-based. Block destructive operations. Gate security-critical paths. Verify dependencies — no new packages without explicit approval. [click] Rules set the standard. Review verifies it. Guardrails enforce it. The teams getting the most value aren't the ones with the least friction — they're the ones with the smartest friction.</aside>
+</section>
+
+<!-- ══ HARNESS ENGINEERING ════════════════════════════════════ -->
+<section>
+  <h3>Team Norms · The Meta-Pattern</h3>
+  <h2>Harness Engineering</h2>
+
+  <div class="two-col" style="margin-top:0.3rem;gap:30px;">
+    <div>
+      <div class="stagger">
+        <div class="card card-accent" style="padding:14px 18px;text-align:center;">
+          <p style="font-size:0.7em;color:var(--muted);margin-bottom:4px;">Same model. Different harness.</p>
+          <div style="display:flex;justify-content:center;gap:24px;align-items:baseline;">
+            <div><span style="font-size:2.2em;font-weight:900;color:var(--danger);">42%</span></div>
+            <div style="font-size:1.2em;color:var(--dim);">→</div>
+            <div><span style="font-size:2.2em;font-weight:900;color:var(--accent);">78%</span></div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 18px;margin-top:8px;">
+          <h4 style="font-size:0.8em;">What is the harness?</h4>
+          <p style="font-size:0.7em;line-height:1.8;"><strong style="color:#fff;">Rules file</strong> + <strong style="color:#fff;">automation hooks</strong> + <strong style="color:#fff;">custom commands</strong> + <strong style="color:#fff;">MCP servers</strong> + <strong style="color:#fff;">review pipeline</strong><br>Committed to git. Reviewed. Updated after every correction.</p>
+          <p style="font-size:0.6em;color:var(--dim);margin-top:4px;font-style:italic;">See previous slide for your tool's equivalent.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="small bold" style="margin-bottom:8px;color:var(--warn);">The enforcement hierarchy</p>
+      <div class="stagger" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.3);border-radius:8px;">
+          <span style="font-size:0.7em;font-weight:800;color:var(--accent);white-space:nowrap;">100%</span>
+          <span style="font-size:0.75em;"><strong style="color:#fff;">Hooks</strong> — deterministic enforcement<br><span style="color:var(--muted);font-size:0.85em;">Auto-format, block destructive ops, inject context</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;">
+          <span style="font-size:0.7em;font-weight:800;color:var(--accent2);white-space:nowrap;">100%</span>
+          <span style="font-size:0.75em;"><strong style="color:#fff;">settings.json</strong> — deterministic config<br><span style="color:var(--muted);font-size:0.85em;">Permissions, deny lists, environment variables</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;">
+          <span style="font-size:0.7em;font-weight:800;color:var(--warn);white-space:nowrap;">~80%</span>
+          <span style="font-size:0.75em;"><strong style="color:#fff;">Rules file</strong> — advisory guidance<br><span style="color:var(--muted);font-size:0.85em;">Conventions, standards, preferences</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi-box fragment" style="margin-top:10px;">
+    <p style="font-size:0.72em;"><strong>Treat your harness like production code.</strong> Commit it. Review it. Update it after every correction.</p>
+  </div>
+  <aside class="notes">How do you make it all stick? Harness engineering. Same model, 42% on one harness, 78% on another. The difference wasn't the AI — it was the configuration around it. The harness is everything the model works within: rules file, hooks, custom commands, MCP servers, review pipeline. All committed to git. The enforcement hierarchy is key. Rules files are advisory — roughly 80% adherence. One in five times, the AI reads your carefully written CLAUDE.md and thinks, "interesting suggestion" — and does whatever it wants. We've all worked with that person. Hooks are deterministic — 100%. If you need a rule enforced every time, it belongs in a hook. [click] Treat your harness like production code. Committed. Reviewed. Updated after every correction.</aside>
+</section>
+
+<!-- ══ MONDAY MORNING ══════════════════════════════════════ -->
+<section>
+  <h3>Takeaways · Immediately Actionable</h3>
+  <h2>Your Monday Morning List</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.7rem;">12 habits. No new tools. No new process. Start this week.</p>
+
+  <div class="mon-grid fill stagger-split">
+    <div class="mon-item"><div class="mon-num">1</div><div class="mon-text"><strong>Create your CLAUDE.md / rules file.</strong> Tech stack, architecture, standards, do-nots. Under 200 lines. Commit to git.</div></div>
+    <div class="mon-item"><div class="mon-num">2</div><div class="mon-text"><strong>Adopt spec–plan–execute.</strong> Any task &gt;15 min: spec with AI → plan → one step at a time.</div></div>
+    <div class="mon-item"><div class="mon-num">3</div><div class="mon-text"><strong>Write tests first.</strong> Always include "Do NOT modify test files."</div></div>
+    <div class="mon-item"><div class="mon-num">4</div><div class="mon-text"><strong>Commit at every milestone.</strong> Git commits as save points. Always revertable.</div></div>
+    <div class="mon-item"><div class="mon-num">5</div><div class="mon-text"><strong>Fresh session per task.</strong> Never mix unrelated work in one conversation.</div></div>
+    <div class="mon-item"><div class="mon-num">6</div><div class="mon-text"><strong>AI self-review before every PR.</strong> Fresh session catches what the author can't.</div></div>
+    <div class="mon-item"><div class="mon-num">7</div><div class="mon-text"><strong>Declare your plan before coding.</strong> List files to modify — and files to NOT touch.</div></div>
+    <div class="mon-item"><div class="mon-num">8</div><div class="mon-text"><strong>Zero trust for auth, payments, secrets.</strong> Human review + automated scanning. Always.</div></div>
+    <div class="mon-item"><div class="mon-num">9</div><div class="mon-text"><strong>AI for docs nobody writes.</strong> ADRs, PR descriptions, golden path examples.</div></div>
+    <div class="mon-item"><div class="mon-num">10</div><div class="mon-text"><strong>Build a team prompt library.</strong> Document what works. Shared skills and commands.</div></div>
+    <div class="mon-item"><div class="mon-num">11</div><div class="mon-text"><strong>Review diffs, not just outputs.</strong> Check what changed, not just whether it looks right.</div></div>
+    <div class="mon-item"><div class="mon-num">12</div><div class="mon-text"><strong>Use AI to learn, not just produce.</strong> Ask why. Read the code. Stay in the driver's seat.</div></div>
+  </div>
+  <aside class="notes">Patterns, team norms, governance, harness engineering — that's a lot. Let me distil it. Twelve habits you can start this week. No new tools. No new process. If you take nothing else from this talk — besides the nap some of you definitely had — do these three: number 1 — create your rules file. Number 2 — spec-plan-execute. Number 3 — write tests first. Those three will change more than anything else. But the most important one philosophically is number 12. Use AI to learn, not just produce. Ask why. Read the code. Anthropic's research: a 25-point comprehension gap between passive delegation and active engagement. Stay in the driver's seat.</aside>
+</section>
+
+<!-- ══ CLOSE ═══════════════════════════════════════════════ -->
+<section data-background-image="images/patterns-bg.png" data-background-size="cover" data-background-position="center">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;">
+    <p class="fragment" data-fragment-index="0" style="font-size:1.6em;color:var(--muted);font-weight:400;font-style:italic;margin-bottom:0.6rem;">Remember...?</p>
+    <div class="fragment appear-then-strike" data-fragment-index="1" style="font-size:5em;font-weight:900;color:var(--danger);line-height:1;">−19%</div>
+    <div class="fragment" data-fragment-index="2" style="margin-top:1.2rem;">
+      <div style="width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:0 auto 1rem;border-radius:2px;"></div>
+      <div style="font-size:1.8em;font-weight:900;color:#fff;"><span class="gradient-text">Close the gap.</span></div>
+    </div>
+    <div class="fragment" data-fragment-index="3">
+      <p style="font-size:0.9em;color:var(--muted);margin-top:0.6rem;">Six patterns. Twelve habits. One decision.</p>
+      <div style="margin-top:1.4rem;font-size:1.1em;font-weight:700;color:var(--warn);">#ArcOfAI</div>
+    </div>
+  </div>
+  <aside class="notes">Stay in the driver's seat. That's number 12. And that brings us back to where we started. [click] Remember...? [pause] [click] Minus 19%. Felt 20% faster. Shipped 19% slower. That was the gap we opened with. [click] You've spent the last 75 minutes building the playbook to close it. Six patterns. Twelve habits. The tools are extraordinary. What you do with them is up to you. [click] Thank you.</aside>
+</section>
+
+<!-- ══ Q&A ══════════════════════════════════════════════════ -->
+<section data-background-image="images/qa-bg.png" data-background-size="cover" data-background-position="center">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;">
+    <h1 class="gradient-text" style="font-size:5.5em;margin:0;">Q&amp;A</h1>
+    <div style="width:56px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:0.5rem auto;border-radius:2px;"></div>
+    <p class="muted small">#ArcOfAI</p>
+    <div style="margin-top:1.4rem;font-size:0.6em;color:var(--dim);line-height:2.2;">
+      Sources: METR (July 2025) · GitClear · DORA 2025 · Stack Overflow 2025<br>
+      Faros AI · CodeRabbit · Martin Fowler · Kent Beck · Addy Osmani<br>
+      Simon Willison · Steve Yegge · Andrej Karpathy · Anthropic Engineering
+    </div>
+  </div>
+</section>
+
+<!-- ══ APPENDIX A: CLAUDE.MD ═══════════════════════════════ -->
+<section>
+  <h3>Appendix A · Reference Template</h3>
+  <h2>CLAUDE.md Starter Template</h2>
+  <pre><code class="language-markdown"># Project: [Your Project Name]
+
+## Tech Stack
+- Runtime: Java 21 / Node 22 / Python 3.12
+- Framework: Spring Boot 3.x / Next.js 15
+- Test framework: JUnit 5 + Mockito / Jest + RTL
+
+## Architecture (2–3 sentences)
+[Describe system structure and key modules here]
+
+## Commands
+- Build:  mvn clean install  /  npm run build
+- Test:   mvn test           /  npm test
+- Lint:   ./gradlew spotlessCheck
+
+## Coding Standards
+- Immutable data structures preferred
+- Explicit error types, not generic exceptions
+- No magic strings — use enums or constants
+
+## Do NOT
+- Modify test files during implementation tasks
+- Touch auth/** without adding a security-review comment
+- Generate code without running tests first
+
+## Commit Format
+Conventional Commits: feat|fix|refactor|docs|test(scope): message</code></pre>
+</section>
+
+<!-- ══ APPENDIX B: 70% PROBLEM ════════════════════════════ -->
+<section>
+  <h3>Appendix B · Addy Osmani</h3>
+  <h2>The 70% Problem</h2>
+
+  <div class="hi-box" style="margin-bottom:14px;">
+    <p>Non-engineers (and overconfident engineers) hit a wall where AI gets them 70% of the way <em>surprisingly fast</em> — but the final 30% requires actually understanding the system.</p>
+  </div>
+
+  <div class="compare fill">
+    <div class="compare-good">
+      <h4>✅ The 70%</h4>
+      <p class="small muted">"This is incredible. Look how fast we shipped. AI coded the whole thing."</p>
+    </div>
+    <div class="compare-bad">
+      <h4>❌ The 30%</h4>
+      <p class="small muted">"Why is it randomly failing in production?" "Why does auth break after logout?" "Why is there a memory leak nobody can find?"</p>
+    </div>
+  </div>
+
+  <div class="card card-warn" style="margin-top:14px;">
+    <h4>The final 30% requires engineer skills</h4>
+    <p>Understanding actual system behavior · Debugging without clean stack traces · Maintaining consistency across a growing codebase · Architectural judgment under real constraints. AI doesn't eliminate these — it amplifies them in engineers who have them, and reveals their absence in those who don't.</p>
+  </div>
+</section>
+
+<!-- ══ APPENDIX C: KENT BECK ══════════════════════════════ -->
+<section>
+  <h3>Appendix C · Kent Beck</h3>
+  <h2>The B+ Tree Experiment</h2>
+  <p class="small muted" style="margin-top:-0.3em;margin-bottom:0.7rem;">4 weeks · Production B+ Tree library · AI-assisted TDD · Pragmatic Engineer interview</p>
+
+  <div class="two-col fill">
+    <div class="stagger">
+      <div class="card card-accent"><h4>His system prompt discipline</h4></div>
+      <pre style="margin-top:6px;"><code>Always follow instructions in plan.md.
+
+When I say 'go':
+1. Find the next unmarked test
+2. Implement ONLY enough code to pass it
+3. Mark the test done in plan.md
+4. Stop and report back</code></pre>
+      <div class="hi-box" style="margin-top:8px;"><p>One test at a time. Explicit "stop and report." <strong>No surprises.</strong></p></div>
+    </div>
+    <div class="stagger">
+      <div class="card card-danger">
+        <h4>Warning signs he watched for</h4>
+        <p>• Functionality you didn't ask for<br>• Tests being modified or deleted<br>• Explanations that justify cheating<br>• Confidence about things it can't verify</p>
+      </div>
+      <div class="quote-block" style="margin-top:10px;">
+        <p>"I treat the AI like an unpredictable genie. It's powerful, but the quality of the wish determines whether you get what you actually want."</p>
+        <div class="attribution">— Kent Beck</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- slides -->
+</div><!-- reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    controls: true,
+    controlsTutorial: false,
+    center: false,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    pdfSeparateFragments: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: [ RevealNotes, RevealHighlight ]
+  });
+
+  /* ── Typewriter effect ── */
+  (function() {
+    const typewriterTexts = {
+      'metr-quote': '\u201cPeople overestimate speed-up because it\u2019s so much fun to use AI. We sit and work on these long bugs, eventually AI solves it. But we don\u2019t focus on all the time we spent \u2014 we just focus on how it was more enjoyable.\u201d'
+    };
+
+    document.querySelectorAll('[data-typewriter]').forEach(function(el) {
+      var id = el.getAttribute('data-typewriter') || 'metr-quote';
+      var text = typewriterTexts[id] || typewriterTexts['metr-quote'];
+      var speed = parseInt(el.getAttribute('data-typewriter-speed')) || 30;
+      var started = false;
+
+      function startTyping() {
+        if (started) return;
+        started = true;
+        el.textContent = '';
+        el.classList.add('typewriter-cursor');
+        var i = 0;
+        var interval = setInterval(function() {
+          el.textContent += text.charAt(i);
+          i++;
+          if (i >= text.length) {
+            clearInterval(interval);
+            el.classList.remove('typewriter-cursor');
+            el.classList.add('typewriter-done');
+            var attr = el.closest('.quote-block').querySelector('[data-typewriter-attribution]');
+            if (attr) attr.style.opacity = '1';
+          }
+        }, speed);
+      }
+
+      function reset() {
+        started = false;
+        el.textContent = '';
+        el.classList.remove('typewriter-cursor', 'typewriter-done');
+        var attr = el.closest('.quote-block').querySelector('[data-typewriter-attribution]');
+        if (attr) attr.style.opacity = '0';
+      }
+
+      Reveal.on('fragmentshown', function(event) {
+        if (el.closest('.fragment') === event.fragment) startTyping();
+      });
+      Reveal.on('fragmenthidden', function(event) {
+        if (el.closest('.fragment') === event.fragment) reset();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
