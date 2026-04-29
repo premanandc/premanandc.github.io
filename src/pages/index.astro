@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Engineering leader who writes about what actually works.</h1>
+      <p>I build software, lead teams, and write about the gap between what tools promise and what they deliver. Currently Market Tech Director at Thoughtworks.</p>
+    </div>
+    <img src="/images/headshot.png" class="hero-image" alt="Prem Chandrasekaran" />
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 56px 0 48px;
+  }
+
+  .hero-text {
+    flex: 1;
+  }
+
+  .hero-text h1 {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  .hero-text p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 540px;
+  }
+
+  .hero-image {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 3px solid var(--border);
+  }
+</style>

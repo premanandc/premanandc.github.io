@@ -1,0 +1,35 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <span>&copy; {year} Prem Chandrasekaran</span>
+  <span class="footer-links">
+    <a href="https://github.com/premanandc" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <span class="dot">&middot;</span>
+    <a href="https://linkedin.com/in/premanandc" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </span>
+</footer>
+
+<style>
+  footer {
+    max-width: 1080px;
+    margin: 60px auto 0;
+    padding: 24px 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .footer-links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .dot {
+    margin: 0 4px;
+  }
+</style>
