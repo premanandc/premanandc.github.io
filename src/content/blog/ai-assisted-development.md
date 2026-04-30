@@ -1,0 +1,276 @@
+---
+title: "I Code 10x Faster. We Ship at the Same Speed."
+date: 2026-04-29
+excerpt: "AI coding tools accelerate delivery when the work before coding is settled AND the work after coding is consistent and representable in the coding process. Across three projects, both conditions held on exactly one."
+tags: ["AI", "Engineering Leadership", "Developer Experience"]
+---
+
+I watched Claude Code generate in 30 seconds what would have taken me more than an hour. A complete set of integration tests, all structurally sound, all following the project's conventions. And yet, on another project a few weeks later, a feature I could build in a day sat in review for a week, got reworked, sat in review again, and barely shipped ten weeks after the first line of code was written.
+
+This isn't an article about whether AI coding tools work. They do. I've used Claude Code, GitHub Copilot and Cursor across three real projects over the past year: a Java claims management system, a JavaScript/TypeScript personal assistant, and a Python multi-agent system built on LangGraph and A2A. The tools are genuinely impressive, and I'll show you exactly how.
+
+But the industry narrative conflates "coding faster" with "delivering faster," and my experience across these three projects tells a different story. **AI coding tools accelerate delivery when the work before coding (requirements, design, architecture) is settled AND the work after coding (reviews, testing, deployment) is consistent and representable in the coding process. When either side breaks down, faster coding doesn't translate to faster delivery, it translates to faster rework.**
+
+Across three projects, both conditions held on exactly one.
+
+---
+
+## The Three Projects
+
+To ground this in specifics, here's the landscape:
+
+|  | Claims Management | Personal Assistant | A2A Multi-Agent System |
+| :---- | :---- | :---- | :---- |
+| **Language** | Java | JS/TS | Python / LangGraph |
+| **Greenfield?** | Greenfield | Greenfield | Brownfield |
+| **Requirements** | Clear spec | Informal, prototype-driven | Informal \+ high uncertainty |
+| **My role** | Solo developer | Architect / tech lead | Developer on a team |
+| **Coding as % of time** | \~50% | \~10-20% | \~10-15% |
+| **AI tools** | Claude Code \+ Copilot | Claude Code \+ Copilot | Claude Code \+ Copilot |
+
+That row, coding as a percentage of total time, is the number that matters most. Hold it in your mind as you read.
+
+---
+
+## The Tools: What AI Coding Assistants Can Do
+
+Before getting into where delivery breaks down, I want to be clear: these tools represent a genuine step change. This isn't an anti-AI article. It's a calibration.
+
+Both Claude Code and Copilot handle complex, multi-step instructions with remarkable facility across Java, JS/TS, and Python. They write code, refactor code, explain code, and, critically, they integrate with the broader development ecosystem through MCP (Model Context Protocol) servers.
+
+On these projects, MCP integrations included:
+
+- **LangChain docs** for live lookups of the latest LangGraph features, which was essential given how fast the API was moving and how prone the models are to hallucinating outdated patterns  
+- **Atlassian** for creating and updating stories and tasks without leaving the coding flow  
+- **Chrome DevTools** for driving LangGraph Studio's UI to run multi-step conversational tests from natural language descriptions
+
+Beyond MCP, the tools excel at pattern discovery: finding how a problem like OAuth integration was already solved elsewhere in the codebase before implementing it fresh. They enforce consistency and prevent duplication in ways that grep and institutional memory never could.
+
+The code review workflow deserves special mention: paste a screenshot of review comments, the AI evaluates their validity, and implements fixes where warranted. This turned a context-switching tax into a fluid process.
+
+### Where Claude Code Had an Edge
+
+Claude Code offered constructs that Copilot seemed to lack at the time of writing (Copilot's January 2026 release may close some gaps):
+
+**Skills** are markdown files encoding domain expertise that persist across sessions. On the Java project, I created six testing skills: unit tests, Testcontainers, Spring REST Docs, ArchUnit, BDD with Cucumber and Playwright, and JMH with Gatling. Each skill codified the conventions and patterns a senior engineer would bring to that specific testing type: not just "write a test," but "write a test *the way this project writes tests*." Skills live in the project repository, so any developer using Claude Code gets the same quality guardrails.
+
+**Subagents** allow spawning background agents for parallel, isolated work. On the Java project, I built three custom agents:
+
+1. A *coverage analyst* that scanned the codebase for meaningful test gaps: not line coverage metrics, but actual untested behavior prioritized by cyclomatic complexity.  
+2. A *test scaffolder* that set up infrastructure: Testcontainers base classes, Maven source sets, plugin configurations.  
+3. A *database migration test writer* that read all Liquibase changesets and generated a test for each one.
+
+These ran as background tasks while I continued working in the foreground. The analyst produced a prioritized report: 14 untested service methods, 8 undocumented endpoints, 3 untested native queries, 2 architecture violations. Subagents handled the scale problem without exhausting the context window. Each operated in isolation with its own context.
+
+**Plan mode** switches to exploration and planning before committing to code. I used it across all three projects to evaluate multiple approaches in parallel, which naturally triggered subagent spawning. It prevented premature implementation, which is ironic given that premature implementation turned out to be a recurring problem on the other projects.
+
+**Hooks** played a supporting role, triggering actions on events like auto-formatting and pre-commit checks after every *logical* change was completed.
+
+### The Testing Showcase
+
+The full session on the claims project illustrates what's possible when everything aligns:
+
+The coverage analyst and test scaffolder ran in parallel. I reviewed the analyst's report. The ArchUnit skill generated architecture tests. Two failed immediately, confirming real violations in the codebase. The REST Docs skill generated documentation tests for 8 endpoints as a background subagent. The migration test writer produced 13 migration tests. I identified 5 critical BDD scenarios (this required business judgment the tools couldn't provide). The BDD skill generated feature files, page objects, and step definitions. JMH benchmarks were written for the highest-complexity methods, and a Gatling simulation was created for load testing.
+
+Skills carried domain expertise. Agents handled scale. The developer made judgment calls. This separation of concerns is what made it work.
+
+And it only worked because the claims project had clear requirements and stable foundations.
+
+---
+
+## Where It Worked: The Claims Management System
+
+The claims project is the control case. It proves AI tools *can* accelerate delivery when conditions are right.
+
+But "clear requirements" didn't fall from the sky. The functional specification existed, but it targeted a different technology stack entirely (.NET backend, React frontend). Before writing a line of application code, I used AI tools to process the spec itself: deepening my understanding of the domain, evaluating Java against .NET for this specific problem (Spring Modulith's event-driven architecture turned out to be a natural fit for the claim lifecycle), designing the bounded contexts and module boundaries, and establishing quality guidelines with specific thresholds for coverage, mutation testing, and performance.
+
+The result was a set of foundational documents: an architecture built around 12 bounded contexts with event-driven integration, quality guidelines specifying mutation score targets of 90% for the rules engine and 85% for financial calculations, and a project-level CLAUDE.md that encoded the development philosophy (functional programming with pure functions for business logic, mutations only at service boundaries) along with concrete patterns and constraints. These documents became the shared context between me and the AI tools for every subsequent coding session.
+
+This matters because the "pre-coding is settled" condition was *achieved*, not given. AI tools helped settle pre-coding before they accelerated coding itself.
+
+I was also the sole developer, meaning zero coordination overhead and no review bottleneck. Post-coding activities were representable as code: REST Docs generated documentation from tests, ArchUnit enforced architecture as executable rules, Testcontainers provided realistic integration environments, BDD scenarios served as living acceptance criteria, and performance benchmarks were automated.
+
+Roughly 50% of my time on this project was actual coding. That's a large enough fraction for AI tools to make a meaningful difference. And they did. Delivery was genuinely faster.
+
+Both sides of the equation held. Pre-coding was settled through deliberate investment. Post-coding was automatable: testing, documentation, and architectural compliance were all expressed as code that the AI tools could generate and maintain.
+
+This is what the marketing materials promise. It's real. It's just not the whole story.
+
+---
+
+## The Value Stream: Where Time Actually Goes
+
+Software delivery is a value stream. Code is one station on the line. The full sequence looks something like:
+
+1. Requirements clarification and discovery  
+2. Design and architectural decisions  
+3. **Coding** ← *this is what AI tools accelerate*  
+4. Code review  
+5. Integration and testing  
+6. Cross-team dependencies and waiting  
+7. Deployment
+
+AI coding tools operate on step 3\. Everything else remains at human speed: meetings, decisions, reviews, coordination, waiting.
+
+Now revisit those percentages:
+
+- **Claims:** 50% coding → AI tools can theoretically accelerate half the delivery time  
+- **Personal assistant:** 10-20% coding → AI tools accelerate a sliver  
+- **A2A system:** 10-15% coding → even if AI made coding *infinitely fast*, delivery improves by 15% at most
+
+That last number bears repeating. On the A2A project, over 12 calendar weeks (10 working), coding consumed 10-15% of the total effort. If a magic wand eliminated coding time entirely, the project would have finished roughly one week earlier. One week out of twelve.
+
+---
+
+## When Requirements Are the Bottleneck
+
+The personal assistant project had requirements that could charitably be described as "emergent." It was closer to a research project than a delivery project. The product owner wanted working prototypes before deciding direction, which is a valid approach, but it means the cycle looks like this:
+
+Build → Show → Discuss → Pivot → Repeat.
+
+The technology was also constrained. The product owner had committed to a platform that was immature, had its own way of implementing AI agents, and didn't support emerging standards like MCP. Every prototype had to work within these constraints, and evaluating those constraints required detailed technical explanations to the product owner before decisions could move forward.
+
+AI tools made each prototype faster to build. I could spin up a working demo in a fraction of the time it would have taken manually. But the cycle time was dominated by decision-making with the product owner: conversations, explanations, alignment. Faster prototypes meant *more iterations*, not faster delivery.
+
+As the architect and tech lead on this project, my bottleneck was guiding the team and coordinating with the product owner. These are activities where AI coding tools are irrelevant. Five months in, the project was still evolving.
+
+---
+
+## When Architecture and Ecosystem Maturity Are the Bottleneck
+
+The A2A project deserves its own extended treatment because it illustrates multiple bottlenecks compounding.
+
+### The Setup
+
+The system had a router agent that exposed both A2A and MCP interfaces. Behind it sat existing agents: a coding agent (which handled intent discovery, sub-agent assignment, and coding tasks) and a build helper agent. My work was building the golden pathway agent, a new agent that would provision new applications using copier templates with a full pipeline: source repository, build pipeline, binary repository, deployment pipeline, and environments.
+
+### The Architectural Constraint
+
+The golden pathway agent was placed as a sub-agent of the coding agent. It felt orthogonal (provisioning a new application isn't really a "coding task"), but the team wanted zero changes to the existing agent setup. This meant the golden pathway had to exist at the same level as the coding task graph, maintaining no shared state with the rest of the graph.
+
+This decision cascaded into every subsequent design challenge.
+
+### The Conversational Problem
+
+All existing agents were single-turn: request in, response out. The golden pathway needed multi-turn conversation: asking the user for a project name, repository details, pipeline configuration, environments, and so on.
+
+A single-agent prototype worked easily. AI tools helped me build it fast. But multi-agent reality was different: returning to the user for input meant unwinding the entire agent graph, then routing back through the coding agent to the golden pathway agent, restoring state along the way.
+
+The solution was LangGraph interrupts, a mechanism that pauses a subgraph in place without unwinding it, like a loop that avoids complex routing decisions. But exposing interrupts through the A2A protocol required translating them to an A2A analog: the "input-required" task state, which was only released in LangGraph 0.7.5.
+
+The project was on LangGraph 0.5.27. That's not a minor version bump.
+
+Even after upgrading, the A2A client also needed to support this feature. **Code could be written but not end-to-end tested until a framework version that didn't exist yet was released.** No amount of coding speed helps when the platform underneath you hasn't caught up.
+
+---
+
+## When Cross-Team Dependencies Shift the Ground
+
+The golden pathway agent needed to call provisioning APIs built by another team. A CLI tool existed as a reference, so AI tools quickly generated models and conversational questions based on it. Fast, clean, satisfying work.
+
+The real integration, however, was through an MCP server (not the CLI), and that server wasn't available until late in the project. When it arrived, the APIs differed from the CLI.
+
+Models and conversational questions were rebuilt 2-3 times.
+
+The MCP server also required OAuth authentication, a new pattern for the codebase that hadn't been implemented before. More exploration, more integration work.
+
+Each rebuild was fast thanks to AI tools. But the rebuilds were caused by shifting external dependencies, not by slow coding. **Faster coding meant faster arrival at the next blocker.**
+
+---
+
+## The Illusion of Progress
+
+Here's the critical insight from the A2A project, and the one I think matters most for engineering leaders:
+
+**The team was never idle.** AI tools ensured there was always code being written — speculatively, against assumptions, against reference implementations. The single-agent prototype was built early. Models were generated from the CLI. Code was written against LangGraph 0.5.27's patterns. Everyone was productively busy.
+
+But:
+
+- The single-agent prototype was reworked for multi-agent reality.  
+- Models built from the CLI were rebuilt 2-3 times when the MCP server arrived with different APIs.  
+- Code written against 0.5.27 assumptions was adjusted when 0.7.5 patterns became clear.
+
+**The AI tools masked the problem by making rework cheap enough to seem productive.** The team was always moving fast — just not always forward. In 10 working weeks, coding was 10-15% of the time, and much of that coding was done more than once.
+
+This is a subtle trap. When coding is essentially free, there's no natural pressure to wait for clarity before building. You code against assumptions. Those assumptions change. You rebuild. Each iteration is fast. But the total time is dominated by the cycle of assumption → invalidation → rebuild, not by the speed of any individual build.
+
+The old economics of software enforced a natural gate: coding was expensive enough that teams invested in clarifying requirements and stabilizing interfaces before writing code. When coding becomes cheap, that gate disappears, and nothing automatically replaces it.
+
+---
+
+## When Post-Coding Friction Compounds (A2A Project Part 3\)
+
+The A2A project's pre-coding problems get the dramatic examples, but the post-coding side was just as broken. Multiple layers of automated and human review stood between "code written" and "code shipped," and none of them were reproducible in the developer's coding flow.
+
+### Automated checks split across environments
+
+SonarQube quality gates, duplicate code detection, security rules, and GitHub Copilot AI actions only ran on the CI server. On the developer machine, code coverage could be checked, but the 80% coverage gate for new code wasn't enforced locally. A commit that looked clean on your machine could fail in CI for reasons you had no way to catch beforehand. Each failure meant another round of changes, another commit, another CI run.
+
+This is the opposite of the claims project, where ArchUnit rules, coverage thresholds, mutation testing, and REST Docs all ran locally as part of the coding session. On the claims project, AI tools could generate code that passed quality gates because the gates were part of the development loop. On the A2A project, the gates were invisible until CI reported back.
+
+### Type checking introduced mid-stream
+
+Python's `basedpyright` was adopted midway through the project. The existing codebase had an extremely large number of warnings that were baselined rather than fixed. LangGraph itself didn't publish type information, so many exceptions had to be added to suppress checks that couldn't be resolved. Python's loose typing made full compliance impossible regardless. The result was a type checking system that caught some issues but also generated noise, and the baseline kept shifting as new code interacted with untyped dependencies.
+
+### Inconsistent human review
+
+Human code review added another layer of unpredictability. Review feedback varied depending on who performed the review, with different reviewers emphasizing different concerns. The tech lead and I had recurring disagreements on tactical and style issues, and the tech lead had limited availability for reviews.
+
+### The compounding effect
+
+Each of these layers could independently bounce code back: CI-only checks that failed after commit, type errors from untyped framework dependencies, human review comments that varied by reviewer. And because AI tools compressed coding time, code arrived at each of these gates faster, then sat waiting or got sent back more frequently.
+
+The math is stark. Before AI tools: code takes a week to write and a week to clear all reviews. Review is 50% of the cycle. After: code takes a day to write and still takes a week to clear reviews. Review is now 87.5% of the cycle. The bottleneck didn't change; it just became dramatically more visible.
+
+On the claims project, post-coding was representable in the coding process: the AI could generate code that passed the same checks locally that would run in CI. On the A2A project, post-coding was a gauntlet of disconnected checks that couldn't be anticipated during coding. AI tools amplified this gap by compressing everything around it.
+
+---
+
+## The Two-Sided Formula
+
+Pulling together the pattern across all three projects:
+
+**AI tools accelerate delivery when BOTH conditions hold:**
+
+1. **Pre-coding is settled.** Requirements are clear, architecture is decided, interfaces are stable, the framework supports what you need.  
+2. **Post-coding is representable in the coding process.** Testing is automatable, reviews are fast and aligned, deployments are consistent, verification doesn't depend on unavailable external systems.
+
+The claims project met both conditions. Clear spec, actively refined with AI tools into architecture and quality guidelines before coding began. Solo developer. Automatable testing strategy. Result: faster delivery.
+
+The personal assistant failed on pre-coding. Requirements were unclear. Technology was constrained and immature. The decision cycle with the product owner dominated the timeline. AI tools produced faster prototypes that fed into the same slow decision process.
+
+The A2A project failed on both sides. Pre-coding: architectural uncertainty, framework immaturity, shifting external APIs. Post-coding: quality gates that only ran in CI, type checking introduced mid-project against an untyped framework, inconsistent human review, inability to end-to-end test until framework features were released. AI tools produced fast code that arrived at these gates sooner and got bounced back more frequently.
+
+---
+
+## What Would Actually Move Delivery Speed
+
+Given these experiences, what would have had higher leverage than AI coding tools on the projects where delivery lagged?
+
+**Earlier architectural alignment.** On the A2A project, the decision to place the golden pathway as a sub-agent of the coding agent constrained every downstream design decision. Resolving that earlier, or differently, would have eliminated entire categories of complexity.
+
+**API contracts agreed before implementation.** The CLI-to-MCP-server divergence caused multiple rebuilds. A stable contract, even a preliminary one, would have reduced rework significantly.
+
+**Faster code review cycles.** Reviewer availability and upfront alignment on style conventions would have compressed the longest single bottleneck on the A2A project.
+
+**Framework maturity assessment before committing.** The LangGraph version gap between what was available and what was needed could have been identified earlier, changing the approach entirely.
+
+**Requirements clarity processes.** Prototype-driven discovery has real value, but on the personal assistant project, the decision cycle with the product owner was the actual bottleneck. Structuring those decisions differently would have done more than any coding tool.
+
+**Reducing speculative coding.** Sometimes the highest-leverage move is to wait for clarity rather than build against assumptions. When coding is cheap, this feels counterintuitive — why not just build it and see? Because the rework cycle has costs beyond coding: context switching, review overhead, debugging integration issues that only exist because the foundation shifted.
+
+---
+
+## The Honest Assessment
+
+AI coding tools are genuinely impressive and genuinely valuable. The claims project and its testing strategy prove it: skills that encode and scale domain expertise, subagents that handle parallel work at scale, MCP integrations that keep the developer in flow, plan mode that prevents premature implementation. These represent a real step change in what a single developer can accomplish in a session.
+
+But the industry narrative that equates "coding faster" with "delivering faster" only holds when both the pre-coding and post-coding conditions are met. Across three projects, that was true for one.
+
+The real value of AI coding tools may not be delivery speed at all. It might be the ability to settle pre-coding itself: processing a functional spec into architecture, evaluating technology trade-offs, establishing quality guidelines before the first line of application code is written. Beyond that, it's the ability to codify and scale expertise through skills. To explore multiple approaches in parallel through subagents. To keep documentation honest through generated tests. To enforce architecture through executable rules. To work productively across unfamiliar ecosystems with live documentation lookups.
+
+These are substantial benefits: they change what's possible in a single coding session, and they raise the floor of quality across a team. They're just not "10x delivery." And pretending they are sets teams up for the same disappointment I watched play out on two of three projects: everyone coding faster, nobody shipping sooner.
+
+The arithmetic doesn't lie. If coding is 10-15% of your delivery time, a 10x improvement in coding speed gets you — at most — a 15% improvement in delivery. The other 85% is requirements, architecture, coordination, review, dependencies, and waiting.
+
+Want to ship faster? Fix those.

@@ -1,0 +1,97 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  excerpt: string;
+  tags: string[];
+  slug: string;
+  readingTime: string;
+}
+
+const { title, date, excerpt, tags, slug, readingTime } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<a href={`/blog/${slug}`} class="post-card">
+  <div class="post-meta">
+    <span class="post-date">{formattedDate}</span>
+    <span class="post-meta-dot">&bull;</span>
+    <span class="post-reading">{readingTime}</span>
+  </div>
+  <h3>{title}</h3>
+  <p>{excerpt}</p>
+  <div class="post-tags">
+    {tags.map(tag => <span class="tag">{tag}</span>)}
+  </div>
+</a>
+
+<style>
+  .post-card {
+    display: block;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+
+  .post-card:hover {
+    background: rgba(13, 148, 136, 0.02);
+    margin: 0 -16px;
+    padding: 24px 16px;
+    border-radius: 8px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .post-date,
+  .post-reading {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .post-meta-dot {
+    color: var(--border);
+    font-size: 10px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 680px;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--tag-bg);
+    color: var(--accent);
+    border: 1px solid var(--tag-border);
+  }
+</style>
