@@ -5,17 +5,23 @@ interface Props {
   date: string;
   description: string;
   url: string;
+  eventUrl?: string;
+  videoUrl?: string;
 }
 
-const { title, event, date, description, url } = Astro.props;
+const { title, event, date, description, url, eventUrl, videoUrl } = Astro.props;
 ---
 
-<a href={url} class="talk-card">
-  <div class="talk-event">{event}</div>
+<div class="talk-card" onclick={`window.location='${url}'`}>
+  {eventUrl ? (
+    <a href={eventUrl} target="_blank" rel="noopener noreferrer" class="talk-event" onclick="event.stopPropagation()">{event}</a>
+  ) : (
+    <div class="talk-event">{event}</div>
+  )}
   <h3>{title}</h3>
   <p>{description}</p>
   <div class="talk-date">{date}</div>
-</a>
+</div>
 
 <style>
   .talk-card {
@@ -27,6 +33,7 @@ const { title, event, date, description, url } = Astro.props;
     color: inherit;
     transition: border-color 0.15s, box-shadow 0.15s;
     display: block;
+    cursor: pointer;
   }
 
   .talk-card:hover {

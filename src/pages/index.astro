@@ -39,7 +39,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </div>
 
   <div class="section-header">
-    <h2>Talks</h2>
+    <h2>Recent Talks</h2>
     <a href="/talks">View all &rarr;</a>
   </div>
   <div class="talks-grid">
@@ -50,6 +50,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         date={talk.date}
         description={talk.description}
         url={talk.url}
+        eventUrl={talk.eventUrl}
+        videoUrl={talk.videoUrl}
       />
     ))}
   </div>
