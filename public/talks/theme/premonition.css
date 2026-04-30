@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/*
+ * Premonition — shared Reveal.js theme for premonition.dev
+ *
+ * Dark presentation theme with brand continuity to the light site.
+ * Site: Editorial Light (warm stone background, teal/blue accents)
+ * Talks: Dark (deep navy, same teal/blue accents, same typography)
+ */
+
+:root {
+  --r-background-color: #0f1729;
+  --r-main-font: 'Inter', system-ui, sans-serif;
+  --r-heading-font: 'Inter', system-ui, sans-serif;
+  --r-code-font: 'JetBrains Mono', monospace;
+  --r-main-font-size: 28px;
+  --r-main-color: #e2e8f0;
+  --r-heading-color: #ffffff;
+  --r-link-color: #0d9488;
+  --r-link-color-hover: #2dd4bf;
+  --r-selection-background-color: rgba(13, 148, 136, 0.3);
+  --r-selection-color: #fff;
+
+  --accent: #0d9488;
+  --accent2: #2563eb;
+  --muted: #94a3b8;
+  --surface: #1a2332;
+  --dim: #475569;
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+}
+
+.reveal .slides section {
+  text-align: left;
+}
+
+/* ── Typography ── */
+.reveal h1 { font-weight: 900; font-size: 2.2em; line-height: 1.1; text-transform: none; color: var(--r-heading-color); margin: 0 0 0.25em; }
+.reveal h2 { font-weight: 700; font-size: 1.5em; color: var(--accent); text-transform: none; margin: 0 0 0.6em; line-height: 1.2; }
+.reveal h3 { font-weight: 600; font-size: 0.9em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.4em; }
+.reveal p  { line-height: 1.6; margin: 0.25em 0; }
+
+/* ── Utility classes ── */
+.accent  { color: var(--accent); }
+.blue    { color: var(--accent2); }
+.muted   { color: var(--muted); }
+.white   { color: #fff; }
+.small   { font-size: 0.7em; }
+.bold    { font-weight: 700; }
+.center  { text-align: center; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 10px 0;
+}
+
+.card-accent { border-left: 4px solid var(--accent); }
+.card-blue   { border-left: 4px solid var(--accent2); }
+
+.card h4 {
+  margin: 0 0 8px;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.75em;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── Layout ── */
+.two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+
+/* ── Stats ── */
+.stat-row  { display: flex; justify-content: center; gap: 60px; margin: 30px 0; }
+.stat-item { text-align: center; }
+.stat-number { font-size: 3.2em; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+.stat-label  { font-size: 0.65em; color: var(--muted); max-width: 200px; margin: 0 auto; }
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Code ── */
+.reveal pre {
+  font-family: var(--r-code-font);
+  font-size: 0.55em;
+  line-height: 1.6;
+  background: #141e30;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: none;
+}
