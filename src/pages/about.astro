@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About Prem Chandrasekaran — Market Tech Director at Thoughtworks.">
+  <div class="about-layout">
+    <div class="about-content">
+      <h1>About</h1>
+
+      <p>I'm Prem Chandrasekaran, a Market Tech Director at <a href="https://www.thoughtworks.com" target="_blank" rel="noopener noreferrer">Thoughtworks</a>. I build software, lead engineering teams, and write about the gap between what technology promises and what it actually delivers.</p>
+
+      <h2>What I Write About</h2>
+      <ul>
+        <li><strong>AI-assisted development</strong> — what actually accelerates delivery and what just accelerates rework</li>
+        <li><strong>Engineering leadership</strong> — the human systems around the technical systems</li>
+        <li><strong>Domain-Driven Design</strong> — modeling complex domains, bounded contexts, and event-driven architectures</li>
+        <li><strong>Knowledge graphs</strong> — using Neo4j and graph databases for AI memory and consistency</li>
+      </ul>
+
+      <h2>Current Projects</h2>
+      <p>I'm building <strong>LitQuest</strong>, an AI-assisted authoring platform that uses Neo4j knowledge graphs to keep million-word fiction series internally consistent. I spoke about the architecture at NODES AI 2026.</p>
+
+      <h2>Get in Touch</h2>
+      <p>Find me on <a href="https://github.com/premanandc" target="_blank" rel="noopener noreferrer">GitHub</a> and <a href="https://linkedin.com/in/premanandc" target="_blank" rel="noopener noreferrer">LinkedIn</a>.</p>
+    </div>
+    <div class="about-image">
+      <img src="/images/wordcloud.png" alt="Prem Chandrasekaran — word cloud portrait" />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    display: flex;
+    gap: 48px;
+    padding: 40px 0;
+    align-items: flex-start;
+  }
+
+  .about-content {
+    flex: 1;
+    max-width: 640px;
+  }
+
+  .about-content h1 {
+    margin-bottom: 20px;
+  }
+
+  .about-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+  }
+
+  .about-content p {
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    color: #292524;
+  }
+
+  .about-content ul {
+    padding-left: 1.5em;
+    margin-bottom: 1rem;
+  }
+
+  .about-content li {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    color: #292524;
+  }
+
+  .about-image {
+    flex-shrink: 0;
+    width: 280px;
+  }
+
+  .about-image img {
+    width: 100%;
+    border-radius: 12px;
+  }
+</style>
