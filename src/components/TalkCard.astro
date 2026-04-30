@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  event: string;
+  date: string;
+  description: string;
+  url: string;
+}
+
+const { title, event, date, description, url } = Astro.props;
+---
+
+<a href={url} class="talk-card">
+  <div class="talk-event">{event}</div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+  <div class="talk-date">{date}</div>
+</a>
+
+<style>
+  .talk-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    display: block;
+  }
+
+  .talk-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 12px rgba(13, 148, 136, 0.08);
+  }
+
+  .talk-event {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .talk-date {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 12px;
+  }
+</style>
