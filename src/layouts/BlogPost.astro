@@ -1,0 +1,130 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  date: Date;
+  tags: string[];
+  readingTime: string;
+}
+
+const { title, date, tags, readingTime } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+});
+---
+
+<BaseLayout title={title}>
+  <article>
+    <header class="article-header">
+      <div class="article-tags">
+        {tags.map(tag => <span class="tag">{tag}</span>)}
+      </div>
+      <h1>{title}</h1>
+      <div class="article-meta">
+        <img src="/images/headshot.png" alt="Prem Chandrasekaran" class="meta-avatar" />
+        <span>Prem Chandrasekaran</span>
+        <span class="meta-dot">&bull;</span>
+        <span>{formattedDate}</span>
+        <span class="meta-dot">&bull;</span>
+        <span>{readingTime}</span>
+      </div>
+    </header>
+    <div class="article-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    padding-top: 40px;
+  }
+
+  .article-header {
+    margin-bottom: 32px;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--tag-bg);
+    color: var(--accent);
+    border: 1px solid var(--tag-border);
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .meta-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .meta-dot {
+    color: var(--border);
+  }
+
+  .article-body {
+    max-width: 680px;
+  }
+
+  .article-body :global(p) {
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #292524;
+  }
+
+  .article-body :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .article-body :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    padding-left: 1.5em;
+    margin-bottom: 1.25rem;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #292524;
+  }
+
+  .article-body :global(li) {
+    margin-bottom: 0.25rem;
+  }
+
+  .article-body :global(strong) {
+    font-weight: 700;
+  }
+</style>

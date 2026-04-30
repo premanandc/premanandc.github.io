@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagFilter from '../../components/TagFilter.tsx';
+import { getReadingTime } from '../../utils/reading-time';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+
+const postsForClient = posts.map(post => ({
+  slug: post.id,
+  title: post.data.title,
+  date: post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+  excerpt: post.data.excerpt,
+  tags: post.data.tags,
+  readingTime: getReadingTime(post.body ?? ''),
+}));
+---
+
+<BaseLayout title="Blog" description="Writing about AI, engineering leadership, and software delivery.">
+  <div class="blog-header">
+    <h1>Blog</h1>
+    <p>Writing about AI, engineering leadership, and what actually works in software delivery.</p>
+  </div>
+  <TagFilter client:load posts={postsForClient} allTags={allTags} />
+</BaseLayout>
+
+<style>
+  .blog-header {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .blog-header h1 {
+    margin-bottom: 8px;
+  }
+
+  .blog-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+</style>

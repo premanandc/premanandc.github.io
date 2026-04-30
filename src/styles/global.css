@@ -109,3 +109,90 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* ── Tag Filter (React island) ── */
+.tag-filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.filter-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-tag.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.posts-list .post-card {
+  display: block;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.posts-list .post-card:hover {
+  background: rgba(13, 148, 136, 0.02);
+  margin: 0 -16px;
+  padding: 24px 16px;
+  border-radius: 8px;
+}
+
+.posts-list .post-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.posts-list .post-date,
+.posts-list .post-reading {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.posts-list .post-meta-dot {
+  color: var(--border);
+  font-size: 10px;
+}
+
+.posts-list h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.posts-list p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.posts-list .post-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
