@@ -7,6 +7,7 @@ interface Post {
   excerpt: string;
   tags: string[];
   readingTime: string;
+  coverImage?: string;
 }
 
 interface Props {
@@ -43,6 +44,9 @@ export default function TagFilter({ posts, allTags }: Props) {
       <div className="posts-list">
         {filtered.map(post => (
           <a key={post.slug} href={`/blog/${post.slug}`} className="post-card">
+            {post.coverImage && (
+              <img src={post.coverImage} alt={post.title} className="post-cover" />
+            )}
             <div className="post-meta">
               <span className="post-date">{post.date}</span>
               <span className="post-meta-dot">&bull;</span>

@@ -6,9 +6,10 @@ interface Props {
   tags: string[];
   slug: string;
   readingTime: string;
+  coverImage?: string;
 }
 
-const { title, date, excerpt, tags, slug, readingTime } = Astro.props;
+const { title, date, excerpt, tags, slug, readingTime, coverImage } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -17,6 +18,9 @@ const formattedDate = date.toLocaleDateString('en-US', {
 ---
 
 <a href={`/blog/${slug}`} class="post-card">
+  {coverImage && (
+    <img src={coverImage} alt={title} class="post-cover" />
+  )}
   <div class="post-meta">
     <span class="post-date">{formattedDate}</span>
     <span class="post-meta-dot">&bull;</span>
@@ -44,6 +48,13 @@ const formattedDate = date.toLocaleDateString('en-US', {
     margin: 0 -16px;
     padding: 24px 16px;
     border-radius: 8px;
+  }
+
+  .post-cover {
+    width: 100%;
+    max-width: 680px;
+    border-radius: 8px;
+    margin-bottom: 12px;
   }
 
   .post-meta {

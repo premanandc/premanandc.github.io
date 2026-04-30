@@ -6,9 +6,10 @@ interface Props {
   date: Date;
   tags: string[];
   readingTime: string;
+  coverImage?: string;
 }
 
-const { title, date, tags, readingTime } = Astro.props;
+const { title, date, tags, readingTime, coverImage } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -32,6 +33,9 @@ const formattedDate = date.toLocaleDateString('en-US', {
         <span>{readingTime}</span>
       </div>
     </header>
+    {coverImage && (
+      <img src={coverImage} alt={title} class="cover-image" />
+    )}
     <div class="article-body">
       <slot />
     </div>
@@ -88,6 +92,13 @@ const formattedDate = date.toLocaleDateString('en-US', {
 
   .meta-dot {
     color: var(--border);
+  }
+
+  .cover-image {
+    width: 100%;
+    max-width: 680px;
+    border-radius: 10px;
+    margin-bottom: 32px;
   }
 
   .article-body {

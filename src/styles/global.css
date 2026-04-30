@@ -142,6 +142,13 @@ th {
   border-color: var(--accent);
 }
 
+.posts-list .post-cover {
+  width: 100%;
+  max-width: 680px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
 .posts-list .post-card {
   display: block;
   padding: 24px 0;

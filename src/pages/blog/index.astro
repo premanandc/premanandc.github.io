@@ -16,6 +16,7 @@ const postsForClient = posts.map(post => ({
   excerpt: post.data.excerpt,
   tags: post.data.tags,
   readingTime: getReadingTime(post.body ?? ''),
+  coverImage: post.data.coverImage,
 }));
 ---
 

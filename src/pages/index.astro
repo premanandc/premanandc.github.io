@@ -15,7 +15,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <section class="hero">
     <div class="hero-text">
       <h1>Engineering leader who writes about what actually works.</h1>
-      <p>I build software, lead teams, and write about the gap between what tools promise and what they deliver. Currently Market Tech Director at Thoughtworks.</p>
+      <p>I build software, lead teams, and write about the gap between what tools promise and what they deliver.</p>
     </div>
     <img src="/images/headshot.png" class="hero-image" alt="Prem Chandrasekaran" />
   </section>
@@ -33,6 +33,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         tags={post.data.tags}
         slug={post.id}
         readingTime={getReadingTime(post.body ?? '')}
+        coverImage={post.data.coverImage}
       />
     ))}
   </div>

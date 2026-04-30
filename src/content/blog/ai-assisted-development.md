@@ -3,6 +3,7 @@ title: "I Code 10x Faster. We Ship at the Same Speed."
 date: 2026-04-29
 excerpt: "AI coding tools accelerate delivery when the work before coding is settled AND the work after coding is consistent and representable in the coding process. Across three projects, both conditions held on exactly one."
 tags: ["AI", "Engineering Leadership", "Developer Experience"]
+coverImage: "/images/blog/ai-assisted-development.png"
 ---
 
 I watched Claude Code generate in 30 seconds what would have taken me more than an hour. A complete set of integration tests, all structurally sound, all following the project's conventions. And yet, on another project a few weeks later, a feature I could build in a day sat in review for a week, got reworked, sat in review again, and barely shipped ten weeks after the first line of code was written.
