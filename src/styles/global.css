@@ -203,3 +203,74 @@ th {
   margin-top: 10px;
   flex-wrap: wrap;
 }
+
+/* ── Blog Components ── */
+:root {
+  --callout-info-bg: rgba(13, 148, 136, 0.06);
+  --callout-info-border: #0d9488;
+  --callout-warning-bg: rgba(217, 119, 6, 0.06);
+  --callout-warning-border: #d97706;
+  --callout-tip-bg: rgba(37, 99, 235, 0.06);
+  --callout-tip-border: #2563eb;
+  --callout-insight-bg: rgba(124, 58, 237, 0.06);
+  --callout-insight-border: #7c3aed;
+}
+
+.callout {
+  border-left: 3px solid var(--callout-info-border);
+  background: var(--callout-info-bg);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+  max-width: 680px;
+}
+
+.callout-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  color: var(--callout-info-border);
+}
+
+.callout-content {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #292524;
+}
+
+.callout-content p {
+  margin: 0;
+}
+
+.callout-content p + p {
+  margin-top: 8px;
+}
+
+.callout.warning {
+  border-left-color: var(--callout-warning-border);
+  background: var(--callout-warning-bg);
+}
+
+.callout.warning .callout-label {
+  color: var(--callout-warning-border);
+}
+
+.callout.tip {
+  border-left-color: var(--callout-tip-border);
+  background: var(--callout-tip-bg);
+}
+
+.callout.tip .callout-label {
+  color: var(--callout-tip-border);
+}
+
+.callout.insight {
+  border-left-color: var(--callout-insight-border);
+  background: var(--callout-insight-bg);
+}
+
+.callout.insight .callout-label {
+  color: var(--callout-insight-border);
+}
