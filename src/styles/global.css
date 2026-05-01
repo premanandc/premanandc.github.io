@@ -274,3 +274,53 @@ th {
 .callout.insight .callout-label {
   color: var(--callout-insight-border);
 }
+
+.expandable {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 24px 0;
+  max-width: 680px;
+  overflow: hidden;
+}
+
+.expandable-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--bg-surface);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.expandable-trigger:hover {
+  background: var(--bg);
+}
+
+.expandable-arrow {
+  font-size: 12px;
+  color: var(--accent);
+  transition: transform 0.2s;
+}
+
+.expandable-arrow.open {
+  transform: rotate(90deg);
+}
+
+.expandable-body {
+  padding: 0 20px 16px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #292524;
+}
+
+.expandable-body p {
+  margin: 0 0 8px;
+}
