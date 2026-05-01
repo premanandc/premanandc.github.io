@@ -6,11 +6,18 @@ tags: ["AI", "Engineering Leadership", "Developer Experience"]
 coverImage: "/images/blog/ai-assisted-development.png"
 ---
 
+import Callout from '../../components/blog/Callout.tsx';
+import ExpandableSection from '../../components/blog/ExpandableSection.tsx';
+
 I watched Claude Code generate in 30 seconds what would have taken me more than an hour. A complete set of integration tests, all structurally sound, all following the project's conventions. And yet, on another project a few weeks later, a feature I could build in a day sat in review for a week, got reworked, sat in review again, and barely shipped ten weeks after the first line of code was written.
 
 This isn't an article about whether AI coding tools work. They do. I've used Claude Code, GitHub Copilot and Cursor across three real projects over the past year: a Java claims management system, a JavaScript/TypeScript personal assistant, and a Python multi-agent system built on LangGraph and A2A. The tools are genuinely impressive, and I'll show you exactly how.
 
-But the industry narrative conflates "coding faster" with "delivering faster," and my experience across these three projects tells a different story. **AI coding tools accelerate delivery when the work before coding (requirements, design, architecture) is settled AND the work after coding (reviews, testing, deployment) is consistent and representable in the coding process. When either side breaks down, faster coding doesn't translate to faster delivery, it translates to faster rework.**
+But the industry narrative conflates "coding faster" with "delivering faster," and my experience across these three projects tells a different story.
+
+<Callout variant="insight" label="The Two-Sided Formula" client:visible>
+AI coding tools accelerate delivery when the work before coding (requirements, design, architecture) is settled AND the work after coding (reviews, testing, deployment) is consistent and representable in the coding process. When either side breaks down, faster coding doesn't translate to faster delivery, it translates to faster rework.
+</Callout>
 
 Across three projects, both conditions held on exactly one.
 
@@ -53,12 +60,14 @@ The code review workflow deserves special mention: paste a screenshot of review 
 
 Claude Code offered constructs that Copilot seemed to lack at the time of writing (Copilot's January 2026 release may close some gaps):
 
+<ExpandableSection title="Skills, Subagents, Plan Mode, and Hooks — click to expand" client:load>
+
 **Skills** are markdown files encoding domain expertise that persist across sessions. On the Java project, I created six testing skills: unit tests, Testcontainers, Spring REST Docs, ArchUnit, BDD with Cucumber and Playwright, and JMH with Gatling. Each skill codified the conventions and patterns a senior engineer would bring to that specific testing type: not just "write a test," but "write a test *the way this project writes tests*." Skills live in the project repository, so any developer using Claude Code gets the same quality guardrails.
 
 **Subagents** allow spawning background agents for parallel, isolated work. On the Java project, I built three custom agents:
 
-1. A *coverage analyst* that scanned the codebase for meaningful test gaps: not line coverage metrics, but actual untested behavior prioritized by cyclomatic complexity.  
-2. A *test scaffolder* that set up infrastructure: Testcontainers base classes, Maven source sets, plugin configurations.  
+1. A *coverage analyst* that scanned the codebase for meaningful test gaps: not line coverage metrics, but actual untested behavior prioritized by cyclomatic complexity.
+2. A *test scaffolder* that set up infrastructure: Testcontainers base classes, Maven source sets, plugin configurations.
 3. A *database migration test writer* that read all Liquibase changesets and generated a test for each one.
 
 These ran as background tasks while I continued working in the foreground. The analyst produced a prioritized report: 14 untested service methods, 8 undocumented endpoints, 3 untested native queries, 2 architecture violations. Subagents handled the scale problem without exhausting the context window. Each operated in isolation with its own context.
@@ -66,6 +75,8 @@ These ran as background tasks while I continued working in the foreground. The a
 **Plan mode** switches to exploration and planning before committing to code. I used it across all three projects to evaluate multiple approaches in parallel, which naturally triggered subagent spawning. It prevented premature implementation, which is ironic given that premature implementation turned out to be a recurring problem on the other projects.
 
 **Hooks** played a supporting role, triggering actions on events like auto-formatting and pre-commit checks after every *logical* change was completed.
+
+</ExpandableSection>
 
 ### The Testing Showcase
 
@@ -191,7 +202,9 @@ But:
 - Models built from the CLI were rebuilt 2-3 times when the MCP server arrived with different APIs.  
 - Code written against 0.5.27 assumptions was adjusted when 0.7.5 patterns became clear.
 
-**The AI tools masked the problem by making rework cheap enough to seem productive.** The team was always moving fast — just not always forward. In 10 working weeks, coding was 10-15% of the time, and much of that coding was done more than once.
+<Callout variant="warning" label="The Illusion of Progress" client:visible>
+The AI tools masked the problem by making rework cheap enough to seem productive. The team was always moving fast — just not always forward. In 10 working weeks, coding was 10-15% of the time, and much of that coding was done more than once.
+</Callout>
 
 This is a subtle trap. When coding is essentially free, there's no natural pressure to wait for clarity before building. You code against assumptions. Those assumptions change. You rebuild. Each iteration is fast. But the total time is dominated by the cycle of assumption → invalidation → rebuild, not by the speed of any individual build.
 
@@ -272,6 +285,8 @@ The real value of AI coding tools may not be delivery speed at all. It might be 
 
 These are substantial benefits: they change what's possible in a single coding session, and they raise the floor of quality across a team. They're just not "10x delivery." And pretending they are sets teams up for the same disappointment I watched play out on two of three projects: everyone coding faster, nobody shipping sooner.
 
-The arithmetic doesn't lie. If coding is 10-15% of your delivery time, a 10x improvement in coding speed gets you — at most — a 15% improvement in delivery. The other 85% is requirements, architecture, coordination, review, dependencies, and waiting.
+<Callout variant="info" label="The Arithmetic" client:visible>
+If coding is 10-15% of your delivery time, a 10x improvement in coding speed gets you — at most — a 15% improvement in delivery. The other 85% is requirements, architecture, coordination, review, dependencies, and waiting.
+</Callout>
 
 Want to ship faster? Fix those.
