@@ -1,0 +1,162 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { now } from '../data/now';
+import { talks } from '../data/talks';
+
+const latestPost = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+
+const latestTalk = talks[0];
+---
+
+<BaseLayout title="Now" description="What Prem Chandrasekaran is focused on right now.">
+  <div class="now-page">
+    <div class="now-header">
+      <h1>Now</h1>
+      <p>What I'm focused on, building, reading, and thinking about right now.</p>
+    </div>
+
+    <div class="now-section">
+      <h2>Currently Building</h2>
+      <ul class="now-list">
+        {now.building.map(item => (
+          <li>
+            <strong>
+              {item.url ? <a href={item.url}>{item.name}</a> : item.name}
+            </strong>
+            <span class="now-desc"> — {item.description}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now-section">
+      <h2>Currently Reading</h2>
+      <ul class="now-list">
+        {now.reading.map(item => (
+          <li>
+            <strong>{item.title}</strong> by {item.author}
+            {item.note && <span class="now-note"> ({item.note})</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now-section">
+      <h2>Thinking About</h2>
+      <ul class="now-list">
+        {now.thinkingAbout.map(item => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now-section">
+      <h2>Off the Clock</h2>
+      <ul class="now-list">
+        {now.offTheClock.map(item => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now-section">
+      <h2>Recently</h2>
+      <ul class="now-list">
+        {latestPost && (
+          <li>
+            Published <a href={`/blog/${latestPost.id}`}>{latestPost.data.title}</a>
+          </li>
+        )}
+        {latestTalk && (
+          <li>
+            Presented <a href={latestTalk.url}>{latestTalk.title}</a> at {latestTalk.event}
+          </li>
+        )}
+      </ul>
+    </div>
+
+    <div class="now-footer">
+      <p>Last updated: {new Date(now.lastUpdated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p class="now-inspired">Inspired by <a href="https://nownownow.com" target="_blank" rel="noopener noreferrer">nownownow.com</a></p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .now-page {
+    max-width: 640px;
+  }
+
+  .now-header {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .now-header h1 {
+    margin-bottom: 8px;
+  }
+
+  .now-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  .now-section {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .now-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .now-list li {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    color: #292524;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .now-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .now-desc {
+    color: var(--text-secondary);
+  }
+
+  .now-note {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .now-footer {
+    padding: 24px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .now-inspired {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+</style>
