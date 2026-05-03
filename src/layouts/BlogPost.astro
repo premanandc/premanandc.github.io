@@ -1,6 +1,18 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import TableOfContents from '../components/blog/TableOfContents.tsx';
+import SeriesNav from '../components/blog/SeriesNav.astro';
+
+interface SeriesInfo {
+  name: string;
+  part: number;
+  total: number;
+}
+
+interface SeriesPart {
+  title: string;
+  slug: string;
+}
 
 interface Props {
   title: string;
@@ -8,9 +20,11 @@ interface Props {
   tags: string[];
   readingTime: string;
   coverImage?: string;
+  series?: SeriesInfo;
+  seriesParts?: SeriesPart[];
 }
 
-const { title, date, tags, readingTime, coverImage } = Astro.props;
+const { title, date, tags, readingTime, coverImage, series, seriesParts } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -36,6 +50,14 @@ const formattedDate = date.toLocaleDateString('en-US', {
     </header>
     {coverImage && (
       <img src={coverImage} alt={title} class="cover-image" />
+    )}
+    {series && seriesParts && (
+      <SeriesNav
+        seriesName={series.name}
+        currentPart={series.part}
+        total={series.total}
+        parts={seriesParts}
+      />
     )}
     <div class="article-with-toc">
       <div class="article-body">

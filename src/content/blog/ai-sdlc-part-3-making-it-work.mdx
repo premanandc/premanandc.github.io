@@ -1,0 +1,72 @@
+---
+title: "AI-Augmented SDLC: Part 3 - Making It Work"
+date: 2026-04-29
+excerpt: "AI tools accelerate delivery when BOTH conditions hold: pre-coding is settled and post-coding is representable in the coding process. Here's the formula — and what to fix if you want to actually ship faster."
+tags: ["AI", "Engineering Leadership", "Developer Experience"]
+coverImage: "/images/blog/ai-sdlc-making-it-work.png"
+series:
+  name: "I Code 10x Faster. We Ship at the Same Speed."
+  part: 3
+  total: 3
+---
+
+import Callout from '../../components/blog/Callout.tsx';
+
+In this final part of our three-part series, we pull together the pattern and look at what actually makes AI-augmented SDLC work. [Part 1](/blog/ai-sdlc-part-1-ecosystem) explored the ecosystem — the tools, their capabilities, and where they genuinely shine. [Part 2](/blog/ai-sdlc-part-2-bottlenecks) examined the bottlenecks — requirements, architecture, cross-team dependencies, and post-coding friction that prevent faster coding from becoming faster delivery. Here, we synthesize the two-sided formula and discuss what engineering leaders can actually do to ship faster.
+
+---
+
+## The Two-Sided Formula
+
+Pulling together the pattern across all three projects:
+
+**AI tools accelerate delivery when BOTH conditions hold:**
+
+1. **Pre-coding is settled.** Requirements are clear, architecture is decided, interfaces are stable, the framework supports what you need.  
+2. **Post-coding is representable in the coding process.** Testing is automatable, reviews are fast and aligned, deployments are consistent, verification doesn't depend on unavailable external systems.
+
+The claims project met both conditions. Clear spec, actively refined with AI tools into architecture and quality guidelines before coding began. Solo developer. Automatable testing strategy. Result: faster delivery.
+
+The personal assistant failed on pre-coding. Requirements were unclear. Technology was constrained and immature. The decision cycle with the product owner dominated the timeline. AI tools produced faster prototypes that fed into the same slow decision process.
+
+The A2A project failed on both sides. Pre-coding: architectural uncertainty, framework immaturity, shifting external APIs. Post-coding: quality gates that only ran in CI, type checking introduced mid-project against an untyped framework, inconsistent human review, inability to end-to-end test until framework features were released. AI tools produced fast code that arrived at these gates sooner and got bounced back more frequently.
+
+---
+
+## What Would Actually Move Delivery Speed
+
+Given these experiences, what would have had higher leverage than AI coding tools on the projects where delivery lagged?
+
+**Earlier architectural alignment.** On the A2A project, the decision to place the golden pathway as a sub-agent of the coding agent constrained every downstream design decision. Resolving that earlier, or differently, would have eliminated entire categories of complexity.
+
+**API contracts agreed before implementation.** The CLI-to-MCP-server divergence caused multiple rebuilds. A stable contract, even a preliminary one, would have reduced rework significantly.
+
+**Faster code review cycles.** Reviewer availability and upfront alignment on style conventions would have compressed the longest single bottleneck on the A2A project.
+
+**Framework maturity assessment before committing.** The LangGraph version gap between what was available and what was needed could have been identified earlier, changing the approach entirely.
+
+**Requirements clarity processes.** Prototype-driven discovery has real value, but on the personal assistant project, the decision cycle with the product owner was the actual bottleneck. Structuring those decisions differently would have done more than any coding tool.
+
+**Reducing speculative coding.** Sometimes the highest-leverage move is to wait for clarity rather than build against assumptions. When coding is cheap, this feels counterintuitive — why not just build it and see? Because the rework cycle has costs beyond coding: context switching, review overhead, debugging integration issues that only exist because the foundation shifted.
+
+---
+
+## The Honest Assessment
+
+AI coding tools are genuinely impressive and genuinely valuable. The claims project and its testing strategy prove it: skills that encode and scale domain expertise, subagents that handle parallel work at scale, MCP integrations that keep the developer in flow, plan mode that prevents premature implementation. These represent a real step change in what a single developer can accomplish in a session.
+
+But the industry narrative that equates "coding faster" with "delivering faster" only holds when both the pre-coding and post-coding conditions are met. Across three projects, that was true for one.
+
+The real value of AI coding tools may not be delivery speed at all. It might be the ability to settle pre-coding itself: processing a functional spec into architecture, evaluating technology trade-offs, establishing quality guidelines before the first line of application code is written. Beyond that, it's the ability to codify and scale expertise through skills. To explore multiple approaches in parallel through subagents. To keep documentation honest through generated tests. To enforce architecture through executable rules. To work productively across unfamiliar ecosystems with live documentation lookups.
+
+These are substantial benefits: they change what's possible in a single coding session, and they raise the floor of quality across a team. They're just not "10x delivery." And pretending they are sets teams up for the same disappointment I watched play out on two of three projects: everyone coding faster, nobody shipping sooner.
+
+<Callout variant="info" label="The Arithmetic" client:visible>
+If coding is 10-15% of your delivery time, a 10x improvement in coding speed gets you — at most — a 15% improvement in delivery. The other 85% is requirements, architecture, coordination, review, dependencies, and waiting.
+</Callout>
+
+Want to ship faster? Fix those.
+
+---
+
+*This is Part 3 of the series "I Code 10x Faster. We Ship at the Same Speed." Read [Part 1: The AI-Augmented SDLC Ecosystem](/blog/ai-sdlc-part-1-ecosystem) and [Part 2: The Bottlenecks of AI-Augmented SDLC](/blog/ai-sdlc-part-2-bottlenecks).*

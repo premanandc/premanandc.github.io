@@ -7,13 +7,20 @@ export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
   return posts.map((post) => ({
     params: { slug: post.id },
-    props: post,
+    props: { post, allPosts: posts },
   }));
 }
 
-const post = Astro.props;
+const { post, allPosts } = Astro.props;
 const { Content } = await render(post);
 const readingTime = getReadingTime(post.body ?? '');
+
+const seriesParts = post.data.series
+  ? allPosts
+      .filter((p) => p.data.series?.name === post.data.series?.name)
+      .sort((a, b) => (a.data.series?.part ?? 0) - (b.data.series?.part ?? 0))
+      .map((p) => ({ title: p.data.title, slug: p.id }))
+  : undefined;
 ---
 
 <BlogPost
@@ -22,6 +29,8 @@ const readingTime = getReadingTime(post.body ?? '');
   tags={post.data.tags}
   readingTime={readingTime}
   coverImage={post.data.coverImage}
+  series={post.data.series}
+  seriesParts={seriesParts}
 >
   <Content />
 </BlogPost>

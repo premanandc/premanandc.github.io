@@ -1,0 +1,109 @@
+---
+interface SeriesPart {
+  title: string;
+  slug: string;
+}
+
+interface Props {
+  seriesName: string;
+  currentPart: number;
+  total: number;
+  parts: SeriesPart[];
+}
+
+const { seriesName, currentPart, total, parts } = Astro.props;
+---
+
+<nav class="series-nav" aria-label="Article series">
+  <div class="series-header">
+    <span class="series-label">Series</span>
+    <span class="series-name">{seriesName}</span>
+  </div>
+  <ol class="series-parts">
+    {parts.map((part, i) => (
+      <li class:list={['series-part', { active: i + 1 === currentPart }]}>
+        {i + 1 === currentPart ? (
+          <span class="series-current">{part.title}</span>
+        ) : (
+          <a href={`/blog/${part.slug}`}>{part.title}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .series-nav {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+    max-width: 680px;
+  }
+
+  .series-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .series-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--bg-surface);
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .series-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .series-parts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: series;
+  }
+
+  .series-part {
+    counter-increment: series;
+    padding: 6px 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .series-part::before {
+    content: "Part " counter(series) ": ";
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .series-part a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .series-part a:hover {
+    text-decoration: underline;
+  }
+
+  .series-part.active {
+    font-weight: 500;
+  }
+
+  .series-current {
+    color: var(--text-primary);
+  }
+
+  .series-part.active::before {
+    color: var(--accent);
+  }
+</style>

@@ -17,19 +17,21 @@ const formattedDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<a href={`/blog/${slug}`} class="post-card">
+<a href={`/blog/${slug}`} class:list={['post-card', { 'has-cover': !!coverImage }]}>
   {coverImage && (
     <img src={coverImage} alt={title} class="post-cover" />
   )}
-  <div class="post-meta">
-    <span class="post-date">{formattedDate}</span>
-    <span class="post-meta-dot">&bull;</span>
-    <span class="post-reading">{readingTime}</span>
-  </div>
-  <h3>{title}</h3>
-  <p>{excerpt}</p>
-  <div class="post-tags">
-    {tags.map(tag => <span class="tag">{tag}</span>)}
+  <div class="post-card-body">
+    <div class="post-meta">
+      <span class="post-date">{formattedDate}</span>
+      <span class="post-meta-dot">&bull;</span>
+      <span class="post-reading">{readingTime}</span>
+    </div>
+    <h3>{title}</h3>
+    <p>{excerpt}</p>
+    <div class="post-tags">
+      {tags.map(tag => <span class="tag">{tag}</span>)}
+    </div>
   </div>
 </a>
 
@@ -50,11 +52,23 @@ const formattedDate = date.toLocaleDateString('en-US', {
     border-radius: 8px;
   }
 
+  .post-card.has-cover {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
   .post-cover {
-    width: 100%;
-    max-width: 680px;
+    width: 160px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  .post-card-body {
+    flex: 1;
+    min-width: 0;
   }
 
   .post-meta {

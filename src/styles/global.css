@@ -143,14 +143,17 @@ th {
 }
 
 .posts-list .post-cover {
-  width: 100%;
-  max-width: 680px;
+  width: 160px;
+  height: 100px;
+  object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .posts-list .post-card {
-  display: block;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
   padding: 24px 0;
   border-bottom: 1px solid var(--border);
   text-decoration: none;
@@ -163,6 +166,11 @@ th {
   margin: 0 -16px;
   padding: 24px 16px;
   border-radius: 8px;
+}
+
+.posts-list .post-card-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .posts-list .post-meta {
