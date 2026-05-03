@@ -1,0 +1,78 @@
+---
+import type { GitHubEvent } from '../utils/github';
+import { relativeTime } from '../utils/relative-time';
+
+interface Props {
+  events: GitHubEvent[];
+}
+
+const { events } = Astro.props;
+---
+
+{events.length > 0 && (
+  <div class="gh-activity">
+    <div class="section-header">
+      <h2>GitHub Activity</h2>
+      <a href="https://github.com/premanandc" target="_blank" rel="noopener noreferrer">View profile &rarr;</a>
+    </div>
+    <ul class="gh-events">
+      {events.map(event => (
+        <li class="gh-event">
+          <span class="gh-message">{event.message}</span>
+          <span class="gh-meta">
+            <span class="gh-repo">{event.repo.split('/')[1]}</span>
+            <span class="gh-time">{relativeTime(event.date)}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  .gh-activity {
+    margin-top: 8px;
+  }
+
+  .gh-events {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .gh-event {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    gap: 16px;
+  }
+
+  .gh-message {
+    color: var(--text-primary);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gh-meta {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .gh-repo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .gh-time {
+    color: var(--text-secondary);
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import { relativeTime } from '../utils/relative-time';
+
+interface Props {
+  lastPostTitle?: string;
+  lastPostSlug?: string;
+  lastPostDate?: Date;
+  lastCommitDate?: Date | null;
+  nowUpdated?: string;
+}
+
+const { lastPostTitle, lastPostSlug, lastPostDate, lastCommitDate, nowUpdated } = Astro.props;
+---
+
+<div class="pulse-bar">
+  {lastPostDate && lastPostTitle && (
+    <span class="pulse-item">
+      <span class="pulse-dot"></span>
+      Published <a href={`/blog/${lastPostSlug}`}>{lastPostTitle}</a> <span class="pulse-time">{relativeTime(lastPostDate)}</span>
+    </span>
+  )}
+  {lastCommitDate && (
+    <span class="pulse-item">
+      <span class="pulse-dot"></span>
+      Pushed to <a href="https://github.com/premanandc" target="_blank" rel="noopener noreferrer">GitHub</a> <span class="pulse-time">{relativeTime(lastCommitDate)}</span>
+    </span>
+  )}
+  {nowUpdated && (
+    <span class="pulse-item">
+      <span class="pulse-dot"></span>
+      Updated <a href="/now">/now</a> <span class="pulse-time">{relativeTime(new Date(nowUpdated))}</span>
+    </span>
+  )}
+</div>
+
+<style>
+  .pulse-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .pulse-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .pulse-time {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .pulse-bar a {
+    font-weight: 500;
+  }
+</style>
