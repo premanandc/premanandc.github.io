@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://premonition.dev/sitemap-index.xml
+LLMs: https://premonition.dev/llms.txt

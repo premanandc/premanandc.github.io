@@ -1,0 +1,41 @@
+# premonition.dev
+
+> Personal site of Prem Chandrasekaran — software engineer, engineering leader, author, and speaker at Thoughtworks. Writes about AI-assisted development, Domain-Driven Design, software architecture, and engineering leadership.
+
+## Key Pages
+
+- [About](/about): Bio, books, expertise areas, social links
+- [Blog](/blog): Technical articles on AI-assisted development, engineering leadership, and software delivery
+- [Talks](/talks): Conference presentations with slides
+- [Now](/now): What Prem is currently building, reading, and thinking about
+
+## Blog Series: I Code 10x Faster. We Ship at the Same Speed.
+
+A three-part series examining AI coding tools across three real projects — where they accelerate delivery and where they just accelerate rework.
+
+- [Part 1: The Ecosystem](/blog/ai-sdlc-part-1-ecosystem): What AI coding tools can do — Claude Code, Copilot, MCP integrations, skills, subagents. Where it worked: the Claims Management project.
+- [Part 2: The Bottlenecks](/blog/ai-sdlc-part-2-bottlenecks): Where delivery breaks down — requirements, architecture, cross-team dependencies, post-coding friction. The illusion of progress.
+- [Part 3: Making It Work](/blog/ai-sdlc-part-3-making-it-work): The two-sided formula for AI-augmented delivery. What actually moves delivery speed.
+
+## Books by Prem Chandrasekaran
+
+- [Domain-Driven Design with Java](https://www.amazon.com/Domain-Driven-Design-Java-Practitioners-inventive-ebook/dp/B09MV42W27/): A practitioners' guide to building inventive software
+- [Data Architecture in the AI Age](https://learning.oreilly.com/library/view/data-architecture/9781098181185/): Upcoming, published by O'Reilly
+
+## Talks
+
+- [AI-Assisted Development: What Actually Works](/talks/ai-assisted-dev/): Lessons from three real projects. Presented at Arc of AI.
+- [Graph-Powered Storyworlds](/talks/graph-powered-storyworlds/): Using Neo4j to keep 1M+ word LitRPG epics coherent with AI. Presented at Neo4J Nodes AI.
+
+## Contact and Profiles
+
+- Website: https://premonition.dev
+- Twitter/X: https://x.com/premanandc
+- GitHub: https://github.com/premanandc
+- LinkedIn: https://linkedin.com/in/premanandc
+- DDD Practitioners: https://ddd-practitioners.com
+- Thoughtworks Podcast: https://www.thoughtworks.com/insights/podcasts/technology-podcasts
+
+## RSS Feed
+
+- [RSS Feed](/rss.xml): Subscribe to new articles
