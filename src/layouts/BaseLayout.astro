@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -15,6 +16,23 @@ const { title, description = 'Prem Chandrasekaran — engineering leader, writer
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = `${title} | premonition.dev`;
 const socialImage = ogImage ? new URL(ogImage, Astro.site).href : new URL('/images/headshot.png', Astro.site).href;
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  'name': 'premonition.dev',
+  'url': 'https://premonition.dev',
+  'author': {
+    '@type': 'Person',
+    'name': 'Prem Chandrasekaran',
+    'url': 'https://premonition.dev/about',
+    'sameAs': [
+      'https://x.com/premanandc',
+      'https://github.com/premanandc',
+      'https://linkedin.com/in/premanandc',
+    ],
+  },
+};
 ---
 
 <!DOCTYPE html>
@@ -43,6 +61,8 @@ const socialImage = ogImage ? new URL(ogImage, Astro.site).href : new URL('/imag
     <meta name="twitter:image" content={socialImage} />
 
     <script defer src="https://cloud.umami.is/script.js" data-website-id="349f2408-20f1-4b34-b93b-3491e9fe0467"></script>
+    <JsonLd data={websiteSchema} />
+    <slot name="json-ld" />
     <title>{fullTitle}</title>
   </head>
   <body>

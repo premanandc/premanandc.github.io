@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import JsonLd from '../components/JsonLd.astro';
 import TableOfContents from '../components/blog/TableOfContents.tsx';
 import SeriesNav from '../components/blog/SeriesNav.astro';
 
@@ -31,9 +32,32 @@ const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
 });
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  'headline': title,
+  'description': excerpt,
+  'datePublished': date.toISOString(),
+  'author': {
+    '@type': 'Person',
+    'name': 'Prem Chandrasekaran',
+    'url': 'https://premonition.dev/about',
+  },
+  ...(coverImage && { 'image': new URL(coverImage, 'https://premonition.dev').href }),
+  'publisher': {
+    '@type': 'Person',
+    'name': 'Prem Chandrasekaran',
+  },
+  'mainEntityOfPage': {
+    '@type': 'WebPage',
+    '@id': new URL(Astro.url.pathname, 'https://premonition.dev').href,
+  },
+};
 ---
 
 <BaseLayout title={title} description={excerpt} ogImage={coverImage} ogType="article">
+  <JsonLd data={articleSchema} slot="json-ld" />
   <article>
     <header class="article-header">
       <div class="article-tags">

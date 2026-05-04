@@ -1,8 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  'name': 'Prem Chandrasekaran',
+  'url': 'https://premonition.dev',
+  'image': 'https://premonition.dev/images/headshot.png',
+  'worksFor': {
+    '@type': 'Organization',
+    'name': 'Thoughtworks',
+    'url': 'https://www.thoughtworks.com',
+  },
+  'sameAs': [
+    'https://x.com/premanandc',
+    'https://github.com/premanandc',
+    'https://linkedin.com/in/premanandc',
+  ],
+  'knowsAbout': ['AI-Assisted Development', 'Domain-Driven Design', 'Engineering Leadership', 'Software Architecture'],
+};
 ---
 
 <BaseLayout title="About" description="About Prem Chandrasekaran — software engineer, author, and speaker.">
+  <JsonLd data={personSchema} slot="json-ld" />
   <div class="about-layout">
     <div class="about-content">
       <h1>About</h1>
