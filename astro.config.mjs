@@ -7,4 +7,11 @@ export default defineConfig({
   site: 'https://premonition.dev',
   integrations: [react(), mdx(), sitemap()],
   output: 'static',
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
+  },
 });
