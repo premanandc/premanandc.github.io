@@ -6,9 +6,15 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  ogType?: string;
 }
 
-const { title, description = 'Prem Chandrasekaran — engineering leader, writer, speaker.' } = Astro.props;
+const { title, description = 'Prem Chandrasekaran — engineering leader, writer, speaker.', ogImage, ogType = 'website' } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = `${title} | premonition.dev`;
+const socialImage = ogImage ? new URL(ogImage, Astro.site).href : new URL('/images/headshot.png', Astro.site).href;
 ---
 
 <!DOCTYPE html>
@@ -17,9 +23,27 @@ const { title, description = 'Prem Chandrasekaran — engineering leader, writer
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="alternate" type="application/rss+xml" title="premonition.dev" href="/rss.xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:site_name" content="premonition.dev" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@premanandc" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
     <script defer src="https://cloud.umami.is/script.js" data-website-id="349f2408-20f1-4b34-b93b-3491e9fe0467"></script>
-    <title>{title} | premonition.dev</title>
+    <title>{fullTitle}</title>
   </head>
   <body>
     <Nav />

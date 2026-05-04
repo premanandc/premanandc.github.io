@@ -20,11 +20,12 @@ interface Props {
   tags: string[];
   readingTime: string;
   coverImage?: string;
+  excerpt?: string;
   series?: SeriesInfo;
   seriesParts?: SeriesPart[];
 }
 
-const { title, date, tags, readingTime, coverImage, series, seriesParts } = Astro.props;
+const { title, date, tags, readingTime, coverImage, excerpt, series, seriesParts } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -32,7 +33,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={excerpt} ogImage={coverImage} ogType="article">
   <article>
     <header class="article-header">
       <div class="article-tags">
