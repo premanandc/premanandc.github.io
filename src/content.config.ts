@@ -15,6 +15,7 @@ const blog = defineCollection({
       total: z.number(),
     }).optional(),
     draft: z.boolean().default(false),
+    unlisted: z.boolean().default(false),
   }),
 });
 

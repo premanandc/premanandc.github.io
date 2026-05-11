@@ -9,9 +9,10 @@ interface Props {
   description?: string;
   ogImage?: string;
   ogType?: string;
+  noindex?: boolean;
 }
 
-const { title, description = 'Prem Chandrasekaran — engineering leader, writer, speaker.', ogImage, ogType = 'website' } = Astro.props;
+const { title, description = 'Prem Chandrasekaran — engineering leader, writer, speaker.', ogImage, ogType = 'website', noindex = false } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = `${title} | premonition.dev`;
@@ -41,6 +42,7 @@ const websiteSchema = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="alternate" type="application/rss+xml" title="premonition.dev" href="/rss.xml" />

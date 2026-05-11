@@ -9,7 +9,7 @@ import { now } from '../data/now';
 import { getReadingTime } from '../utils/reading-time';
 import { getLastCommitDate } from '../utils/github';
 
-const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const posts = allPosts.slice(0, 3);

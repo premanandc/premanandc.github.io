@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import JsonLd from '../components/JsonLd.astro';
 import TableOfContents from '../components/blog/TableOfContents.tsx';
+import Lightbox from '../components/blog/Lightbox.tsx';
 import SeriesNav from '../components/blog/SeriesNav.astro';
 
 interface SeriesInfo {
@@ -24,9 +25,10 @@ interface Props {
   excerpt?: string;
   series?: SeriesInfo;
   seriesParts?: SeriesPart[];
+  unlisted?: boolean;
 }
 
-const { title, date, tags, readingTime, coverImage, excerpt, series, seriesParts } = Astro.props;
+const { title, date, tags, readingTime, coverImage, excerpt, series, seriesParts, unlisted = false } = Astro.props;
 
 const slug = Astro.url.pathname.replace('/blog/', '').replace(/\/$/, '');
 const ogImage = coverImage ?? `/og/${slug}.png`;
@@ -59,9 +61,17 @@ const articleSchema = {
 };
 ---
 
-<BaseLayout title={title} description={excerpt} ogImage={ogImage} ogType="article">
+<BaseLayout title={title} description={excerpt} ogImage={ogImage} ogType="article" noindex={unlisted}>
   <JsonLd data={articleSchema} slot="json-ld" />
   <article>
+    {unlisted && (
+      <aside class="unlisted-banner" role="status" aria-label="Draft notice">
+        <span class="unlisted-banner-dot" aria-hidden="true"></span>
+        <span class="unlisted-banner-text">
+          <strong>Draft.</strong> This post is unlisted and intended for review. Please don't share publicly.
+        </span>
+      </aside>
+    )}
     <header class="article-header">
       <div class="article-tags">
         {tags.map(tag => <span class="tag">{tag}</span>)}
@@ -96,6 +106,7 @@ const articleSchema = {
       </aside>
     </div>
   </article>
+  <Lightbox client:load />
 </BaseLayout>
 
 <style>
@@ -108,6 +119,39 @@ const articleSchema = {
     article {
       max-width: 1000px;
     }
+  }
+
+  .unlisted-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    background: var(--callout-warning-bg);
+    border-left: 3px solid var(--callout-warning-border);
+    border-radius: 0 8px 8px 0;
+    max-width: 680px;
+  }
+
+  .unlisted-banner-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--callout-warning-border);
+    box-shadow: 0 0 0 4px var(--callout-warning-bg);
+  }
+
+  .unlisted-banner-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  .unlisted-banner-text strong {
+    color: var(--callout-warning-border);
+    font-weight: 700;
+    letter-spacing: 0.02em;
   }
 
   .article-header {

@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { now } from '../data/now';
 import { talks } from '../data/talks';
 
-const latestPost = (await getCollection('blog', ({ data }) => !data.draft))
+const latestPost = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
 
 const latestTalk = talks[0];

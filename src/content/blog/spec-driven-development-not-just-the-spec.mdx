@@ -1,0 +1,61 @@
+---
+title: "Spec-Driven Development Is Not Just the Spec"
+date: 2026-05-10
+excerpt: "Most discussions of Spec-Driven Development flatten it into one step: write a spec, get the output. The version that survives real systems is a four-layer system, and the spec is only one of them."
+tags: ["AI", "Software Architecture", "Spec-Driven Development"]
+coverImage: "/images/blog/two-models-of-spec-driven-development.png"
+draft: false
+unlisted: true
+---
+
+A few days ago I shared this [visual](/images/blog/two-models-of-spec-driven-development.png) with a few of my colleagues and on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7458901702612766720/) comparing two models of Spec-Driven Development: continuous evolution and front-loaded specification. The question was simple. Which model do you prefer, and why?
+
+The responses were thoughtful and split along predictable lines. Several practitioners argued that continuous evolution fits the way modern teams actually work, where boundaries between engineering, product, and analysis blur. Others pointed out that the choice is conditional: front-loaded works when you can keep the entire spec current and evolve it carefully, while continuous works when the cost of small iterations is low. Some framed it as a team-shape decision, with front-loaded fitting larger or more junior teams and continuous fitting smaller senior ones. One asked a sharper question underneath all of it: why bother keeping specs at all when code and commit messages already document what was built.
+
+The skepticism that runs through these comments is not new. It tracks with the pushback I have heard from clients directly. Spec-Driven Development, in the form most often demonstrated, is seen as a PoC pattern. Greenfield. Solo developer. Curated stage. The moment it meets a real codebase, the argument goes, it falls apart and the generated code is sub-standard.
+
+That critique is largely correct, and I want to take it seriously.
+
+Most public demonstrations of SDD are shaped to look cleaner than the systems any of us actually work in. A skeptic pattern-matching to "this will not survive my codebase" is not being cynical. They are reading the evidence accurately. But the conclusion they draw, that the methodology is broken, points at the wrong target.
+
+The discussion of SDD has flattened into one step: write a good spec, feed it to the AI, get the output. That is the version that triggers the skepticism, and that version really does fail at scale. The version that works is not one step. It is a system. Four layers, each pulling its weight. Take any one of them away and natural-language spec-driven development does not hold together for serious work.
+
+## Decomposition
+
+Start with the problem. Real systems are complex, and complex problems do not fit into a single specification that any model, however capable, can act on reliably. The first move is to break the problem into smaller, collaborating, independent parts. Domain-Driven Design calls these bounded contexts. The point is not the vocabulary; it is that each part has clear ownership, a defined contract with its neighbors, and a scope small enough that a spec can describe it without ambiguity leaking across boundaries.
+
+This step is upstream of everything else. A system that has not been decomposed cleanly will defeat the best spec, the best harness, and the most attentive human review. AI tools amplify whatever shape they are pointed at. Pointed at clean contexts, they accelerate good outcomes. Pointed at a tangled codebase, they accelerate rework.
+
+## Specification Craft
+
+With contexts in place, the spec describes what each context must do. This is the layer closest to the model, and the quality of what gets written here sets the ceiling for everything downstream. Specs earn their keep when they encode what code cannot: the intent behind the behavior, the invariants that span modules, the assumptions about inputs the system has not yet seen, and the contract the system must honor when it is regenerated next year by someone who was not in the room when it was first built.
+
+Specs come in three temporal shapes, and the choice among them is a property of the work, not a team preference.
+
+![Three spec-style timelines: upfront, evolving, and hybrid](/images/blog/spec-style-timelines.png)
+
+Upfront specification fits when the domain is well understood, requirements are stable, and coordination across people or teams matters more than rapid feedback. Evolving specification fits when learning happens during implementation, feedback is fast, and the cost of incremental change is low. Hybrid fits the common middle ground: a comprehensive spec at the start, refined as the system meets reality. The pattern most enterprise systems actually need is also structural, not just temporal: different bounded contexts within the same system often call for different styles. A stable payments context may use upfront, a recommendation engine may evolve, a reporting service may need only lightweight specification. Same system, different cadences per context.
+
+## The Harness
+
+Specifications are written in natural language, and natural language is ambiguous. Large language models are probabilistic systems. The combination means that no matter how carefully a spec is written, what gets generated will sometimes diverge from what was intended. The harness is the deterministic layer that catches the divergence.
+
+Concretely, the harness is a set of executable expectations: coverage thresholds, mutation testing, fitness functions, static analysis, contract validation, security gates. It does not reach into generation. It decides what survives generation. Generated code that fails the harness does not progress. In agentic setups, the harness closes a loop: generate, verify, regenerate against the failure, verify again. The better the harness, the higher the ceiling on what gets through.
+
+Prompts and specs request good behavior. Harnesses make undesirable outcomes hard to ship. Both functions matter; the harness is where verification is automated, and automation is what makes the verification scale.
+
+## Human Reflection
+
+No harness catches everything. There will always be a residual: the spec that asked for the wrong system, the generated code that passes every test but behaves incorrectly in production, the integration assumption that nothing in the test suite anticipated. The human's job is not to verify every output, which does not scale. It is to watch for what the harness missed and feed corrections back upstream. A failure caught in production becomes a new fitness function. A spec that produced misleading code becomes a clearer spec. A pattern of brittle generation becomes a refinement to the prompt or the bounded context.
+
+This is the layer that improves the system over time. Without it, the same errors recur. With it, every cycle of generation makes the next one more reliable.
+
+## The System, Not the Spec
+
+![Four-layer pipeline: decomposition, specification craft, harness, and human reflection, with a generate-verify loop and feedback arrow](/images/blog/sdd-four-layer-system.png)
+
+The quality of AI-assisted output is bounded by the quality of the system around the generation, not by the quality of the model. Better models help, but they hit a ceiling determined by how well you decomposed, how well you specified, how rigorous the harness is, and how disciplined the reflection cycle is. PoCs make SDD look easy because the surrounding system is small enough to compensate for sloppy harnesses and rough specs. Enterprise systems do not have that luxury. The surrounding system has to be stronger.
+
+This is the part of Spec-Driven Development that is missing from most of the discussion. The spec is not the whole story. It is one of four layers, and the other three are doing at least as much work.
+
+Are there other layers worth naming? Almost certainly. Decomposition, specification, harness, and reflection are the four I keep coming back to, but I would not claim the list is complete. If there are means of reducing risk in AI-assisted development that I have missed, I would like to hear them.

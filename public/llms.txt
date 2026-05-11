@@ -1,6 +1,6 @@
 # premonition.dev
 
-> Personal site of Prem Chandrasekaran — software engineer, engineering leader, author, and speaker at Thoughtworks. Writes about AI-assisted development, Domain-Driven Design, software architecture, and engineering leadership.
+> Personal site of Prem Chandrasekaran — software engineer, engineering leader, author, and speaker who works at Thoughtworks. Writes about AI-assisted development, Domain-Driven Design, software architecture, and engineering leadership.
 
 ## Key Pages
 

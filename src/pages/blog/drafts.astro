@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getReadingTime } from '../../utils/reading-time';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.unlisted))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title="Drafts"
+  description="Unlisted blog posts available for review."
+  noindex={true}
+>
+  <div class="blog-header">
+    <h1>Drafts</h1>
+    <p>Unlisted posts. Reachable by direct URL but hidden from the public site.</p>
+  </div>
+  <div class="posts-list">
+    {posts.length === 0 && (
+      <p class="posts-empty">No unlisted posts.</p>
+    )}
+    {posts.map(post => (
+      <PostCard
+        title={post.data.title}
+        date={post.data.date}
+        excerpt={post.data.excerpt}
+        tags={post.data.tags}
+        slug={post.id}
+        readingTime={getReadingTime(post.body ?? '')}
+        coverImage={post.data.coverImage}
+      />
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-header {
+    padding: 40px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .blog-header h1 {
+    margin-bottom: 8px;
+  }
+
+  .blog-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  .posts-empty {
+    padding: 40px 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
+</style>
