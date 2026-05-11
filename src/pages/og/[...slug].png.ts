@@ -1,5 +1,6 @@
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
+import type { ReactNode } from 'react';
 import satori from 'satori';
 import sharp from 'sharp';
 
@@ -27,7 +28,7 @@ export async function GET({ props }: APIContext) {
   }
 
   const svg = await satori(
-    {
+    ({
       type: 'div',
       props: {
         style: {
@@ -139,7 +140,7 @@ export async function GET({ props }: APIContext) {
           },
         ],
       },
-    },
+    } as unknown as ReactNode),
     {
       width: 1200,
       height: 630,
@@ -156,7 +157,7 @@ export async function GET({ props }: APIContext) {
 
   const png = await sharp(Buffer.from(svg)).png().toBuffer();
 
-  return new Response(png, {
+  return new Response(new Uint8Array(png), {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=31536000, immutable',
