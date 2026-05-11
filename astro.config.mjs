@@ -27,10 +27,13 @@ export default defineConfig({
     ],
   },
   output: 'static',
+  // Allow tunneled hostnames (cloudflared, ngrok, etc.) to reach the local
+  // server. Applies to both `astro dev` and `astro preview`.
+  // Local dev only; production is GitHub Pages and not affected.
+  server: {
+    allowedHosts: true,
+  },
   vite: {
-    preview: {
-      allowedHosts: true,
-    },
     build: {
       rollupOptions: {
         external: ['/pagefind/pagefind.js'],
