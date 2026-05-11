@@ -16,6 +16,7 @@ export default function Search() {
   const loadPagefind = useCallback(async () => {
     if (pagefindRef.current) return;
     try {
+      // @ts-expect-error - Pagefind is generated at build time and resolved at runtime
       pagefindRef.current = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
       await pagefindRef.current.init();
     } catch {
