@@ -65,12 +65,15 @@ const articleSchema = {
   <JsonLd data={articleSchema} slot="json-ld" />
   <article>
     {unlisted && (
-      <aside class="unlisted-banner" role="status" aria-label="Draft notice">
-        <span class="unlisted-banner-dot" aria-hidden="true"></span>
-        <span class="unlisted-banner-text">
-          <strong>Draft.</strong> This post is unlisted and intended for review. Please don't share publicly.
-        </span>
-      </aside>
+      <>
+        <aside class="unlisted-banner" role="status" aria-label="Draft notice">
+          <span class="unlisted-banner-dot" aria-hidden="true"></span>
+          <span class="unlisted-banner-text">
+            <strong>Draft.</strong> This post is unlisted and intended for review. Please don't share publicly.
+          </span>
+        </aside>
+        <div class="draft-watermark" aria-hidden="true">DRAFT</div>
+      </>
     )}
     <header class="article-header">
       <div class="article-tags">
@@ -113,6 +116,25 @@ const articleSchema = {
   article {
     padding-top: 40px;
     max-width: 1000px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .draft-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: clamp(8rem, 22vw, 18rem);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    white-space: nowrap;
+    font-family: inherit;
   }
 
   @media (min-width: 1200px) {
