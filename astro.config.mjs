@@ -10,6 +10,12 @@ const UNLISTED_BLOG_SLUGS = [
   'spec-driven-development-not-just-the-spec',
 ];
 
+// Folder names under public/talks/ for talks marked `unlisted: true` in src/data/talks.ts.
+// Keep in sync when flipping an unlisted talk to published or vice versa.
+const UNLISTED_TALK_SLUGS = [
+  'your-problem-isnt-the-monolith',
+];
+
 export default defineConfig({
   site: 'https://premonition.dev',
   integrations: [
@@ -18,7 +24,9 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !page.includes('/blog/drafts') &&
-        !UNLISTED_BLOG_SLUGS.some((slug) => page.includes(`/blog/${slug}`)),
+        !page.includes('/talks/drafts') &&
+        !UNLISTED_BLOG_SLUGS.some((slug) => page.includes(`/blog/${slug}`)) &&
+        !UNLISTED_TALK_SLUGS.some((slug) => page.includes(`/talks/${slug}`)),
     }),
   ],
   markdown: {

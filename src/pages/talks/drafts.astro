@@ -1,18 +1,25 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import TalkCard from '../components/TalkCard.astro';
-import { talks } from '../data/talks';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TalkCard from '../../components/TalkCard.astro';
+import { talks } from '../../data/talks';
 
-const publicTalks = talks.filter(t => !t.unlisted);
+const drafts = talks.filter(t => t.unlisted);
 ---
 
-<BaseLayout title="Talks" description="Conference talks and presentations by Prem Chandrasekaran.">
+<BaseLayout
+  title="Talk Drafts"
+  description="Unlisted talks available for review."
+  noindex={true}
+>
   <div class="talks-header">
-    <h1>Talks</h1>
-    <p>Conference talks and presentations on AI, engineering, and software delivery.</p>
+    <h1>Talk Drafts</h1>
+    <p>Unlisted talks. Reachable by direct URL but hidden from the public site.</p>
   </div>
   <div class="talks-grid">
-    {publicTalks.map(talk => (
+    {drafts.length === 0 && (
+      <p class="talks-empty">No unlisted talks.</p>
+    )}
+    {drafts.map(talk => (
       <TalkCard
         title={talk.title}
         event={talk.event}
@@ -46,5 +53,12 @@ const publicTalks = talks.filter(t => !t.unlisted);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+  }
+
+  .talks-empty {
+    padding: 40px 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+    grid-column: 1 / -1;
   }
 </style>

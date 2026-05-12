@@ -7,7 +7,7 @@ import { talks } from '../data/talks';
 const latestPost = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
 
-const latestTalk = talks[0];
+const latestTalk = talks.filter(t => !t.unlisted)[0];
 ---
 
 <BaseLayout title="Now" description="What Prem Chandrasekaran is focused on right now.">

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Your problem isn't the monolith. It's the data. — LDX3 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/monokai.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --r-background-color: #0f1729;
+      --r-main-font: 'Inter', sans-serif;
+      --r-heading-font: 'Inter', sans-serif;
+      --r-code-font: 'JetBrains Mono', monospace;
+      --r-main-font-size: 28px;
+      --r-main-color: #e2e8f0;
+      --r-heading-color: #ffffff;
+      --accent:  #00d4aa;
+      --accent2: #3b82f6;
+      --muted:   #94a3b8;
+      --surface: #1a2332;
+      --surface2:#141e30;
+      --dim:     #475569;
+      --danger:  #ef4444;
+      --warn:    #f59e0b;
+    }
+
+    .reveal { font-family: var(--r-main-font),serif; }
+
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 { font-weight: 900; font-size: 2.2em; line-height: 1.1; text-transform: none; color: var(--r-heading-color); margin: 0 0 0.25em; }
+    .reveal h2 { font-weight: 700; font-size: 1.5em; color: var(--accent); text-transform: none; margin: 0 0 0.6em; line-height: 1.2; }
+    .reveal h3 { font-weight: 600; font-size: 0.9em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.4em; }
+    .reveal p  { line-height: 1.6; margin: 0.25em 0; }
+    .reveal ul, .reveal ol { padding-left: 1.2em; }
+    .reveal li { margin: 0.25em 0; line-height: 1.5; }
+
+    /* ── Gradient text ── */
+    .gradient-text      { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-text-warm { background: linear-gradient(135deg, var(--warn), #f97316);     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-text-red  { background: linear-gradient(135deg, #ef4444, #f97316);         -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── Utility ── */
+    .accent  { color: var(--accent); }  .blue   { color: var(--accent2); }
+    .gold    { color: var(--warn); }  .danger { color: var(--danger);  }
+    .muted   { color: var(--muted);}  .white  { color: #fff;        }
+    .small   { font-size: 0.7em;  }   .tiny   { font-size: 0.55em; }
+    .bold    { font-weight: 700;  }   .center { text-align: center; }
+    .fill    { flex: 1; }
+
+    /* ── Layout ── */
+    .two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 50px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: start; }
+
+    /* ── Cards ── */
+    .card { background: var(--surface); border-radius: 12px; padding: 24px 28px; margin: 10px 0; }
+    .card-accent { border-left: 4px solid var(--accent); }
+    .card-blue { border-left: 4px solid var(--accent2); }
+    .card-warn { border-left: 4px solid var(--warn); }
+    .card-danger  { border-left: 4px solid var(--danger);  }
+    .card h4 { margin: 0 0 8px; font-size: 0.9em; font-weight: 700; color: #fff; }
+    .card p  { margin: 0; font-size: 0.75em; color: var(--muted); line-height: 1.55; }
+
+    /* ── Stat display ── */
+    .stat-row  { display: flex; justify-content: center; gap: 60px; margin: 30px 0; }
+    .stat-item { text-align: center; }
+    .stat-number  { font-size: 3.2em; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .stat-label  { font-size: 0.65em; color: var(--muted); max-width: 240px; margin: 0 auto; }
+
+    /* ── Flow / numbered list ── */
+    .flow { display: flex; flex-direction: column; gap: 4px; margin: 14px 0; }
+    .flow-step { display: grid; grid-template-columns: 48px 1fr; gap: 16px; align-items: center; padding: 8px 0; }
+    .flow-num  { width: 42px; height: 42px; line-height: 42px; text-align: center; border-radius: 50%; background: var(--accent); color: var(--r-background-color); font-weight: 800; font-size: 0.85em; flex-shrink: 0; }
+    .flow-content        { font-size: 0.78em; }
+    .flow-content strong { color: #fff; }
+
+    /* ── Compare (wrong/right) ── */
+    .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+    .compare-bad  { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.25);  border-radius: 12px; padding: 20px 24px; min-width: 0; overflow: hidden; }
+    .compare-good { background: rgba(0,212,170,0.08);  border: 1px solid rgba(0,212,170,0.25);  border-radius: 12px; padding: 20px 24px; min-width: 0; overflow: hidden; }
+    .compare-bad h4  { font-size: 0.8em; font-weight: 800; color: var(--danger);  margin: 0 0 12px; letter-spacing: 0.1em; }
+    .compare-good h4 { font-size: 0.8em; font-weight: 800; color: var(--accent); margin: 0 0 12px; letter-spacing: 0.1em; }
+    .compare pre { margin: 0; }
+
+    /* ── Code ── */
+    .reveal pre { background: var(--surface2); border-left: 4px solid var(--accent); border-radius: 8px; padding: 14px 18px; font-size: 0.5em; width: 100%; box-shadow: none; margin: 10px 0; }
+    .reveal pre code { font-family: var(--r-code-font),serif; line-height: 1.6; }
+    .reveal code { font-family: var(--r-code-font),serif; background: rgba(0,212,170,0.12); color: var(--accent); padding: 0.07em 0.32em; border-radius: 3px; font-size: 0.87em; }
+    .compare-bad pre  { border-left-color: var(--danger); }
+    .compare-good pre { border-left-color: var(--accent); }
+
+    /* ── Act/thesis title (centered) ── */
+    .act-title { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; }
+
+    /* ── Progress / slide number ── */
+    .reveal .progress    { background: rgba(0,212,170,0.15); color: var(--accent); height: 3px; }
+    .reveal .slide-number { color: var(--dim); font-family: var(--r-code-font); font-size: 0.54em; background: none; top: 8px; right: 12px; bottom: auto; left: auto; }
+
+    /* ══════════════════════════════════════════════════════ */
+    /*  LDX3-specific additions                               */
+    /* ══════════════════════════════════════════════════════ */
+
+    /* Failure grid (2x2 colored cards with icon + number) — slide 4 */
+    .failure-grid-items { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; flex: 1; min-height: 0; margin-top: 10px; }
+    .failure-card { background: rgba(15,23,41,0.6); border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; gap: 6px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .failure-card .fc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+    .failure-card .fc-icon { font-size: 1.5em; line-height: 1; }
+    .failure-card .fc-num  { font-size: 1.6em; font-weight: 900; line-height: 1; }
+    .failure-card .fc-text { font-size: 0.78em; font-weight: 700; color: #fff; margin: 0; line-height: 1.35; }
+    .failure-card .fc-sub  { font-size: 0.62em; font-style: italic; color: var(--muted); margin: 4px 0 0; line-height: 1.5; }
+    .failure-card.c1 { border-top: 4px solid var(--accent);  } .failure-card.c1 .fc-num { color: var(--accent);  }
+    .failure-card.c2 { border-top: 4px solid var(--accent2); } .failure-card.c2 .fc-num { color: var(--accent2); }
+    .failure-card.c3 { border-top: 4px solid var(--warn);    } .failure-card.c3 .fc-num { color: var(--warn);    }
+    .failure-card.c4 { border-top: 4px solid var(--danger);  } .failure-card.c4 .fc-num { color: var(--danger);  }
+
+    /* Big-number / hero stat (slides 24, 25, 26) */
+    .big-stat { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 0 60px; }
+    .big-stat .bs-number  { font-size: 5em; font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 14px; }
+    .big-stat .bs-pair    { display: flex; gap: 80px; margin: 0 0 14px; }
+    .big-stat .bs-pair .bs-number { margin: 0; }
+    .big-stat .bs-words   { font-size: 2.4em; font-weight: 900; line-height: 1.1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 20px; }
+    .big-stat .bs-caption { font-size: 0.9em; color: var(--r-main-color); line-height: 1.5; margin: 0 0 14px; max-width: 760px; }
+    .big-stat .bs-source  { font-size: 0.55em; color: var(--dim); line-height: 1.55; margin: 0 0 14px; max-width: 760px; }
+    .big-stat .bs-punch   { font-size: 0.85em; font-weight: 700; color: var(--accent); border-top: 1px solid rgba(0,212,170,0.3); padding-top: 12px; max-width: 760px; line-height: 1.4; }
+
+    /* Diagram placeholder (when SVG missing) */
+    .diagram-frame { flex: 1; display: flex; align-items: center; justify-content: center; margin-top: 10px; min-height: 0; }
+    .diagram-frame img { max-width: 100%; max-height: 100%; height: auto; }
+    .diagram-placeholder { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 36px; background: rgba(15,23,41,0.5); border: 2px dashed rgba(0,212,170,0.3); border-radius: 12px; font-size: 0.65em; color: var(--muted); text-align: center; line-height: 1.7; width: 90%; max-width: 900px; }
+
+    /* Background-image overlay card (text on bg image) */
+    .bg-card { padding: 18px 26px; background: rgba(15,23,41,0.6); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .bg-card-center { display: inline-block; padding: 28px 36px; background: rgba(15,23,41,0.6); border: 1px solid rgba(0,212,170,0.25); border-radius: 14px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+    /* Thesis statement */
+    .statement { font-size: 1.5em; font-weight: 700; color: #fff; line-height: 1.25; max-width: 80%; margin: 0; }
+    .statement-attribution { font-size: 0.7em; font-style: italic; color: var(--muted); margin-top: 1.2em; max-width: 70%; line-height: 1.5; }
+
+    /* Cold-open lede (slide 2) */
+    .cold-lede    { font-size: 1.55em; font-weight: 700; color: #fff; line-height: 1.2; margin: 0 0 0.5em; }
+    .cold-sublede { font-size: 1.05em; font-style: italic; color: var(--muted); line-height: 1.4; margin: 0; }
+
+    /* Section transition label (slide 23) */
+    .transition-label { font-size: 1.4em; font-weight: 700; color: #fff; line-height: 1.3; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══ Slide 1: Title ══════════════════════════════════════ -->
+<section data-background-image="images/metaphor/01-title.png" data-background-size="cover">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%;max-width:64%;">
+    <div style="padding:28px 36px;background:rgba(15,23,41,0.6);border:1px solid rgba(0,212,170,0.25);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+      <h3>LDX3 London &nbsp;·&nbsp; June 2026</h3>
+      <h1 style="font-size:2.8em;line-height:0.98;margin:0.1em 0 0.5em;">
+        Your problem isn't the monolith.<br>
+        <span class="gradient-text">It's the data.</span>
+      </h1>
+      <div style="font-size:0.8em;color:var(--muted);line-height:1.8;">
+        <strong style="color:#fff;">Prem Chandrasekaran</strong> &nbsp;·&nbsp; Tech Director, Thoughtworks<br>
+        <strong style="color:#fff;">Pramod Sadalage</strong> &nbsp;·&nbsp; Distinguished Engineer, Thoughtworks
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    Just the title. Don't read it. Pause.
+  </aside>
+</section>
+
+<!-- ══ Slide 2: Cold open ═════════════════════════════════ -->
+<section data-background-image="images/metaphor/02-cold-open.png" data-background-size="cover">
+  <div style="display:flex;flex-direction:column;justify-content:center;height:100%;max-width:70%;">
+    <div class="bg-card" style="max-width:none;">
+      <p class="cold-lede">Six years of monolith. Eighteen months of microservices.</p>
+      <p class="cold-sublede">Same engineers. Same data. Different outcome.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    I've seen versions of this story at multiple orgs over the last two years. Spring Boot monolith. Six years. Tests fast, deploys fine. People felt slow, so they migrated to microservices. Eighteen months in: deploys slower, on-call incidents tripled, two senior engineers quit. Postmortem: the shape of the system wasn't the problem. Every service they extracted still needed to read tables in services they hadn't extracted yet. They built a microservices distribution on top of a shared database, and they called it progress. Same engineers. Same data. Different outcome. The variable that changed wasn't talent or architectural fashion. It was something else. That's this talk.
+  </aside>
+</section>
+
+<!-- ══ Slide 3: Thesis ════════════════════════════════════ -->
+<section>
+  <div class="act-title">
+    <p class="statement">Architecture endures when teams align on data lifecycles, not just APIs.</p>
+  </div>
+  <aside class="notes">
+    This is the talk. We are going to walk through one company. They got the modular monolith right. Then they decomposed without trauma. The thing they did was not a deployment trick. It was data discipline.
+  </aside>
+</section>
+
+<!-- ══ Slide 4: Rot starts at the schema ═════════════════ -->
+<section data-background-image="images/metaphor/04-rot.png">
+  <h2 style="margin-bottom:0.15em;">Rot doesn't start at the deployment boundary</h2>
+  <p style="font-size:1.1em;font-weight:600;color:#fff;margin:0 0 0.6em;line-height:1.25;">It starts at the schema</p>
+  <div class="failure-grid-items">
+    <div class="failure-card c1">
+      <div class="fc-head"><span class="fc-icon">🔓</span><span class="fc-num">01</span></div>
+      <p class="fc-text">Anyone writes to any table.</p>
+      <p class="fc-sub">No ownership at the persistence layer.</p>
+    </div>
+    <div class="failure-card c2">
+      <div class="fc-head"><span class="fc-icon">🔗</span><span class="fc-num">02</span></div>
+      <p class="fc-text">Cross-domain joins in hot paths.</p>
+      <p class="fc-sub">Latency follows your worst dependency.</p>
+    </div>
+    <div class="failure-card c3">
+      <div class="fc-head"><span class="fc-icon">⏳</span><span class="fc-num">03</span></div>
+      <p class="fc-text">Lifecycle and retention rules applied inconsistently.</p>
+      <p class="fc-sub">Data outlives the rules that govern it.</p>
+    </div>
+    <div class="failure-card c4">
+      <div class="fc-head"><span class="fc-icon">💬</span><span class="fc-num">04</span></div>
+      <p class="fc-text">Teams share a database but not a vocabulary.</p>
+      <p class="fc-sub">One schema, many implicit meanings.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Walk the four. 20 seconds each. Don't list and move on, name the failure mode briefly. The audience needs to feel "yes, that's my system." Close with: "Ownership in most orgs ends at the code. It never reaches the data."
+  </aside>
+</section>
+
+<!-- ══ Slide 5: Shared data = shared architecture ═════════ -->
+<section data-background-image="images/metaphor/05-shared-basement.png">
+  <div class="act-title">
+    <div class="bg-card-center">
+      <p class="statement" style="max-width:none;">If your data is shared, your architecture is shared.<br>Whatever the org chart says.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    This is the pivot. "Microservices, modular monoliths, mainframes: it doesn't matter. If your data is shared, you have one system pretending to be many. The rest of this talk is about how to actually have many."
+  </aside>
+</section>
+
+<!-- ══ Slide 6: Penultimate Markets Year 4 ════════════════ -->
+<section>
+  <h2>Penultimate Markets, 2022. One deployment. 120 engineers. 8 markets.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/06-penultimate-year-4.svg"
+         alt="Penultimate Markets modular monolith at Year 4"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Penultimate Markets modular monolith at Year 4</strong><br><br>
+      Eight domains inside one outer "monolith" frame:<br>
+      Identity &amp; Accounts · Catalog · Orders · Payments<br>
+      Tax · Search · Fulfillment · Pricing &amp; Promotions<br><br>
+      Sidebar stats: 1M orders/day · 25M SKUs
+    </div>
+  </div>
+  <aside class="notes">
+    Set the scene. "By Year 4, Penultimate had 120 engineers shipping into one deployment. People asked them when they were moving to microservices. They didn't, for another four years. Here is what they did instead."
+  </aside>
+</section>
+
+<!-- ══ Slide 7: Aggregates own their invariants ══════════ -->
+<section data-background-image="images/metaphor/07-fortress.png" data-background-opacity="0.15">
+  <h2>Aggregates own their invariants.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/07-aggregate.svg"
+         alt="Order aggregate with internal entities and external references as IDs"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Order aggregate root</strong><br><br>
+      Inside boundary: OrderLine, ShippingAddress, Money<br>
+      Outside boundary (referenced as IDs only): CustomerId, ProductId
+    </div>
+  </div>
+  <aside class="notes">
+    An aggregate is the only place an invariant lives. If an Order can't ship without a confirmed payment, that rule lives in Order. Not in a service layer. Not in a database trigger. Not in a Slack message. In Order. The aggregate is the transactional boundary because it's the only thing that knows the rules.
+  </aside>
+</section>
+
+<!-- ══ Slide 8: Wrong / Right code ═══════════════════════ -->
+<section>
+  <h2>What this looks like in practice</h2>
+  <div class="compare" style="margin-top:10px;">
+    <div class="compare-bad">
+      <h4>WRONG</h4>
+<pre><code class="language-java" data-trim>
+// Tax module mutating Order's data directly
+orderRepository.findById(id).getLines()
+    .forEach(line -&gt; line.setTaxRate(rate));
+</code></pre>
+    </div>
+    <div class="compare-good">
+      <h4>RIGHT</h4>
+<pre><code class="language-java" data-trim>
+// Tax sends a command. Order owns the transition.
+orderService.applyTaxes(orderId, taxBreakdown);
+
+// inside Order aggregate:
+//   validates state, applies rule, emits event
+</code></pre>
+    </div>
+  </div>
+  <aside class="notes">
+    If your tax module is reaching into Order's tables, you don't have an Order aggregate. You have a database with Java in front of it. Twenty seconds on the right side: write logic encapsulated, validation at the boundary, emits an event.
+  </aside>
+</section>
+
+<!-- ══ Slide 9: Other teams consume contracts ════════════ -->
+<section data-background-image="images/metaphor/09-windows.png" data-background-opacity="0.15">
+  <h2>Other teams consume contracts, not tables.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/09-read-model.svg"
+         alt="Tax subscribes to Order events and builds its own projection"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Tax needs Order data</strong><br><br>
+      Tax subscribes to OrderPlaced and OrderShipped events.<br>
+      Tax builds its own local read projection.<br>
+      Tax never queries Order's tables.
+    </div>
+  </div>
+  <aside class="notes">
+    Tax does not join to Order's tables. Tax subscribes to events Order publishes. From those events, Tax builds its own projection: order lines, prices, shipping address, the fields Tax cares about. The contract is the event. Order can refactor its schema tomorrow. Tax doesn't notice, because Tax was never reading the schema.
+  </aside>
+</section>
+
+<!-- ══ Slide 10: Event contract YAML ═════════════════════ -->
+<section>
+  <h2>The contract is the boundary.</h2>
+<pre><code class="language-yaml" data-trim>
+OrderPlaced:
+  version: 3
+  fields:
+    orderId: UUID
+    customerId: UUID
+    placedAt: timestamp
+    lines: [OrderLine]
+    shippingAddress: Address
+    currency: ISO4217
+</code></pre>
+  <aside class="notes">
+    This is the only thing Tax knows about Order. Versioned, owned by Order's team, published with a guarantee. Order's internal tables are nobody else's business.
+  </aside>
+</section>
+
+<!-- ══ Slide 11: Discipline is not a wiki page ═══════════ -->
+<section data-background-image="images/metaphor/11-guard.png">
+  <div class="act-title">
+    <div class="bg-card-center">
+      <p class="statement" style="max-width:none;">Discipline is not a wiki page.<br>It's CI exit code 1.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    I have seen every one of these patterns documented in Confluence and broken in production the same week. The only way they hold is if a CI build fails when they break. So here is the slide most architecture talks don't show.
+  </aside>
+</section>
+
+<!-- ══ Slide 12: ArchUnit fitness functions ══════════════ -->
+<section>
+  <h2>Fitness functions for data boundaries.</h2>
+<pre><code class="language-java" data-trim>
+@AnalyzeClasses(packages = "com.penultimate")
+public class DataBoundaryFitnessFunctions {
+
+  @ArchTest
+  static final ArchRule no_cross_domain_persistence_access =
+    noClasses().that().resideInAPackage("..tax..")
+      .should().accessClassesThat()
+      .resideInAPackage("..orders.persistence..")
+      .because("Tax reads OrderPlaced events. Tax does not query Order's tables.");
+
+  @ArchTest
+  static final ArchRule writes_only_via_aggregate_root =
+    noClasses().that().resideOutsideOfPackage("..orders.domain..")
+      .should().callMethod(OrderRepository.class, "save", Order.class)
+      .because("Order's invariants live in Order. No exceptions.");
+
+  @ArchTest
+  static final ArchRule events_versioned_and_immutable =
+    classes().that().areAnnotatedWith(DomainEvent.class)
+      .should().haveSimpleNameEndingWith("V1")
+      .orShould().haveSimpleNameEndingWith("V2")
+      .andShould().haveOnlyFinalFields();
+}
+</code></pre>
+  <aside class="notes">
+    Three rules. Each one took an afternoon to write. Each one runs on every PR. The first one stops Tax from reaching into Order's database. The second stops anyone outside Order from saving an Order. The third makes sure events are versioned and immutable. This is the slide you should photograph. (Pause for cameras.)
+  </aside>
+</section>
+
+<!-- ══ Slide 13: Other fitness functions ═════════════════ -->
+<section>
+  <h2>Other fitness functions you'll add</h2>
+  <ul>
+    <li>Schema migration linter (expand/contract enforcement)</li>
+    <li>Contract stability test (Pact, schema-registry compatibility)</li>
+    <li>Cross-aggregate join detector (SQL log analysis or query plan inspection)</li>
+    <li>Event schema validation (in CI, against registry)</li>
+    <li>Lifecycle/retention assertions (per-table TTL declared, enforced)</li>
+  </ul>
+  <aside class="notes">
+    These don't fit on one slide. They all live in CI. Build them gradually. Each one buys you back a category of bug you used to find in production.
+  </aside>
+</section>
+
+<!-- ══ Slide 14: Monolith doesn't fail — it stops fitting ═ -->
+<section data-background-image="images/metaphor/14-tree-cylinder.png">
+  <div class="act-title">
+    <div class="bg-card-center">
+      <p class="statement" style="max-width:none;">The monolith doesn't fail.<br>It stops fitting.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    By Year 5, three of Penultimate's domains were pulling outward. Not because the monolith was broken, because they were starting to need different things from their data.
+  </aside>
+</section>
+
+<!-- ══ Slide 15: Three pressures, three lifecycles ═══════ -->
+<section>
+  <h2>The pressure was not traffic. It was lifecycle.</h2>
+  <div class="three-col" style="margin-top:14px;">
+    <div class="card card-accent">
+      <h4>Search</h4>
+      <p>Read-heavy<br>Low-latency<br>Regional<br>Eventually consistent</p>
+    </div>
+    <div class="card card-blue">
+      <h4>Tax</h4>
+      <p>Immutable<br>7-year retention<br>Audit<br>Regulatory</p>
+    </div>
+    <div class="card card-warn">
+      <h4>Payments</h4>
+      <p>Isolated failure domain<br>Stricter SLA<br>PCI scope reduction</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Search needs to be cached at the edge in eight regions. Tax needs to keep records nobody can ever rewrite. Payments needs to fail in isolation and recover without taking the rest of the platform with it. These are not traffic problems. They're data lifecycle problems. And data lifecycle is what tells you where to cut.
+  </aside>
+</section>
+
+<!-- ══ Slide 16: Before / After ══════════════════════════ -->
+<section>
+  <h2>Same colors. Same domains. Same teams.</h2>
+  <div class="two-col" style="flex:1;align-items:stretch;gap:32px;min-height:0;">
+    <div style="display:flex;flex-direction:column;min-height:0;">
+      <h3 style="text-align:center;">Before (Year 4)</h3>
+      <div class="diagram-frame">
+        <img src="images/diagrams/16a-before.svg"
+             alt="Modular monolith at Year 4"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="diagram-placeholder" style="display:none;font-size:0.55em;">
+          One outer boundary, 8 domains inside as colored regions.<br>
+          Solid lines between aggregates.<br>
+          Event arrows loop internally.
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;min-height:0;">
+      <h3 style="text-align:center;">After (Year 7)</h3>
+      <div class="diagram-frame">
+        <img src="images/diagrams/16b-after.svg"
+             alt="Distributed architecture at Year 7"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="diagram-placeholder" style="display:none;font-size:0.55em;">
+          Three extracted services: Search, Tax, Payments.<br>
+          Remaining monolith: Identity, Catalog, Orders, Fulfillment, Pricing.<br>
+          Versioned event contracts as labelled arrows.
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    Same colors. Same domains. Same teams. The only thing that changed is which boundaries became network boundaries. The seams were already drawn at Year 4. We just had to honor them.
+  </aside>
+</section>
+
+<!-- ══ Slide 17: Aggregates become extraction boundaries ═ -->
+<section data-background-image="images/metaphor/17-cell-division.png" data-background-opacity="0.15">
+  <h2>Aggregates become extraction boundaries.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/17-search-extraction.svg"
+         alt="Search subscribes to ProductPublished, OrderPlaced; in Year 4 in-process, in Year 5 over Kafka"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Search extraction</strong><br><br>
+      Search subscribes to ProductPublished, OrderPlaced.<br>
+      Year 4: events in-process. &nbsp;·&nbsp; Year 5: events over Kafka.<br>
+      Same code, different transport.
+    </div>
+  </div>
+  <aside class="notes">
+    When Search was extracted, almost nothing in Search's code changed. It already consumed events. It already had its own projection of catalog data. The boundary was already there. The extraction was a deployment change, not a redesign.
+  </aside>
+</section>
+
+<!-- ══ Slide 18: Same contract, bigger blast radius ══════ -->
+<section data-background-image="images/metaphor/18-window-archway.png" data-background-opacity="0.15">
+  <h2>Same contract. Bigger blast radius.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/18-read-model-evolution.svg"
+         alt="Read model contract growth from Year 4 to Year 7"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Read model contract — side by side</strong><br><br>
+      Year 4: consumed by 1 internal team.<br>
+      Year 7: consumed by 6 internal teams + 2 external integrations.<br>
+      With SLA, version policy, deprecation window.
+    </div>
+  </div>
+  <aside class="notes">
+    The Tax read model existed before extraction. After extraction it has a name, a version, an SLA, and consumers it didn't have before. That's the work of decomposition: making implicit contracts explicit, and giving them an owner.
+  </aside>
+</section>
+
+<!-- ══ Slide 19: Process managers replace transactions ═══ -->
+<section data-background-image="images/metaphor/19-relay-baton.png" data-background-opacity="0.15">
+  <h2>Process managers replace transactions.</h2>
+  <div class="diagram-frame">
+    <img src="images/diagrams/19-process-manager.svg"
+         alt="Order placement flow from single DB transaction to process manager"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="diagram-placeholder" style="display:none;">
+      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Order placement, before and after</strong><br><br>
+      Year 4: single DB transaction across Order, Payment, Tax, Inventory.<br>
+      Year 7: process manager — PlaceOrder &rarr; AuthorizePayment &rarr; ApplyTaxes &rarr; ReserveInventory.<br>
+      Each step has compensation.
+    </div>
+  </div>
+  <aside class="notes">
+    The order placement that used to be a five-table transaction is now a process manager with compensation. Choreography for the simple paths, orchestration for the multi-step flows. The point isn't to avoid transactions. The point is to know when you have one and when you have a saga, and to never confuse the two.
+  </aside>
+</section>
+
+<!-- ══ Slide 20: Duplication owned by a contract ═════════ -->
+<section data-background-image="images/metaphor/20-blueprints.png">
+  <div class="act-title">
+    <div class="bg-card-center" style="max-width:80%;">
+      <p class="statement" style="max-width:none;">Duplication owned by a contract is not debt.<br>It's autonomy.</p>
+      <p class="statement-attribution">Tax keeps its own copy of order line items. Search keeps its own denormalized catalog projection. Both update from events; both own their schema.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Stop apologizing for duplication. Tax has its own copy of the parts of an order it cares about. Search has its own copy of catalog data, denormalized for query performance. Both copies are owned. Both update from events. That is autonomy. The opposite of duplication isn't elegance. It's coupling.
+  </aside>
+</section>
+
+<!-- ══ Slide 21: Discipline is portable ══════════════════ -->
+<section>
+  <h2>The discipline is portable.</h2>
+<pre><code class="language-java" data-trim>
+// Year 4 rule:
+// "Tax doesn't access Order's persistence package."
+
+// Year 7 rule:
+@ArchTest
+static final ArchRule tax_only_consumes_versioned_order_events =
+    classes().that().resideInAPackage("..tax.consumer..")
+      .should().onlyDependOnClassesThat()
+      .areAnnotatedWith(VersionedDomainEvent.class)
+      .because("Tax consumes events. Tax does not call Order's APIs.");
+</code></pre>
+  <aside class="notes">
+    When you decompose, your CI gets stronger, not weaker. The schema-boundary rule becomes a service-boundary rule. The contract-stability rule becomes a published-event rule. Same discipline, new transport.
+  </aside>
+</section>
+
+<!-- ══ Slide 22: Decomposition wasn't a flag day ═════════ -->
+<section>
+  <div class="act-title">
+    <p class="statement">Decomposition wasn't a flag day. It was four moves over three years.<br>Each one obvious, because the seams were already drawn in the data.</p>
+  </div>
+  <aside class="notes">
+    That's it. No big rewrite. No transformation program. Three extractions, four moves, in the order the data lifecycle asked for them.
+  </aside>
+</section>
+
+<!-- ══ Slide 23: Section transition ══════════════════════ -->
+<section data-background-image="images/metaphor/23-tide.png" data-background-size="cover">
+  <div class="act-title">
+    <div class="bg-card-center">
+      <p class="transition-label">One reason this matters more in 2026 than in 2022.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Three quick beats, then I'll close.
+  </aside>
+</section>
+
+<!-- ══ Slide 24: 57% ═════════════════════════════════════ -->
+<section data-background-image="images/metaphor/24-octopus.png">
+  <div class="big-stat">
+    <div class="bg-card-center">
+      <div class="bs-number">57%</div>
+      <p class="bs-caption">of agent tool interaction paths show data over-exposure.</p>
+      <p class="bs-source">AgentRaft, 2026 (n=6,675 real-world agent tools). ThoughtWorks Tech Radar Vol 33, Nov 2025: "Naive API-to-MCP conversion" on Hold.</p>
+      <p class="bs-punch">MCP is the wire format. Your data product is the contract.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Every team I see exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes. The fix is the one we just spent twenty minutes on. Aggregates with encapsulated writes, contracts at the boundary, anti-corruption between agent vocabulary and domain invariants. MCP is the wire format. Your data product is the contract.
+  </aside>
+</section>
+
+<!-- ══ Slide 25: +153% / +322% ═══════════════════════════ -->
+<section data-background-image="images/metaphor/25-dam.png">
+  <div class="big-stat">
+    <div class="bg-card-center">
+      <div class="bs-pair">
+        <div class="bs-number">+153%</div>
+        <div class="bs-number">+322%</div>
+      </div>
+      <p class="bs-caption">architectural design flaws (+153%) and privilege escalation paths (+322%) in AI-assisted code.</p>
+      <p class="bs-source">Apiiro Fortune 50 telemetry, 2025. 4× more commits. Fewer, larger PRs.</p>
+      <p class="bs-punch">CLAUDE.md is advisory. CI is deterministic. Build the deterministic layer.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Velocity moved. Reviewer attention did not. Every fitness function I just showed you stopped being optional in 2025. The advisory layer doesn't matter if the deterministic layer isn't there.
+  </aside>
+</section>
+
+<!-- ══ Slide 26: Propose. Approve. Enforce. ═════════════ -->
+<section data-background-image="images/metaphor/26-three-figures.png">
+  <div class="big-stat">
+    <div class="bg-card-center">
+      <div class="bs-words">Propose. Approve. Enforce.</div>
+      <p class="bs-source">arXiv 2603.26244 (2026): LLM-led DDD nailed glossary and context maps; bounded contexts and aggregates degraded by step 5. Production pattern at LinkedIn, Visa, Netflix via Acryl/DataHub.</p>
+      <p class="bs-punch">Use it to scale the boring parts. Keep humans on the seams.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    AI is not going to discover your domain boundaries. A 2026 study tried it. It got the glossary right. By step five, the bounded contexts were unusable. The pattern that has actually shipped is propose, approve, enforce. AI drafts. Humans decide the contracts. CI enforces them. Use it to scale the work that doesn't need taste. Keep humans on the work that does.
+  </aside>
+</section>
+
+<!-- ══ Slide 27: Monday actions ══════════════════════════ -->
+<section data-background-image="images/metaphor/27-monday-calendar.png">
+  <div style="padding:24px 32px;background:rgba(15,23,41,0.6);border:1px solid rgba(0,212,170,0.25);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+  <h2 style="margin-bottom:0.4em;">Monday actions</h2>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-content"><strong>Encode ownership.</strong> Which team owns which aggregates? Write it down this week.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-content"><strong>Publish contracts.</strong> Events and read models, versioned and owned.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-content"><strong>Verify in CI.</strong> Fitness functions for boundaries, contracts, migrations.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-content"><strong>Make migrations safe by design.</strong> Expand, then contract. Always.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-content"><strong>Decompose along seams when lifecycle pulls.</strong> Not when traffic pulls. Not when fashion pulls.</div>
+    </div>
+  </div>
+  </div>
+  <aside class="notes">
+    Walk the five briskly. 8 seconds each.
+  </aside>
+</section>
+
+<!-- ══ Slide 28: Close ═══════════════════════════════════ -->
+<section>
+  <div class="act-title">
+    <p class="statement">Your monolith will stay modular longer.<br>Your decompositions will be evolutionary, not traumatic.</p>
+    <p class="statement-attribution">Thank you.</p>
+  </div>
+  <aside class="notes">
+    Read it. Pause. "I'd love to take questions."
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    progress: true,
+    controls: false,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    pdfSeparateFragments: false,
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    plugins: [ RevealNotes, RevealHighlight ]
+  });
+</script>
+</body>
+</html>

@@ -6,9 +6,19 @@ export interface Talk {
   url: string;
   eventUrl?: string;
   videoUrl?: string;
+  unlisted?: boolean;
 }
 
 export const talks: Talk[] = [
+  {
+    title: "Your Problem Isn't the Monolith. It's the Data.",
+    event: 'LDX3 London 2026',
+    date: '2026',
+    description: 'Architecture endures when teams align on data lifecycles, not just APIs. A walk through one company that built a disciplined monolith, then decomposed without trauma.',
+    url: '/talks/your-problem-isnt-the-monolith/',
+    eventUrl: 'https://ldx3.london',
+    unlisted: true,
+  },
   {
     title: 'AI-Assisted Development: What Actually Works',
     event: 'Arc of AI',

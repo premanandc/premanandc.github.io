@@ -58,7 +58,7 @@ const lastCommitDate = await getLastCommitDate('premanandc');
     <a href="/talks">View all &rarr;</a>
   </div>
   <div class="talks-grid">
-    {talks.map(talk => (
+    {talks.filter(t => !t.unlisted).map(talk => (
       <TalkCard
         title={talk.title}
         event={talk.event}
