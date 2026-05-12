@@ -66,6 +66,8 @@ Concretely, the harness is a set of executable expectations: coverage thresholds
 
 Prompts and specs request good behavior. Harnesses make undesirable outcomes hard to ship. The harness is where verification is automated, and automation is what makes the verification scale.
 
+Birgitta Böckeler's [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) goes into more depth on this layer.
+
 ## Human Reflection
 
 There will always be a residual: the spec that asked for the wrong system, the generated code that passes every test but behaves incorrectly in production, the integration assumption that nothing in the test suite anticipated. The human's job is not to verify every output, which does not scale. It is to watch for what the harness missed and feed corrections back upstream. A failure caught in production becomes a new fitness function. A spec that produced misleading code becomes a clearer spec. A pattern of brittle generation becomes a refinement to the prompt or the bounded context.
