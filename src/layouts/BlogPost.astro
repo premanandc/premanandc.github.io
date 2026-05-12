@@ -4,6 +4,8 @@ import JsonLd from '../components/JsonLd.astro';
 import TableOfContents from '../components/blog/TableOfContents.tsx';
 import Lightbox from '../components/blog/Lightbox.tsx';
 import SeriesNav from '../components/blog/SeriesNav.astro';
+import DraftFeedbackAnchors from '../components/blog/DraftFeedbackAnchors.tsx';
+import { buildFeedbackUrl } from '../utils/feedback';
 
 interface SeriesInfo {
   name: string;
@@ -32,6 +34,7 @@ const { title, date, tags, readingTime, coverImage, excerpt, series, seriesParts
 
 const slug = Astro.url.pathname.replace('/blog/', '').replace(/\/$/, '');
 const ogImage = coverImage ?? `/og/${slug}.png`;
+const feedbackUrl = unlisted ? buildFeedbackUrl({ slug, title }) : null;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -71,6 +74,16 @@ const articleSchema = {
           <span class="unlisted-banner-text">
             <strong>Draft.</strong> This post is unlisted and intended for review. Please don't share publicly.
           </span>
+          {feedbackUrl && (
+            <a
+              class="unlisted-banner-cta"
+              href={feedbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Leave feedback &rarr;
+            </a>
+          )}
         </aside>
         <div class="draft-watermark" aria-hidden="true">DRAFT</div>
       </>
@@ -103,12 +116,29 @@ const articleSchema = {
     <div class="article-with-toc">
       <div class="article-body">
         <slot />
+        {unlisted && feedbackUrl && (
+          <aside class="feedback-card" aria-label="Send feedback on this draft">
+            <div class="feedback-card-text">
+              <strong>Share your thoughts on this draft.</strong>
+              <p>This post is in review. Use the link to open a pre-filled GitHub issue with your feedback.</p>
+            </div>
+            <a
+              class="feedback-card-cta"
+              href={feedbackUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Send feedback
+            </a>
+          </aside>
+        )}
       </div>
       <aside class="toc-sidebar">
         <TableOfContents client:load />
       </aside>
     </div>
   </article>
+  {unlisted && <DraftFeedbackAnchors client:load slug={slug} title={title} />}
   <Lightbox client:load />
 </BaseLayout>
 
@@ -153,6 +183,7 @@ const articleSchema = {
     border-left: 3px solid var(--callout-warning-border);
     border-radius: 0 8px 8px 0;
     max-width: 680px;
+    flex-wrap: wrap;
   }
 
   .unlisted-banner-dot {
@@ -168,12 +199,96 @@ const articleSchema = {
     font-size: 14px;
     line-height: 1.5;
     color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
   }
 
   .unlisted-banner-text strong {
     color: var(--callout-warning-border);
     font-weight: 700;
     letter-spacing: 0.02em;
+  }
+
+  .unlisted-banner-cta {
+    flex-shrink: 0;
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--callout-warning-border);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--callout-warning-border);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .unlisted-banner-cta:hover {
+    background: var(--callout-warning-border);
+    color: #fff;
+  }
+
+  .feedback-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 56px;
+    padding: 20px 24px;
+    background: var(--callout-warning-bg);
+    border: 1px solid var(--callout-warning-border);
+    border-radius: 10px;
+    max-width: 680px;
+    flex-wrap: wrap;
+  }
+
+  .feedback-card-text {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .feedback-card-text strong {
+    display: block;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .feedback-card-text p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .feedback-card-cta {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--callout-warning-border);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: filter 0.15s ease;
+  }
+
+  .feedback-card-cta:hover {
+    filter: brightness(0.92);
+  }
+
+  .article-body :global(.feedback-anchor) {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 0.7em;
+    text-decoration: none;
+    opacity: 0.35;
+    vertical-align: middle;
+    transition: opacity 0.15s ease;
+  }
+
+  .article-body :global(.feedback-anchor:hover),
+  .article-body :global(.feedback-anchor:focus) {
+    opacity: 1;
   }
 
   .article-header {
