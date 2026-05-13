@@ -241,13 +241,21 @@
   </aside>
 </section>
 
-<!-- ══ Slide 3: Thesis ════════════════════════════════════ -->
+<!-- ══ Slide 3: Thesis + roadmap chips ═══════════════════ -->
 <section>
   <div class="act-title">
     <p class="statement">Architecture endures when teams align on data lifecycles, not just APIs.</p>
+    <p style="font-size:0.72em;color:var(--muted);margin:2.2em 0 0.8em;letter-spacing:3px;text-transform:uppercase;font-weight:700;">Five disciplines · we'll walk all of them</p>
+    <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+      <span style="padding:10px 20px;background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">1 · Ownership</span>
+      <span style="padding:10px 20px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">2 · Contracts</span>
+      <span style="padding:10px 20px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">3 · CI fitness</span>
+      <span style="padding:10px 20px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">4 · Safe migrations</span>
+      <span style="padding:10px 20px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">5 · Decompose along seams</span>
+    </div>
   </div>
   <aside class="notes">
-    This is the talk. We are going to walk through one company. They got the modular monolith right. Then they decomposed without trauma. The thing they did was not a deployment trick. It was data discipline.
+    This is the talk. We are going to walk through one company. They got the modular monolith right. Then they decomposed without trauma. The thing they did was not a deployment trick. It was data discipline. By the end you'll have these five things to take to your team on Monday: encode ownership, publish contracts, verify in CI, make migrations safe by design, and decompose along data seams. Five disciplines. We'll walk all of them.
   </aside>
 </section>
 
@@ -279,18 +287,6 @@
   </div>
   <aside class="notes">
     Walk the four. 20 seconds each. Don't list and move on, name the failure mode briefly. The audience needs to feel "yes, that's my system." Close with: "Ownership in most orgs ends at the code. It never reaches the data."
-  </aside>
-</section>
-
-<!-- ══ Slide 5: Shared data = shared architecture ═════════ -->
-<section data-background-image="images/metaphor/05-shared-basement.png">
-  <div class="act-title">
-    <div class="bg-card-center">
-      <p class="statement" style="max-width:none;">If your data is shared, your architecture is shared.<br>Whatever the org chart says.</p>
-    </div>
-  </div>
-  <aside class="notes">
-    This is the pivot. "Microservices, modular monoliths, mainframes: it doesn't matter. If your data is shared, you have one system pretending to be many. The rest of this talk is about how to actually have many."
   </aside>
 </section>
 
@@ -504,6 +500,7 @@ public class DataBoundaryFitnessFunctions {
       .andShould().haveOnlyFinalFields();
 }
 </code></pre>
+  <p style="text-align:center;font-size:0.85em;color:var(--accent);font-weight:700;margin:18px 0 0;letter-spacing:1px;">Three rules. One CI build. The four failure modes — blocked at the door.</p>
   <aside class="notes">
     Three rules. Each one took an afternoon to write. Each one runs on every PR. The first one stops Tax from reaching into Order's database. The second stops anyone outside Order from saving an Order. The third makes sure events are versioned and immutable. This is the slide you should photograph. (Pause for cameras.)
   </aside>
@@ -567,6 +564,38 @@ public class DataBoundaryFitnessFunctions {
   </div>
   <aside class="notes">
     By Year 5, three of Penultimate's domains were pulling outward. Not because the monolith was broken, because they were starting to need different things from their data.
+  </aside>
+</section>
+
+<!-- ══ Slide 14b: Three triggers (narrative beat) ════════ -->
+<section>
+  <h2 style="font-size:1.6em;margin-bottom:0.15em;">Three pressures. Three triggers.</h2>
+  <p style="font-size:0.95em;color:var(--muted);margin:0 0 1.2em;">Decomposition didn't start with a plan. It started with incidents.</p>
+  <div style="display:flex;flex-direction:column;gap:22px;flex:1;justify-content:center;max-width:1300px;margin:0 auto;width:100%;">
+    <div style="display:flex;gap:28px;align-items:center;padding:24px 32px;background:rgba(15,23,41,0.6);border-left:6px solid var(--accent);border-radius:0 14px 14px 0;">
+      <div style="font-family:var(--r-code-font);font-size:0.8em;color:var(--accent);letter-spacing:2px;width:130px;flex-shrink:0;font-weight:700;">Y5 · Q1</div>
+      <div style="flex:1;">
+        <p style="font-size:1.15em;font-weight:800;color:#fff;margin:0 0 6px;line-height:1.3;">Catalog publish p99 hit 800 ms.</p>
+        <p style="font-size:0.8em;font-style:italic;color:var(--muted);margin:0;line-height:1.5;">Search team needed regional read replicas — fast.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:28px;align-items:center;padding:24px 32px;background:rgba(15,23,41,0.6);border-left:6px solid var(--accent2);border-radius:0 14px 14px 0;">
+      <div style="font-family:var(--r-code-font);font-size:0.8em;color:var(--accent2);letter-spacing:2px;width:130px;flex-shrink:0;font-weight:700;">Y5 · Q3</div>
+      <div style="flex:1;">
+        <p style="font-size:1.15em;font-weight:800;color:#fff;margin:0 0 6px;line-height:1.3;">Audit flagged tax record retention drift.</p>
+        <p style="font-size:0.8em;font-style:italic;color:var(--muted);margin:0;line-height:1.5;">Tax team needed immutable, append-only storage — for seven years.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:28px;align-items:center;padding:24px 32px;background:rgba(15,23,41,0.6);border-left:6px solid var(--warn);border-radius:0 14px 14px 0;">
+      <div style="font-family:var(--r-code-font);font-size:0.8em;color:var(--warn);letter-spacing:2px;width:130px;flex-shrink:0;font-weight:700;">Y6 · Q1</div>
+      <div style="flex:1;">
+        <p style="font-size:1.15em;font-weight:800;color:#fff;margin:0 0 6px;line-height:1.3;">Payments outage cascaded to checkout.</p>
+        <p style="font-size:0.8em;font-style:italic;color:var(--muted);margin:0;line-height:1.5;">Payments team needed an isolated failure domain — and a stricter SLA.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    The pressures didn't come from an architecture review. They came from incidents and audits. Year 5, Q1: Catalog publish latency hit 800ms p99 — the search team couldn't tolerate it any longer. Year 5, Q3: an audit flagged that tax record retention had drifted out of compliance. Year 6, Q1: a payments outage cascaded into the rest of the marketplace. Three different domains, three different timelines, three different lifecycle pressures. The monolith didn't break. It just stopped fitting three teams at once.
   </aside>
 </section>
 
@@ -779,83 +808,62 @@ static final ArchRule tax_only_consumes_versioned_order_events =
       .areAnnotatedWith(VersionedDomainEvent.class)
       .because("Tax consumes events. Tax does not call Order's APIs.");
 </code></pre>
+  <p style="text-align:center;font-size:0.85em;color:var(--accent);font-weight:700;margin:18px 0 0;letter-spacing:1px;">Schema boundary → service boundary. Same shape, bigger blast radius.</p>
   <aside class="notes">
     When you decompose, your CI gets stronger, not weaker. The schema-boundary rule becomes a service-boundary rule. The contract-stability rule becomes a published-event rule. Same discipline, new transport.
   </aside>
 </section>
 
-<!-- ══ Slide 22: Decomposition wasn't a flag day ═════════ -->
+<!-- ══ Slide 22: Four moves timeline ═════════════════════ -->
 <section>
-  <div class="act-title">
-    <p class="statement">Decomposition wasn't a flag day. It was four moves over three years.<br>Each one obvious, because the seams were already drawn in the data.</p>
-  </div>
-  <aside class="notes">
-    That's it. No big rewrite. No transformation program. Three extractions, four moves, in the order the data lifecycle asked for them.
-  </aside>
-</section>
+  <div style="display:flex;flex-direction:column;height:100%;">
+    <h2 style="text-align:center;margin:0 0 0.2em;">Four moves over three years.</h2>
+    <p style="text-align:center;font-size:0.95em;color:var(--muted);margin:0 0 1em;">Each one obvious, because the seams were already drawn in the data.</p>
 
-<!-- ══ Slide 23: Section transition ══════════════════════ -->
-<section data-background-image="images/metaphor/23-tide.png" data-background-size="cover">
-  <div class="act-title">
-    <div class="bg-card-center">
-      <p class="transition-label">One reason this matters more in 2026 than in 2022.</p>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+      <div style="display:flex;gap:22px;width:100%;max-width:1820px;">
+        <div style="flex:1;padding:26px 28px;background:rgba(15,23,41,0.6);border-top:5px solid var(--accent);border-radius:12px;display:flex;flex-direction:column;">
+          <div style="font-family:var(--r-code-font);font-size:0.75em;color:var(--accent);font-weight:700;letter-spacing:2px;margin-bottom:14px;">YEAR 5 · MOVE 1</div>
+          <p style="font-size:1.05em;font-weight:800;color:#fff;margin:0 0 10px;line-height:1.3;">Aggregates become extraction boundaries.</p>
+          <p style="font-size:0.75em;font-style:italic;color:var(--muted);margin:0;line-height:1.55;">Search extracted. Same code, different transport.</p>
+        </div>
+        <div style="flex:1;padding:26px 28px;background:rgba(15,23,41,0.6);border-top:5px solid var(--accent2);border-radius:12px;display:flex;flex-direction:column;">
+          <div style="font-family:var(--r-code-font);font-size:0.75em;color:var(--accent2);font-weight:700;letter-spacing:2px;margin-bottom:14px;">YEAR 6 · MOVE 2</div>
+          <p style="font-size:1.05em;font-weight:800;color:#fff;margin:0 0 10px;line-height:1.3;">Read models become published products.</p>
+          <p style="font-size:0.75em;font-style:italic;color:var(--muted);margin:0;line-height:1.55;">Tax extracted. Contracts gain owner, SLA, deprecation window.</p>
+        </div>
+        <div style="flex:1;padding:26px 28px;background:rgba(15,23,41,0.6);border-top:5px solid var(--warn);border-radius:12px;display:flex;flex-direction:column;">
+          <div style="font-family:var(--r-code-font);font-size:0.75em;color:var(--warn);font-weight:700;letter-spacing:2px;margin-bottom:14px;">YEAR 6–7 · MOVE 3</div>
+          <p style="font-size:1.05em;font-weight:800;color:#fff;margin:0 0 10px;line-height:1.3;">Process managers replace transactions.</p>
+          <p style="font-size:0.75em;font-style:italic;color:var(--muted);margin:0;line-height:1.55;">Payments extracted. Sagas with explicit compensation.</p>
+        </div>
+        <div style="flex:1;padding:26px 28px;background:rgba(15,23,41,0.6);border-top:5px solid #8b5cf6;border-radius:12px;display:flex;flex-direction:column;">
+          <div style="font-family:var(--r-code-font);font-size:0.75em;color:#8b5cf6;font-weight:700;letter-spacing:2px;margin-bottom:14px;">YEAR 7 · MOVE 4</div>
+          <p style="font-size:1.05em;font-weight:800;color:#fff;margin:0 0 10px;line-height:1.3;">Duplication becomes intentional.</p>
+          <p style="font-size:0.75em;font-style:italic;color:var(--muted);margin:0;line-height:1.55;">Tax and Search own their projections; events keep them fresh.</p>
+        </div>
+      </div>
     </div>
+
+    <p style="text-align:center;font-size:0.72em;color:var(--muted);font-style:italic;margin:0;letter-spacing:2px;">No flag day. No big rewrite. The seams led — the team followed.</p>
   </div>
   <aside class="notes">
-    Three quick beats, then I'll close.
+    That's it. No big rewrite. No transformation program. Three extractions, four moves, in the order the data lifecycle asked for them. Move one in Year 5: Search extracted. Aggregates became extraction boundaries. Move two in Year 6: Tax extracted. Read models became published data products with owners and SLAs. Move three through Year 6 and 7: payments extracted, distributed transactions replaced by process managers. Move four through Year 7: duplication became intentional — Tax and Search own their own projections, kept fresh by events.
   </aside>
 </section>
 
-<!-- ══ Slide 24: 57% ═════════════════════════════════════ -->
-<section data-background-image="images/metaphor/24-octopus.png">
-  <div class="big-stat">
-    <div class="bg-card-center">
-      <div class="bs-number">57%</div>
-      <p class="bs-caption">of agent tool interaction paths show data over-exposure.</p>
-      <p class="bs-source">AgentRaft, 2026 (n=6,675 real-world agent tools). ThoughtWorks Tech Radar Vol 33, Nov 2025: "Naive API-to-MCP conversion" on Hold.</p>
-      <p class="bs-punch">MCP is the wire format. Your data product is the contract.</p>
-    </div>
-  </div>
-  <aside class="notes">
-    Every team I see exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes. The fix is the one we just spent twenty minutes on. Aggregates with encapsulated writes, contracts at the boundary, anti-corruption between agent vocabulary and domain invariants. MCP is the wire format. Your data product is the contract.
-  </aside>
-</section>
-
-<!-- ══ Slide 25: +153% / +322% ═══════════════════════════ -->
+<!-- ══ Slide 23: AI bridge — cost compounds ══════════════ -->
 <section data-background-image="images/metaphor/25-dam.png">
   <div class="big-stat">
     <div class="bg-card-center">
-      <div class="bs-pair">
-        <div class="bs-stat-cell">
-          <div class="bs-number">+153%</div>
-          <p class="bs-stat-label">architectural design flaws</p>
-        </div>
-        <div class="bs-stat-cell">
-          <div class="bs-number">+322%</div>
-          <p class="bs-stat-label">privilege escalation paths</p>
-        </div>
-      </div>
-      <p class="bs-caption">in AI-assisted code.</p>
-      <p class="bs-source">Apiiro Fortune 50 telemetry, 2025. 4× more commits. Fewer, larger PRs.</p>
-      <p class="bs-punch">CLAUDE.md is advisory. CI is deterministic. Build the deterministic layer.</p>
+      <p style="font-size:1.6em;font-weight:800;color:#fff;line-height:1.15;margin:0 auto 18px;max-width:760px;letter-spacing:-0.01em;">In 2026, the cost compounds.</p>
+      <p class="bs-caption">AI agents over-expose data through naively converted tools. AI-assisted code ships with multi-fold more design flaws and privilege-escalation paths. LLM-led DDD nails the glossary, but bounded contexts and aggregates degrade by step five.</p>
+      <p class="bs-source">57% over-exposure · AgentRaft 2026 &nbsp;·&nbsp; +153% design flaws, +322% privilege escalation · Apiiro 2025 &nbsp;·&nbsp; arXiv 2603.26244 (2026)</p>
+      <p class="bs-punch">AI doesn't change the principles. It compounds the cost of getting them wrong.</p>
     </div>
   </div>
   <aside class="notes">
-    Velocity moved. Reviewer attention did not. Every fitness function I just showed you stopped being optional in 2025. The advisory layer doesn't matter if the deterministic layer isn't there.
-  </aside>
-</section>
-
-<!-- ══ Slide 26: Propose. Approve. Enforce. ═════════════ -->
-<section data-background-image="images/metaphor/26-three-figures.png">
-  <div class="big-stat">
-    <div class="bg-card-center">
-      <div class="bs-words">Propose. Approve. Enforce.</div>
-      <p class="bs-source">arXiv 2603.26244 (2026): LLM-led DDD nailed glossary and context maps; bounded contexts and aggregates degraded by step 5. Production pattern at LinkedIn, Visa, Netflix via Acryl/DataHub.</p>
-      <p class="bs-punch">Use it to scale the boring parts. Keep humans on the seams.</p>
-    </div>
-  </div>
-  <aside class="notes">
-    AI is not going to discover your domain boundaries. A 2026 study tried it. It got the glossary right. By step five, the bounded contexts were unusable. The pattern that has actually shipped is propose, approve, enforce. AI drafts. Humans decide the contracts. CI enforces them. Use it to scale the work that doesn't need taste. Keep humans on the work that does.
+    One reason this matters more in 2026 than in 2022 is that the cost of weak data discipline now compounds. Every team I see exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes — AgentRaft found 57 percent of agent tool paths over-expose data. Apiiro's Fortune 50 telemetry shows AI-assisted code shipping with 153 percent more design flaws and 322 percent more privilege escalation paths. And LLM-led DDD attempts that look promising in early phases come apart at the aggregate boundary by step five. None of these are new failures. They're old failures at higher velocity, with wider blast radius. The fix is the one we just spent twenty minutes on. MCP is the wire format; your data product is the contract. CLAUDE.md is advisory; CI is deterministic. AI drafts; humans decide contracts; CI enforces them. Same discipline. More reason to do it now.
   </aside>
 </section>
 
@@ -906,14 +914,38 @@ static final ArchRule tax_only_consumes_versioned_order_events =
   </aside>
 </section>
 
-<!-- ══ Slide 28: Close ═══════════════════════════════════ -->
+<!-- ══ Slide 28: Close + outcomes ═══════════════════════ -->
 <section>
-  <div class="act-title">
-    <p class="statement">Your monolith will stay modular longer.<br>Your decompositions will be evolutionary, not traumatic.</p>
-    <p class="statement-attribution">Thank you.</p>
+  <div style="display:flex;flex-direction:column;justify-content:space-around;height:100%;text-align:center;">
+    <div>
+      <p style="font-size:1.5em;font-weight:800;color:#fff;line-height:1.25;margin:0 auto 0.4em;max-width:85%;">Your monolith will stay modular longer.<br>Your decompositions will be evolutionary, not traumatic.</p>
+    </div>
+    <div>
+      <p style="font-size:0.7em;color:var(--muted);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin:0 0 1.6em;">What that looked like at Penultimate</p>
+      <div style="display:flex;justify-content:center;gap:80px;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="gradient-text" style="font-size:2.4em;font-weight:900;line-height:1;margin-bottom:12px;">2/wk → 50/day</div>
+          <div style="font-size:0.65em;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;">Deploy frequency</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="gradient-text" style="font-size:2.4em;font-weight:900;line-height:1;margin-bottom:12px;">−68%</div>
+          <div style="font-size:0.65em;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;">On-call escalations</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="gradient-text" style="font-size:2.4em;font-weight:900;line-height:1;margin-bottom:12px;">~3 mo</div>
+          <div style="font-size:0.65em;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;">Extraction → GA</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="gradient-text" style="font-size:2.4em;font-weight:900;line-height:1;margin-bottom:12px;">0</div>
+          <div style="font-size:0.65em;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;">Extraction-related outages</div>
+        </div>
+      </div>
+      <p style="font-size:0.65em;color:var(--muted);font-style:italic;margin:1.4em 0 0;letter-spacing:1.5px;">Year 4 → Year 7. Same headcount. Same teams.</p>
+    </div>
+    <p style="font-size:1em;color:var(--muted);font-style:italic;letter-spacing:1px;margin:0;">Thank you.</p>
   </div>
   <aside class="notes">
-    Read it. Pause. "I'd love to take questions."
+    Read the thesis. Pause. Then walk the four numbers. Deploys went from twice a week to fifty a day. On-call escalations dropped by two thirds. Extractions averaged three months from proposal to GA. Zero downtime incidents caused by the extractions themselves. Same headcount. Same teams. That's "evolutionary, not traumatic" in numbers. Then: "I'd love to take questions."
   </aside>
 </section>
 
