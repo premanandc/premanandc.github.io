@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .pill-label    { font: 800 22px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #0f1729; }
+      .entity-label  { font: 700 20px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+      .ref-label     { font: 700 18px 'Inter', 'Arial', sans-serif; fill: #e2e8f0; }
+      .ref-sublabel  { font: 600 12px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #94a3b8; }
+      .conn-label    { font: 600 12px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #94a3b8; }
+      .annotation    { font: 700 16px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #00d4aa; }
+      .role-label    { font: 600 13px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #00d4aa; }
+    </style>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#00d4aa"/>
+    </marker>
+  </defs>
+
+  <!-- ── Aggregate boundary ── -->
+  <rect x="280" y="180" width="720" height="420" rx="22"
+        fill="rgba(20,30,48,0.55)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.6"/>
+
+  <!-- ORDER pill on the top edge — the single point of entry -->
+  <rect x="555" y="160" width="170" height="40" rx="20" fill="#00d4aa"/>
+  <text x="640" y="187" text-anchor="middle" class="pill-label">ORDER</text>
+
+  <!-- "commands enter here" annotation above the pill -->
+  <text x="640" y="118" text-anchor="middle" class="annotation">COMMANDS ENTER HERE</text>
+  <line x1="640" y1="128" x2="640" y2="155"
+        stroke="#00d4aa" stroke-width="2.5" marker-end="url(#arrow-teal)"/>
+
+  <!-- "AGGREGATE ROOT" caption below the bottom of the boundary -->
+  <text x="640" y="635" text-anchor="middle" class="role-label">— AGGREGATE ROOT —</text>
+
+  <!-- ── Internal entities (3 tiles in a row inside the boundary) ── -->
+  <rect x="330" y="320" width="180" height="160" rx="14" fill="#00d4aa"/>
+  <text x="420" y="410" text-anchor="middle" class="entity-label">OrderLine</text>
+
+  <rect x="534" y="320" width="180" height="160" rx="14" fill="#3b82f6"/>
+  <text x="624" y="395" text-anchor="middle" class="entity-label">
+    <tspan x="624" dy="0">Shipping</tspan>
+    <tspan x="624" dy="28">Address</tspan>
+  </text>
+
+  <rect x="738" y="320" width="180" height="160" rx="14" fill="#f59e0b"/>
+  <text x="828" y="410" text-anchor="middle" class="entity-label">Money</text>
+
+  <!-- Caption inside the boundary clarifying what these are -->
+  <text x="640" y="540" text-anchor="middle" class="conn-label">OWNED BY ORDER. PROTECTED BY THE BOUNDARY.</text>
+
+  <!-- ── External references (outside the boundary) ── -->
+  <!-- CustomerId on the left -->
+  <rect x="70" y="340" width="170" height="100" rx="14"
+        fill="rgba(20,30,48,0.5)" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7,5" stroke-opacity="0.6"/>
+  <text x="155" y="380" text-anchor="middle" class="ref-label">CustomerId</text>
+  <text x="155" y="408" text-anchor="middle" class="ref-sublabel">REFERENCED BY ID</text>
+
+  <!-- Dashed connection from boundary edge to CustomerId -->
+  <line x1="240" y1="390" x2="280" y2="390"
+        stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,4" stroke-opacity="0.65"/>
+
+  <!-- ProductId on the right -->
+  <rect x="1040" y="340" width="170" height="100" rx="14"
+        fill="rgba(20,30,48,0.5)" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7,5" stroke-opacity="0.6"/>
+  <text x="1125" y="380" text-anchor="middle" class="ref-label">ProductId</text>
+  <text x="1125" y="408" text-anchor="middle" class="ref-sublabel">REFERENCED BY ID</text>
+
+  <!-- Dashed connection from boundary edge to ProductId -->
+  <line x1="1000" y1="390" x2="1040" y2="390"
+        stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,4" stroke-opacity="0.65"/>
+</svg>

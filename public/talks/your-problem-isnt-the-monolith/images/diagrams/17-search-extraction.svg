@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .year-label    { font: 800 18px 'Inter', 'Arial', sans-serif; letter-spacing: 4px; fill: #00d4aa; }
+      .year-sub      { font: 600 14px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #94a3b8; }
+      .pill-label    { font: 800 16px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #0f1729; }
+      .tile-label    { font: 700 17px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+      .bus-label     { font: 800 16px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #3b82f6; }
+      .event-name    { font: 700 13px 'JetBrains Mono', 'Courier New', monospace; fill: #ffffff; }
+      .caption       { font: 700 16px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #ffffff; }
+      .caption-sub   { font: 500 13px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #94a3b8; }
+    </style>
+    <marker id="arr-teal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#00d4aa"/>
+    </marker>
+  </defs>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- TOP HALF — Year 4 · in-process                  -->
+  <!-- ════════════════════════════════════════════════ -->
+  <text x="100" y="74" class="year-label">YEAR 4</text>
+  <text x="100" y="96" class="year-sub">IN-PROCESS DELIVERY</text>
+
+  <!-- Monolith boundary containing Catalog, Orders, Search -->
+  <rect x="220" y="120" width="900" height="200" rx="20"
+        fill="rgba(20,30,48,0.45)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.55"/>
+  <rect x="610" y="100" width="140" height="36" rx="18" fill="#00d4aa"/>
+  <text x="680" y="124" text-anchor="middle" class="pill-label">MONOLITH</text>
+
+  <!-- Catalog -->
+  <rect x="260" y="155" width="170" height="60" rx="10" fill="#3b82f6"/>
+  <text x="345" y="192" text-anchor="middle" class="tile-label">Catalog</text>
+
+  <!-- Orders -->
+  <rect x="260" y="225" width="170" height="60" rx="10" fill="#f59e0b"/>
+  <text x="345" y="262" text-anchor="middle" class="tile-label">Orders</text>
+
+  <!-- Search (right side) -->
+  <rect x="900" y="180" width="180" height="80" rx="12" fill="#22c55e"/>
+  <text x="990" y="227" text-anchor="middle" class="tile-label">Search</text>
+
+  <!-- Internal events arrows (curved from both Catalog and Orders to Search) -->
+  <path d="M 430 185 Q 660 185 900 215"
+        fill="none" stroke="#00d4aa" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+  <path d="M 430 255 Q 660 255 900 225"
+        fill="none" stroke="#00d4aa" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+  <text x="660" y="170" text-anchor="middle" class="event-name">ProductPublished</text>
+  <text x="660" y="284" text-anchor="middle" class="event-name">OrderPlaced</text>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- BOTTOM HALF — Year 5 · over Kafka               -->
+  <!-- ════════════════════════════════════════════════ -->
+  <text x="100" y="404" class="year-label">YEAR 5</text>
+  <text x="100" y="426" class="year-sub">OVER KAFKA</text>
+
+  <!-- Smaller monolith on left -->
+  <rect x="60" y="460" width="320" height="220" rx="20"
+        fill="rgba(20,30,48,0.45)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.55"/>
+  <rect x="160" y="440" width="120" height="36" rx="18" fill="#00d4aa"/>
+  <text x="220" y="464" text-anchor="middle" class="pill-label">MONOLITH</text>
+
+  <rect x="90" y="500" width="260" height="70" rx="10" fill="#3b82f6"/>
+  <text x="220" y="544" text-anchor="middle" class="tile-label">Catalog</text>
+
+  <rect x="90" y="585" width="260" height="70" rx="10" fill="#f59e0b"/>
+  <text x="220" y="629" text-anchor="middle" class="tile-label">Orders</text>
+
+  <!-- Kafka bus -->
+  <rect x="470" y="490" width="340" height="160" rx="16"
+        fill="rgba(20,30,48,0.65)" stroke="#3b82f6" stroke-width="2.5" stroke-opacity="0.7"/>
+  <text x="640" y="520" text-anchor="middle" class="bus-label">KAFKA</text>
+
+  <rect x="495" y="540" width="290" height="40" rx="8" fill="rgba(59,130,246,0.18)"/>
+  <text x="640" y="566" text-anchor="middle" class="event-name">ProductPublished</text>
+
+  <rect x="495" y="590" width="290" height="40" rx="8" fill="rgba(59,130,246,0.18)"/>
+  <text x="640" y="616" text-anchor="middle" class="event-name">OrderPlaced</text>
+
+  <!-- Search extracted on right -->
+  <rect x="900" y="460" width="320" height="220" rx="20"
+        fill="rgba(20,30,48,0.55)" stroke="#22c55e" stroke-width="2.5"/>
+  <rect x="1010" y="440" width="120" height="36" rx="18" fill="#22c55e"/>
+  <text x="1070" y="464" text-anchor="middle" class="pill-label">SEARCH</text>
+
+  <rect x="930" y="500" width="260" height="70" rx="10" fill="#22c55e" fill-opacity="0.15"
+        stroke="#22c55e" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="1060" y="544" text-anchor="middle" class="tile-label" fill="#22c55e">extracted service</text>
+
+  <rect x="930" y="585" width="260" height="70" rx="10" fill="#22c55e" fill-opacity="0.15"
+        stroke="#22c55e" stroke-width="1.5" stroke-opacity="0.4"/>
+  <text x="1060" y="619" text-anchor="middle" class="caption-sub">same consumer code</text>
+  <text x="1060" y="640" text-anchor="middle" class="caption-sub">as Year 4</text>
+
+  <!-- Arrows: monolith → Kafka → Search -->
+  <line x1="380" y1="570" x2="470" y2="570"
+        stroke="#00d4aa" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+  <line x1="810" y1="570" x2="900" y2="570"
+        stroke="#00d4aa" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+
+  <!-- Bottom caption -->
+  <text x="640" y="705" text-anchor="middle" class="caption">SAME CODE. SAME EVENTS. DIFFERENT TRANSPORT.</text>
+</svg>

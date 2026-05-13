@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .pill-label   { font: 800 18px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #0f1729; }
+      .domain-label { font: 700 17px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+      .caption      { font: 600 13px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #94a3b8; }
+    </style>
+  </defs>
+
+  <!-- Monolith boundary -->
+  <rect x="40" y="70" width="720" height="440" rx="20"
+        fill="rgba(20,30,48,0.45)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.55"/>
+
+  <!-- MONOLITH pill on top edge -->
+  <rect x="310" y="50" width="180" height="40" rx="20" fill="#00d4aa"/>
+  <text x="400" y="77" text-anchor="middle" class="pill-label">MONOLITH</text>
+
+  <!-- Row 1 -->
+  <rect x="62"  y="130" width="160" height="160" rx="14" fill="#00d4aa"/>
+  <text x="142" y="218" text-anchor="middle" class="domain-label">
+    <tspan x="142" dy="0">Identity &amp;</tspan>
+    <tspan x="142" dy="22">Accounts</tspan>
+  </text>
+
+  <rect x="234" y="130" width="160" height="160" rx="14" fill="#3b82f6"/>
+  <text x="314" y="218" text-anchor="middle" class="domain-label">Catalog</text>
+
+  <rect x="406" y="130" width="160" height="160" rx="14" fill="#f59e0b"/>
+  <text x="486" y="218" text-anchor="middle" class="domain-label">Orders</text>
+
+  <rect x="578" y="130" width="160" height="160" rx="14" fill="#ef4444"/>
+  <text x="658" y="218" text-anchor="middle" class="domain-label">Payments</text>
+
+  <!-- Row 2 -->
+  <rect x="62"  y="310" width="160" height="160" rx="14" fill="#8b5cf6"/>
+  <text x="142" y="400" text-anchor="middle" class="domain-label">Tax</text>
+
+  <rect x="234" y="310" width="160" height="160" rx="14" fill="#22c55e"/>
+  <text x="314" y="400" text-anchor="middle" class="domain-label">Search</text>
+
+  <rect x="406" y="310" width="160" height="160" rx="14" fill="#06b6d4"/>
+  <text x="486" y="400" text-anchor="middle" class="domain-label">Fulfillment</text>
+
+  <rect x="578" y="310" width="160" height="160" rx="14" fill="#f97316"/>
+  <text x="658" y="388" text-anchor="middle" class="domain-label">
+    <tspan x="658" dy="0">Pricing &amp;</tspan>
+    <tspan x="658" dy="22">Promotions</tspan>
+  </text>
+
+  <!-- Bottom caption -->
+  <text x="400" y="555" text-anchor="middle" class="caption">ONE DEPLOYMENT — EVENTS LOOP INTERNALLY</text>
+</svg>

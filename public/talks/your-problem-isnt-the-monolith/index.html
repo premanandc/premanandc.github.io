@@ -114,12 +114,12 @@
 
     /* Failure grid (2x2 colored cards with icon + number) — slide 4 */
     .failure-grid-items { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; flex: 1; min-height: 0; margin-top: 10px; }
-    .failure-card { background: rgba(15,23,41,0.6); border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; gap: 6px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-    .failure-card .fc-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
-    .failure-card .fc-icon { font-size: 1.5em; line-height: 1; }
-    .failure-card .fc-num  { font-size: 1.6em; font-weight: 900; line-height: 1; }
-    .failure-card .fc-text { font-size: 0.78em; font-weight: 700; color: #fff; margin: 0; line-height: 1.35; }
-    .failure-card .fc-sub  { font-size: 0.62em; font-style: italic; color: var(--muted); margin: 4px 0 0; line-height: 1.5; }
+    .failure-card { background: rgba(15,23,41,0.6); border-radius: 12px; padding: 26px 32px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+    .failure-card .fc-head { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
+    .failure-card .fc-icon { font-size: 2em; line-height: 1; }
+    .failure-card .fc-num  { font-size: 2.2em; font-weight: 900; line-height: 1; }
+    .failure-card .fc-text { font-size: 1.15em; font-weight: 700; color: #fff; margin: 0; line-height: 1.3; }
+    .failure-card .fc-sub  { font-size: 0.85em; font-style: italic; color: var(--muted); margin: 6px 0 0; line-height: 1.5; }
     .failure-card.c1 { border-top: 4px solid var(--accent);  } .failure-card.c1 .fc-num { color: var(--accent);  }
     .failure-card.c2 { border-top: 4px solid var(--accent2); } .failure-card.c2 .fc-num { color: var(--accent2); }
     .failure-card.c3 { border-top: 4px solid var(--warn);    } .failure-card.c3 .fc-num { color: var(--warn);    }
@@ -127,22 +127,70 @@
 
     /* Big-number / hero stat (slides 24, 25, 26) */
     .big-stat { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; padding: 0 60px; }
-    .big-stat .bs-number  { font-size: 5em; font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 14px; }
-    .big-stat .bs-pair    { display: flex; gap: 80px; margin: 0 0 14px; }
-    .big-stat .bs-pair .bs-number { margin: 0; }
-    .big-stat .bs-words   { font-size: 2.4em; font-weight: 900; line-height: 1.1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 20px; }
-    .big-stat .bs-caption { font-size: 0.9em; color: var(--r-main-color); line-height: 1.5; margin: 0 0 14px; max-width: 760px; }
-    .big-stat .bs-source  { font-size: 0.55em; color: var(--dim); line-height: 1.55; margin: 0 0 14px; max-width: 760px; }
-    .big-stat .bs-punch   { font-size: 0.85em; font-weight: 700; color: var(--accent); border-top: 1px solid rgba(0,212,170,0.3); padding-top: 12px; max-width: 760px; line-height: 1.4; }
+    .big-stat .bs-number    { font-size: 5em; font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 14px; }
+    .big-stat .bs-pair      { display: flex; gap: 80px; justify-content: center; align-items: flex-start; margin: 0 0 22px; }
+    .big-stat .bs-pair .bs-stat-cell { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 280px; }
+    .big-stat .bs-pair .bs-number { font-size: 4.4em; margin: 0 0 14px; }
+    .big-stat .bs-stat-label { font-size: 0.62em; font-weight: 700; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; margin: 0; line-height: 1.35; max-width: 240px; }
+    .big-stat .bs-words     { font-size: 2.4em; font-weight: 900; line-height: 1.1; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 20px; }
+    .big-stat .bs-caption   { font-size: 0.9em; color: #e2e8f0; line-height: 1.5; margin: 0 auto 16px; max-width: 760px; text-wrap: balance; }
+    .big-stat .bs-source    { font-size: 0.6em; color: #94a3b8; line-height: 1.55; margin: 0 auto 18px; max-width: 720px; text-wrap: balance; }
+    .big-stat .bs-punch     { display: inline-block; font-size: 1.15em; font-weight: 800; color: var(--accent); background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.4); padding: 18px 32px; margin: 18px 0 0; max-width: 760px; border-radius: 14px; line-height: 1.4; text-wrap: balance; letter-spacing: 0.2px; }
+    .big-stat .bs-punch::before { content: '✦'; display: inline-block; margin-right: 12px; opacity: 0.7; font-weight: 400; }
 
     /* Diagram placeholder (when SVG missing) */
     .diagram-frame { flex: 1; display: flex; align-items: center; justify-content: center; margin-top: 10px; min-height: 0; }
-    .diagram-frame img { max-width: 100%; max-height: 100%; height: auto; }
+    .diagram-frame img { width: 100%; height: 100%; object-fit: contain; }
     .diagram-placeholder { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px 36px; background: rgba(15,23,41,0.5); border: 2px dashed rgba(0,212,170,0.3); border-radius: 12px; font-size: 0.65em; color: var(--muted); text-align: center; line-height: 1.7; width: 90%; max-width: 900px; }
 
     /* Background-image overlay card (text on bg image) */
-    .bg-card { padding: 18px 26px; background: rgba(15,23,41,0.6); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-    .bg-card-center { display: inline-block; padding: 28px 36px; background: rgba(15,23,41,0.6); border: 1px solid rgba(0,212,170,0.25); border-radius: 14px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .bg-card { padding: 18px 26px; background: rgba(15,23,41,0.6); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; }
+    .bg-card-center { display: inline-block; padding: 28px 36px; background: rgba(15,23,41,0.6); border: 1px solid rgba(0,212,170,0.25); border-radius: 14px; }
+
+    /* Fitness-function grid (slide 13 — other fitness functions) */
+    .ff-grid    { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 24px; flex: 1; min-height: 0; margin-top: 14px; }
+    .ff-card    { display: flex; flex-direction: column; padding: 28px 32px; background: rgba(15,23,41,0.65); border-radius: 14px; border-top: 5px solid var(--accent); justify-content: center; gap: 14px; }
+    .ff-head    { display: flex; align-items: center; gap: 16px; }
+    .ff-num     { width: 52px; height: 52px; line-height: 52px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 900; font-size: 1.5em; flex-shrink: 0; }
+    .ff-title   { font-size: 1.05em; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.2; }
+    .ff-desc    { font-size: 0.78em; color: #94a3b8; margin: 0; line-height: 1.5; font-style: italic; }
+    .ff-card.placeholder { border-top-style: dashed; border-top-color: rgba(148,163,184,0.25); background: rgba(15,23,41,0.3); align-items: center; justify-content: center; text-align: center; }
+    .ff-plus    { font-size: 3em; color: rgba(148,163,184,0.45); margin: 0; font-weight: 200; line-height: 1; }
+    .ff-next    { font-size: 0.7em; color: rgba(148,163,184,0.55); margin: 4px 0 0; letter-spacing: 2.5px; text-transform: uppercase; font-style: italic; }
+    .ff-card.c1 { border-top-color: var(--accent);  } .ff-card.c1 .ff-num { background: var(--accent);  }
+    .ff-card.c2 { border-top-color: var(--accent2); } .ff-card.c2 .ff-num { background: var(--accent2); }
+    .ff-card.c3 { border-top-color: var(--warn);    } .ff-card.c3 .ff-num { background: var(--warn);    }
+    .ff-card.c4 { border-top-color: var(--danger);  } .ff-card.c4 .ff-num { background: var(--danger);  }
+    .ff-card.c5 { border-top-color: #8b5cf6;        } .ff-card.c5 .ff-num { background: #8b5cf6;        }
+
+    /* Lifecycle cards (slide 15 — three pressures · quality fingerprint) */
+    .lifecycle-grid  { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: 1fr; gap: 32px; flex: 1; min-height: 0; align-items: stretch; margin-top: 18px; }
+    .lifecycle-card  { display: flex; flex-direction: column; padding: 40px 44px 36px; background: rgba(15,23,41,0.65); border-radius: 16px; border-top: 6px solid var(--accent); }
+    .lc-tag          { font-size: 1.9em; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.05; }
+    .lc-axes         { display: flex; flex-direction: column; justify-content: space-between; margin: 30px 0 0; padding-top: 26px; border-top: 1px solid rgba(148,163,184,0.18); flex: 1; }
+    .lc-axis         { display: grid; grid-template-columns: 1fr auto 120px; gap: 14px; align-items: center; }
+    .lc-axis-label   { font-size: 0.72em; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase; }
+    .lc-axis-value   { font-size: 0.72em; font-weight: 600; color: #e2e8f0; font-style: italic; text-align: right; }
+    .lc-dots         { display: flex; gap: 8px; }
+    .lc-dot          { width: 18px; height: 18px; border-radius: 50%; background: rgba(148,163,184,0.18); }
+    .lc-dot.on       { background: var(--accent); box-shadow: 0 0 12px rgba(0,212,170,0.5); }
+    .lc-implies      { font-size: 1.1em; font-weight: 700; color: var(--accent); margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(148,163,184,0.2); line-height: 1.3; }
+    .lifecycle-card.c1 { border-top-color: var(--accent);  } .lifecycle-card.c1 .lc-implies { color: var(--accent);  } .lifecycle-card.c1 .lc-dot.on { background: var(--accent);  box-shadow: 0 0 14px rgba(0,212,170,0.55); }
+    .lifecycle-card.c2 { border-top-color: var(--accent2); } .lifecycle-card.c2 .lc-implies { color: var(--accent2); } .lifecycle-card.c2 .lc-dot.on { background: var(--accent2); box-shadow: 0 0 14px rgba(59,130,246,0.55); }
+    .lifecycle-card.c3 { border-top-color: var(--warn);    } .lifecycle-card.c3 .lc-implies { color: var(--warn);    } .lifecycle-card.c3 .lc-dot.on { background: var(--warn);    box-shadow: 0 0 14px rgba(245,158,11,0.55); }
+
+    /* Action list (slide 27 — Monday actions) */
+    .action-list  { display: flex; flex-direction: column; gap: 14px; flex: 1; min-height: 0; margin-top: 8px; }
+    .action-item  { display: flex; align-items: center; gap: 24px; padding: 18px 28px; background: rgba(15,23,41,0.65); border-left: 5px solid var(--accent); border-radius: 0 14px 14px 0; }
+    .action-num   { width: 54px; height: 54px; line-height: 54px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 900; font-size: 1.5em; flex-shrink: 0; }
+    .action-body  { flex: 1; min-width: 0; }
+    .action-title { font-size: 1.05em; font-weight: 800; color: #ffffff; margin: 0 0 3px; line-height: 1.25; }
+    .action-sub   { font-size: 0.7em; font-style: italic; color: #94a3b8; margin: 0; line-height: 1.45; }
+    .action-item.c1 { border-left-color: var(--accent);  } .action-item.c1 .action-num { background: var(--accent);  }
+    .action-item.c2 { border-left-color: var(--accent2); } .action-item.c2 .action-num { background: var(--accent2); }
+    .action-item.c3 { border-left-color: var(--warn);    } .action-item.c3 .action-num { background: var(--warn);    }
+    .action-item.c4 { border-left-color: var(--danger);  } .action-item.c4 .action-num { background: var(--danger);  }
+    .action-item.c5 { border-left-color: #8b5cf6;        } .action-item.c5 .action-num { background: #8b5cf6;        }
 
     /* Thesis statement */
     .statement { font-size: 1.5em; font-weight: 700; color: #fff; line-height: 1.25; max-width: 80%; margin: 0; }
@@ -163,7 +211,7 @@
 <!-- ══ Slide 1: Title ══════════════════════════════════════ -->
 <section data-background-image="images/metaphor/01-title.png" data-background-size="cover">
   <div style="display:flex;flex-direction:column;justify-content:center;height:100%;max-width:64%;">
-    <div style="padding:28px 36px;background:rgba(15,23,41,0.6);border:1px solid rgba(0,212,170,0.25);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+    <div style="padding:28px 36px;background:rgba(15,23,41,0.6);border:1px solid rgba(0,212,170,0.25);border-radius:14px;">
       <h3>LDX3 London &nbsp;·&nbsp; June 2026</h3>
       <h1 style="font-size:2.8em;line-height:0.98;margin:0.1em 0 0.5em;">
         Your problem isn't the monolith.<br>
@@ -287,23 +335,49 @@
 <!-- ══ Slide 8: Wrong / Right code ═══════════════════════ -->
 <section>
   <h2>What this looks like in practice</h2>
-  <div class="compare" style="margin-top:10px;">
-    <div class="compare-bad">
-      <h4>WRONG</h4>
-<pre><code class="language-java" data-trim>
-// Tax module mutating Order's data directly
-orderRepository.findById(id).getLines()
-    .forEach(line -&gt; line.setTaxRate(rate));
+  <div class="compare" style="flex:1;margin-top:14px;align-items:stretch;">
+    <div class="compare-bad" style="display:flex;flex-direction:column;">
+      <h4 style="font-size:1.1em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+        <span style="display:inline-flex;width:42px;height:42px;border-radius:50%;background:rgba(239,68,68,0.18);align-items:center;justify-content:center;font-size:1.4em;line-height:1;">⊗</span>
+        <span>WRONG <span style="font-size:0.65em;font-weight:600;color:var(--muted);letter-spacing:0.18em;margin-left:6px;">· THE ASK</span></span>
+      </h4>
+<pre style="font-size:0.9em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.5;">
+// Tax reaches into Order's internals
+var order = orderRepo.findById(id);
+if (order.state() != DRAFT)
+    throw new IllegalStateException();
+
+var subtotal = order.lines().stream()
+    .map(l -&gt; l.price().multiply(l.qty()))
+    .reduce(ZERO, BigDecimal::add);
+
+order.lines().forEach(l -&gt; {
+    var rate = rateFor(order.address());
+    l.setTaxRate(rate);
+    l.setTaxAmount(l.price().multiply(rate));
+});
+
+order.setSubtotal(subtotal);
+order.setState(TAXED);
+orderRepo.save(order);
 </code></pre>
     </div>
-    <div class="compare-good">
-      <h4>RIGHT</h4>
-<pre><code class="language-java" data-trim>
-// Tax sends a command. Order owns the transition.
+    <div class="compare-good" style="display:flex;flex-direction:column;">
+      <h4 style="font-size:1.1em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+        <span style="display:inline-flex;width:42px;height:42px;border-radius:50%;background:rgba(0,212,170,0.2);align-items:center;justify-content:center;font-size:1.3em;line-height:1;">✓</span>
+        <span>RIGHT <span style="font-size:0.65em;font-weight:600;color:var(--muted);letter-spacing:0.18em;margin-left:6px;">· THE TELL</span></span>
+      </h4>
+<pre style="font-size:0.9em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.5;">
+// Tax tells. Order owns the transition.
 orderService.applyTaxes(orderId, taxBreakdown);
 
-// inside Order aggregate:
-//   validates state, applies rule, emits event
+// Inside the Order aggregate:
+//   · validates current state
+//   · applies the tax rule
+//   · emits OrderTaxed event
+//
+// One command in. One event out.
+// Order's invariants stay in Order.
 </code></pre>
     </div>
   </div>
@@ -331,20 +405,60 @@ orderService.applyTaxes(orderId, taxBreakdown);
   </aside>
 </section>
 
-<!-- ══ Slide 10: Event contract YAML ═════════════════════ -->
+<!-- ══ Slide 10: Internal model vs public contract ═══════ -->
 <section>
   <h2>The contract is the boundary.</h2>
-<pre><code class="language-yaml" data-trim>
-OrderPlaced:
-  version: 3
-  fields:
-    orderId: UUID
-    customerId: UUID
-    placedAt: timestamp
-    lines: [OrderLine]
-    shippingAddress: Address
-    currency: ISO4217
+  <div class="compare" style="flex:1;margin-top:14px;align-items:stretch;">
+    <div style="background:rgba(148,163,184,0.06);border:1px solid rgba(148,163,184,0.25);border-radius:12px;padding:20px 26px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+      <h4 style="font-size:0.85em;font-weight:800;color:var(--muted);letter-spacing:2px;margin:0 0 14px;">INTERNAL · Order's private tables</h4>
+<pre style="font-size:0.95em;margin:0;border-left-color:var(--muted);background:rgba(15,23,41,0.55);"><code class="language-sql" data-trim style="max-height:none;line-height:1.45;">
+-- private to orders-team
+CREATE TABLE orders (
+  order_id       UUID        PRIMARY KEY,
+  customer_id    UUID        NOT NULL,
+  state          order_state NOT NULL,
+  placed_at      TIMESTAMPTZ NOT NULL,
+  currency       CHAR(3)     NOT NULL,
+  total_minor    BIGINT      NOT NULL,
+  fraud_score    SMALLINT,        -- internal
+  channel        TEXT,
+  channel_meta   JSONB,           -- internal
+  fulfillment_id UUID,
+  ml_segment     TEXT,            -- internal
+  updated_at     TIMESTAMPTZ NOT NULL
+);
+CREATE TABLE order_lines       ( ... );
+CREATE TABLE order_status_log  ( ... );
+CREATE INDEX ON orders (customer_id, placed_at DESC);
 </code></pre>
+    </div>
+    <div style="background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.3);border-radius:12px;padding:20px 26px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+      <h4 style="font-size:0.85em;font-weight:800;color:var(--accent);letter-spacing:2px;margin:0 0 14px;">PUBLIC · OrderPlaced event</h4>
+<pre style="font-size:0.95em;margin:0;border-left-color:var(--accent);background:rgba(15,23,41,0.55);"><code class="language-protobuf" data-trim style="max-height:none;line-height:1.45;">
+syntax = "proto3";
+package penultimate.orders.events.v3;
+
+// Owner: orders-team
+// Compatibility: BACKWARD (Buf in CI)
+message OrderPlaced {
+  reserved 9, 10;   // removed: discount_code, promo_id
+
+  string             order_id        = 1;
+  string             customer_id     = 2;
+  int64              placed_at_ms    = 3;
+  string             currency        = 4;
+  Address            shipping        = 5;
+  repeated OrderLine lines           = 6;
+  Money              total_amount    = 7;
+  Source             source          = 8;
+  optional string    idempotency_key = 11;
+}
+// internal-only fields excluded:
+//   fraud_score, channel_meta, ml_segment
+</code></pre>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:0.7em;color:var(--muted);margin:18px 0 0;font-style:italic;">Versioned. Owned by orders-team. Published with a guarantee.</p>
   <aside class="notes">
     This is the only thing Tax knows about Order. Versioned, owned by Order's team, published with a guarantee. Order's internal tables are nobody else's business.
   </aside>
@@ -365,7 +479,7 @@ OrderPlaced:
 <!-- ══ Slide 12: ArchUnit fitness functions ══════════════ -->
 <section>
   <h2>Fitness functions for data boundaries.</h2>
-<pre><code class="language-java" data-trim>
+<pre style="font-size:1em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.4;">
 @AnalyzeClasses(packages = "com.penultimate")
 public class DataBoundaryFitnessFunctions {
 
@@ -398,13 +512,47 @@ public class DataBoundaryFitnessFunctions {
 <!-- ══ Slide 13: Other fitness functions ═════════════════ -->
 <section>
   <h2>Other fitness functions you'll add</h2>
-  <ul>
-    <li>Schema migration linter (expand/contract enforcement)</li>
-    <li>Contract stability test (Pact, schema-registry compatibility)</li>
-    <li>Cross-aggregate join detector (SQL log analysis or query plan inspection)</li>
-    <li>Event schema validation (in CI, against registry)</li>
-    <li>Lifecycle/retention assertions (per-table TTL declared, enforced)</li>
-  </ul>
+  <div class="ff-grid">
+    <div class="ff-card c1">
+      <div class="ff-head">
+        <div class="ff-num">1</div>
+        <p class="ff-title">Schema migration linter</p>
+      </div>
+      <p class="ff-desc">Expand / contract enforcement.</p>
+    </div>
+    <div class="ff-card c2">
+      <div class="ff-head">
+        <div class="ff-num">2</div>
+        <p class="ff-title">Contract stability test</p>
+      </div>
+      <p class="ff-desc">Pact, schema-registry compatibility.</p>
+    </div>
+    <div class="ff-card c3">
+      <div class="ff-head">
+        <div class="ff-num">3</div>
+        <p class="ff-title">Cross-aggregate join detector</p>
+      </div>
+      <p class="ff-desc">SQL log analysis or query plan inspection.</p>
+    </div>
+    <div class="ff-card c4">
+      <div class="ff-head">
+        <div class="ff-num">4</div>
+        <p class="ff-title">Event schema validation</p>
+      </div>
+      <p class="ff-desc">In CI, against registry.</p>
+    </div>
+    <div class="ff-card c5">
+      <div class="ff-head">
+        <div class="ff-num">5</div>
+        <p class="ff-title">Lifecycle / retention assertions</p>
+      </div>
+      <p class="ff-desc">Per-table TTL declared, enforced.</p>
+    </div>
+    <div class="ff-card placeholder">
+      <p class="ff-plus">+</p>
+      <p class="ff-next">your next one</p>
+    </div>
+  </div>
   <aside class="notes">
     These don't fit on one slide. They all live in CI. Build them gradually. Each one buys you back a category of bug you used to find in production.
   </aside>
@@ -425,18 +573,84 @@ public class DataBoundaryFitnessFunctions {
 <!-- ══ Slide 15: Three pressures, three lifecycles ═══════ -->
 <section>
   <h2>The pressure was not traffic. It was lifecycle.</h2>
-  <div class="three-col" style="margin-top:14px;">
-    <div class="card card-accent">
-      <h4>Search</h4>
-      <p>Read-heavy<br>Low-latency<br>Regional<br>Eventually consistent</p>
+  <div class="lifecycle-grid">
+    <div class="lifecycle-card c1">
+      <p class="lc-tag">Search</p>
+      <div class="lc-axes">
+        <div class="lc-axis">
+          <span class="lc-axis-label">Consistency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">eventual</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Latency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">tight</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Retention</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">short</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Isolation</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">regional</span>
+        </div>
+      </div>
+      <p class="lc-implies">→ Cache at the edge.</p>
     </div>
-    <div class="card card-blue">
-      <h4>Tax</h4>
-      <p>Immutable<br>7-year retention<br>Audit<br>Regulatory</p>
+    <div class="lifecycle-card c2">
+      <p class="lc-tag">Tax</p>
+      <div class="lc-axes">
+        <div class="lc-axis">
+          <span class="lc-axis-label">Consistency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">strong</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Latency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">relaxed</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Retention</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">7 years</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Isolation</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">regulated</span>
+        </div>
+      </div>
+      <p class="lc-implies">→ Append-only ledger.</p>
     </div>
-    <div class="card card-warn">
-      <h4>Payments</h4>
-      <p>Isolated failure domain<br>Stricter SLA<br>PCI scope reduction</p>
+    <div class="lifecycle-card c3">
+      <p class="lc-tag">Payments</p>
+      <div class="lc-axes">
+        <div class="lc-axis">
+          <span class="lc-axis-label">Consistency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">strong</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Latency</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">tight</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Retention</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
+          <span class="lc-axis-value">medium</span>
+        </div>
+        <div class="lc-axis">
+          <span class="lc-axis-label">Isolation</span>
+          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
+          <span class="lc-axis-value">bulkheaded</span>
+        </div>
+      </div>
+      <p class="lc-implies">→ Bulkhead for blast radius.</p>
     </div>
   </div>
   <aside class="notes">
@@ -553,7 +767,7 @@ public class DataBoundaryFitnessFunctions {
 <!-- ══ Slide 21: Discipline is portable ══════════════════ -->
 <section>
   <h2>The discipline is portable.</h2>
-<pre><code class="language-java" data-trim>
+<pre style="font-size:1.2em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;">
 // Year 4 rule:
 // "Tax doesn't access Order's persistence package."
 
@@ -612,10 +826,16 @@ static final ArchRule tax_only_consumes_versioned_order_events =
   <div class="big-stat">
     <div class="bg-card-center">
       <div class="bs-pair">
-        <div class="bs-number">+153%</div>
-        <div class="bs-number">+322%</div>
+        <div class="bs-stat-cell">
+          <div class="bs-number">+153%</div>
+          <p class="bs-stat-label">architectural design flaws</p>
+        </div>
+        <div class="bs-stat-cell">
+          <div class="bs-number">+322%</div>
+          <p class="bs-stat-label">privilege escalation paths</p>
+        </div>
       </div>
-      <p class="bs-caption">architectural design flaws (+153%) and privilege escalation paths (+322%) in AI-assisted code.</p>
+      <p class="bs-caption">in AI-assisted code.</p>
       <p class="bs-source">Apiiro Fortune 50 telemetry, 2025. 4× more commits. Fewer, larger PRs.</p>
       <p class="bs-punch">CLAUDE.md is advisory. CI is deterministic. Build the deterministic layer.</p>
     </div>
@@ -640,31 +860,46 @@ static final ArchRule tax_only_consumes_versioned_order_events =
 </section>
 
 <!-- ══ Slide 27: Monday actions ══════════════════════════ -->
-<section data-background-image="images/metaphor/27-monday-calendar.png">
-  <div style="padding:24px 32px;background:rgba(15,23,41,0.6);border:1px solid rgba(0,212,170,0.25);border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
-  <h2 style="margin-bottom:0.4em;">Monday actions</h2>
-  <div class="flow">
-    <div class="flow-step">
-      <div class="flow-num">1</div>
-      <div class="flow-content"><strong>Encode ownership.</strong> Which team owns which aggregates? Write it down this week.</div>
+<section>
+  <img src="images/metaphor/27-monday-calendar.png" alt=""
+       style="position:absolute;right:0;top:0;width:48%;height:100%;object-fit:cover;z-index:0;">
+  <h2 style="position:relative;z-index:1;">Monday actions</h2>
+  <div class="action-list" style="max-width:50%;position:relative;z-index:1;">
+    <div class="action-item c1">
+      <div class="action-num">1</div>
+      <div class="action-body">
+        <p class="action-title">Encode ownership.</p>
+        <p class="action-sub">Which team owns which aggregates? Write it down this week.</p>
+      </div>
     </div>
-    <div class="flow-step">
-      <div class="flow-num">2</div>
-      <div class="flow-content"><strong>Publish contracts.</strong> Events and read models, versioned and owned.</div>
+    <div class="action-item c2">
+      <div class="action-num">2</div>
+      <div class="action-body">
+        <p class="action-title">Publish contracts.</p>
+        <p class="action-sub">Events and read models, versioned and owned.</p>
+      </div>
     </div>
-    <div class="flow-step">
-      <div class="flow-num">3</div>
-      <div class="flow-content"><strong>Verify in CI.</strong> Fitness functions for boundaries, contracts, migrations.</div>
+    <div class="action-item c3">
+      <div class="action-num">3</div>
+      <div class="action-body">
+        <p class="action-title">Verify in CI.</p>
+        <p class="action-sub">Fitness functions for boundaries, contracts, migrations.</p>
+      </div>
     </div>
-    <div class="flow-step">
-      <div class="flow-num">4</div>
-      <div class="flow-content"><strong>Make migrations safe by design.</strong> Expand, then contract. Always.</div>
+    <div class="action-item c4">
+      <div class="action-num">4</div>
+      <div class="action-body">
+        <p class="action-title">Make migrations safe by design.</p>
+        <p class="action-sub">Expand, then contract. Always.</p>
+      </div>
     </div>
-    <div class="flow-step">
-      <div class="flow-num">5</div>
-      <div class="flow-content"><strong>Decompose along seams when lifecycle pulls.</strong> Not when traffic pulls. Not when fashion pulls.</div>
+    <div class="action-item c5">
+      <div class="action-num">5</div>
+      <div class="action-body">
+        <p class="action-title">Decompose along seams when lifecycle pulls.</p>
+        <p class="action-sub">Not when traffic pulls. Not when fashion pulls.</p>
+      </div>
     </div>
-  </div>
   </div>
   <aside class="notes">
     Walk the five briskly. 8 seconds each.
@@ -698,8 +933,8 @@ static final ArchRule tax_only_consumes_versioned_order_events =
     transitionSpeed: 'fast',
     backgroundTransition: 'fade',
     pdfSeparateFragments: false,
-    width: 1280,
-    height: 720,
+    width: 1920,
+    height: 1080,
     margin: 0.04,
     minScale: 0.2,
     maxScale: 2.0,
