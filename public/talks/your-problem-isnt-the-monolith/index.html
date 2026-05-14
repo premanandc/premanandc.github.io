@@ -560,18 +560,90 @@ orderService.applyTaxes(
   </p>
   <h2>Other teams consume contracts, not tables.</h2>
   <div class="diagram-frame">
-    <img src="images/diagrams/09-read-model.svg"
-         alt="Tax subscribes to Order events and builds its own projection"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <div class="diagram-placeholder" style="display:none;">
-      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Tax needs Order data</strong><br><br>
-      Tax subscribes to OrderPlaced and OrderShipped events.<br>
-      Tax builds its own local read projection.<br>
-      Tax never queries Order's tables.
-    </div>
+    <svg viewBox="0 0 1280 720" style="width:100%;height:100%;max-width:none;max-height:none;margin:0;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .pill-label    { font: 800 22px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #0f1729; }
+          .inner-label   { font: 700 18px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+          .inner-sub     { font: 500 13px 'Inter', 'Arial', sans-serif; fill: #94a3b8; letter-spacing: 1px; }
+          .badge         { font: 700 11px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; }
+          .event-name    { font: 700 19px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+          .event-ver     { font: 600 12px 'JetBrains Mono', 'Courier New', monospace; fill: #94a3b8; }
+          .stream-title  { font: 700 14px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #3b82f6; }
+          .forbidden     { font: 800 15px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #ef4444; }
+          .forbidden-sub { font: 500 12px 'Inter', 'Arial', sans-serif; fill: #94a3b8; }
+          .flow-label    { font: 700 13px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #00d4aa; }
+        </style>
+        <marker id="arrow-teal-09" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#00d4aa"/>
+        </marker>
+      </defs>
+
+      <!-- Beat 1: Order + Tax boxes -->
+      <g class="fragment fade-in" data-fragment-index="0">
+        <!-- ORDER (left) — center x = 220, width 320 -->
+        <rect x="60" y="180" width="320" height="340" rx="22"
+              fill="rgba(20,30,48,0.55)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.6"/>
+        <rect x="130" y="160" width="180" height="40" rx="20" fill="#00d4aa"/>
+        <text x="220" y="187" text-anchor="middle" class="pill-label">ORDER</text>
+        <rect x="105" y="240" width="230" height="160" rx="12"
+              fill="rgba(15,23,41,0.85)" stroke="#475569" stroke-width="1.5"/>
+        <rect x="125" y="262" width="190" height="10" rx="3" fill="#475569"/>
+        <rect x="125" y="280" width="190" height="10" rx="3" fill="#475569"/>
+        <rect x="125" y="298" width="190" height="10" rx="3" fill="#475569"/>
+        <rect x="125" y="316" width="190" height="10" rx="3" fill="#475569"/>
+        <text x="220" y="358" text-anchor="middle" class="inner-label">Internal tables</text>
+        <text x="220" y="380" text-anchor="middle" class="badge" fill="#ef4444">PRIVATE</text>
+
+        <!-- TAX (right) — center x = 1060, width 320 -->
+        <rect x="900" y="180" width="320" height="340" rx="22"
+              fill="rgba(20,30,48,0.55)" stroke="#00d4aa" stroke-width="2.5" stroke-opacity="0.6"/>
+        <rect x="970" y="160" width="180" height="40" rx="20" fill="#00d4aa"/>
+        <text x="1060" y="187" text-anchor="middle" class="pill-label">TAX</text>
+        <rect x="945" y="240" width="230" height="160" rx="12"
+              fill="rgba(15,23,41,0.85)" stroke="#475569" stroke-width="1.5"/>
+        <rect x="965" y="262" width="190" height="10" rx="3" fill="#1e3a52"/>
+        <rect x="965" y="280" width="190" height="10" rx="3" fill="#1e3a52"/>
+        <rect x="965" y="298" width="190" height="10" rx="3" fill="#1e3a52"/>
+        <text x="1060" y="345" text-anchor="middle" class="inner-label">Local projection</text>
+        <text x="1060" y="370" text-anchor="middle" class="inner-sub">order lines</text>
+        <text x="1060" y="388" text-anchor="middle" class="inner-sub">shipping addresses</text>
+      </g>
+
+      <!-- Beat 2: Forbidden direct-query path -->
+      <g class="fragment fade-in" data-fragment-index="1">
+        <text x="640" y="100" text-anchor="middle" class="forbidden">✕  DIRECT TABLE QUERY</text>
+        <text x="640" y="122" text-anchor="middle" class="forbidden-sub">would couple Tax to Order's schema forever</text>
+        <line x1="380" y1="260" x2="544" y2="260"
+              stroke="#ef4444" stroke-width="2.5" stroke-dasharray="8,6" stroke-opacity="0.55"/>
+        <line x1="736" y1="260" x2="900" y2="260"
+              stroke="#ef4444" stroke-width="2.5" stroke-dasharray="8,6" stroke-opacity="0.55"/>
+        <line x1="610" y1="230" x2="670" y2="290" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+        <line x1="670" y1="230" x2="610" y2="290" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+      </g>
+
+      <!-- Beat 3: Event stream + per-box flow labels + arrows -->
+      <g class="fragment fade-in" data-fragment-index="2">
+        <text x="220" y="450" text-anchor="middle" class="flow-label">PUBLISHES EVENTS</text>
+        <text x="220" y="475" text-anchor="middle" class="inner-sub">Owns the schema. Owns the contract.</text>
+        <text x="1060" y="450" text-anchor="middle" class="flow-label">SUBSCRIBES TO EVENTS</text>
+        <text x="1060" y="475" text-anchor="middle" class="inner-sub">Builds its own copy. Owns its schema.</text>
+        <rect x="360" y="540" width="560" height="140" rx="16"
+              fill="rgba(20,30,48,0.65)" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.5"/>
+        <text x="640" y="568" text-anchor="middle" class="stream-title">EVENTS PUBLISHED BY ORDER</text>
+        <rect x="390" y="585" width="240" height="75" rx="10" fill="#00d4aa"/>
+        <text x="510" y="618" text-anchor="middle" class="event-name">OrderPlaced</text>
+        <text x="510" y="640" text-anchor="middle" class="event-ver" fill="#0f1729">v3</text>
+        <rect x="650" y="585" width="240" height="75" rx="10" fill="#3b82f6"/>
+        <text x="770" y="618" text-anchor="middle" class="event-name">OrderShipped</text>
+        <text x="770" y="640" text-anchor="middle" class="event-ver" fill="#0f1729">v2</text>
+        <path d="M 220 520 Q 220 580 360 610" fill="none" stroke="#00d4aa" stroke-width="3" marker-end="url(#arrow-teal-09)"/>
+        <path d="M 920 610 Q 1060 580 1060 520" fill="none" stroke="#00d4aa" stroke-width="3" marker-end="url(#arrow-teal-09)"/>
+      </g>
+    </svg>
   </div>
   <aside class="notes">
-    Tax does not join to Order's tables. Tax subscribes to events Order publishes. From those events, Tax builds its own projection: order lines, prices, shipping address, the fields Tax cares about. The contract is the event. Order can refactor its schema tomorrow. Tax doesn't notice, because Tax was never reading the schema. The event is small. The schema behind it isn't. Let me show you both, side by side.
+    This is how Tax gets Order's data. [CLICK] Two teams. Order on the left, owns its data. Tax on the right, needs some of it. [CLICK] The lazy answer is for Tax to query Order's tables directly. That couples them forever — any schema change in Order breaks Tax. [CLICK] The right answer is the one Penultimate took. Order publishes events. Tax subscribes. Tax builds its own projection of the fields it cares about. The contract is the event, not the schema. Order can refactor tomorrow. Tax doesn't notice. The event is small. The schema behind it isn't. Let me show you both, side by side.
   </aside>
 </section>
 
