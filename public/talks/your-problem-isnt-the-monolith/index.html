@@ -495,7 +495,7 @@
     </div>
   </div>
   <aside class="notes">
-    An aggregate is the only place an invariant lives. If an Order can't ship without a confirmed payment, that rule lives in Order. Not in a service layer. Not in a database trigger. Not in a Slack message. In Order. The aggregate is the transactional boundary because it's the only thing that knows the rules.
+    An aggregate is the only place an invariant lives. If an Order can't ship without a confirmed payment, that rule lives in Order. Not in a service layer. Not in a database trigger. Not in a Slack message. In Order. The aggregate is the transactional boundary because it's the only thing that knows the rules. In code, the difference shows up every time another team needs Order's data.
   </aside>
 </section>
 
@@ -549,7 +549,7 @@ orderService.applyTaxes(
     <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;"> don't ask.</span>
   </p>
   <aside class="notes">
-    Set up the comparison: "Somewhere in the tax codebase…" Show both snippets without labels. Ask the audience: which one is better? Wait for hands or a beat of consideration. Then click — labels appear: this is what asking looks like, this is what telling looks like. Then click — "Tell, don't ask." The principle that's been hiding in plain sight since the 1990s. If your tax module is reaching into Order's tables, you don't have an Order aggregate. You have a database with Java in front of it. The right side is one line. Write logic encapsulated. Validation at the boundary. Emits an event. One command in, one event out.
+    Set up the comparison: "Somewhere in the tax codebase…" Show both snippets without labels. Ask the audience: which one is better? Wait for hands or a beat of consideration. Then click — labels appear: this is what asking looks like, this is what telling looks like. Then click — "Tell, don't ask." The principle that's been hiding in plain sight since the 1990s. If your tax module is reaching into Order's tables, you don't have an Order aggregate. You have a database with Java in front of it. The right side is one line. Write logic encapsulated. Validation at the boundary. Emits an event. One command in, one event out. Aggregates own the writes. Now look at what other teams see.
   </aside>
 </section>
 
@@ -571,7 +571,7 @@ orderService.applyTaxes(
     </div>
   </div>
   <aside class="notes">
-    Tax does not join to Order's tables. Tax subscribes to events Order publishes. From those events, Tax builds its own projection: order lines, prices, shipping address, the fields Tax cares about. The contract is the event. Order can refactor its schema tomorrow. Tax doesn't notice, because Tax was never reading the schema.
+    Tax does not join to Order's tables. Tax subscribes to events Order publishes. From those events, Tax builds its own projection: order lines, prices, shipping address, the fields Tax cares about. The contract is the event. Order can refactor its schema tomorrow. Tax doesn't notice, because Tax was never reading the schema. The event is small. The schema behind it isn't. Let me show you both, side by side.
   </aside>
 </section>
 
@@ -633,7 +633,7 @@ message OrderPlaced {
   </div>
   <p style="text-align:center;font-size:0.7em;color:var(--muted);margin:18px 0 0;font-style:italic;">Versioned. Owned by orders-team. Published with a guarantee.</p>
   <aside class="notes">
-    This is the only thing Tax knows about Order. Versioned, owned by Order's team, published with a guarantee. Order's internal tables are nobody else's business.
+    This is the only thing Tax knows about Order. Versioned, owned by Order's team, published with a guarantee. Order's internal tables are nobody else's business. All of which lives in a wiki page until something fails the build when it breaks. Discipline isn't documentation. It's exit code 1.
   </aside>
 </section>
 
@@ -685,7 +685,7 @@ public class DataBoundaryFitnessFunctions {
 </code></pre>
   <p style="text-align:center;font-size:0.85em;color:var(--accent);font-weight:700;margin:18px 0 0;letter-spacing:1px;">Three rules. One CI build. The four failure modes — blocked at the door.</p>
   <aside class="notes">
-    Three rules. Each one took an afternoon to write. Each one runs on every PR. The first one stops Tax from reaching into Order's database. The second stops anyone outside Order from saving an Order. The third makes sure events are versioned and immutable. This is the slide you should photograph. (Pause for cameras.)
+    Three rules. Each one took an afternoon to write. Each one runs on every PR. The first one stops Tax from reaching into Order's database. The second stops anyone outside Order from saving an Order. The third makes sure events are versioned and immutable. This is the slide you should photograph. (Pause for cameras.) Three rules for one team. A fuller suite ends up looking like this.
   </aside>
 </section>
 
@@ -737,7 +737,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    These don't fit on one slide. They all live in CI. Build them gradually. Each one buys you back a category of bug you used to find in production.
+    These don't fit on one slide. They all live in CI. Build them gradually. Each one buys you back a category of bug you used to find in production. One of those — the migration linter — is worth its own slide. Because migrations are where most CI promises go to die.
   </aside>
 </section>
 
@@ -784,7 +784,7 @@ public class DataBoundaryFitnessFunctions {
   </div>
   <p class="mig-ci-footer">Enforced in CI: an Expand without its Contract is a failed build.</p>
   <aside class="notes">
-    The Monday-morning migration is the one that takes the site down. Not because the migration is wrong — because it tried to do everything at once. Expand-then-contract turns one risky deploy into four boring ones. Add the new column nullable. Backfill in the background. Switch reads behind a flag. Then, weeks later, drop the old column once the metrics say no one is reading it. Every step has a one-line rollback that doesn't lose data. And here's the trick that makes it stick — the fitness function from the previous slide watches for this. An Expand without a matching Contract eventually fails the build. The discipline isn't "write good migrations." The discipline is: the build won't let you forget to finish one.
+    The Monday-morning migration is the one that takes the site down. Not because the migration is wrong — because it tried to do everything at once. Expand-then-contract turns one risky deploy into four boring ones. Add the new column nullable. Backfill in the background. Switch reads behind a flag. Then, weeks later, drop the old column once the metrics say no one is reading it. Every step has a one-line rollback that doesn't lose data. And here's the trick that makes it stick — the fitness function from the previous slide watches for this. An Expand without a matching Contract eventually fails the build. The discipline isn't "write good migrations." The discipline is: the build won't let you forget to finish one. Five disciplines, four covered. The fifth is the one the audience asked about back at slide 2 — when do we finally split this thing? Here's when. And why it cost Penultimate nothing dramatic.
   </aside>
 </section>
 
@@ -799,7 +799,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    By Year 5, three of Penultimate's domains were pulling outward. Not because the monolith was broken, because they were starting to need different things from their data.
+    By Year 5, three of Penultimate's domains were pulling outward. Not because the monolith was broken, because they were starting to need different things from their data. Three teams. Three triggers. Each one specific.
   </aside>
 </section>
 
@@ -835,7 +835,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    The pressures didn't come from an architecture review. They came from incidents and audits. Year 5, Q1: Catalog publish latency hit 800ms p99 — the search team couldn't tolerate it any longer. Year 5, Q3: an audit flagged that tax record retention had drifted out of compliance. Year 6, Q1: a payments outage cascaded into the rest of the marketplace. Three different domains, three different timelines, three different lifecycle pressures. The monolith didn't break. It just stopped fitting three teams at once.
+    The pressures didn't come from an architecture review. They came from incidents and audits. Year 5, Q1: Catalog publish latency hit 800ms p99 — the search team couldn't tolerate it any longer. Year 5, Q3: an audit flagged that tax record retention had drifted out of compliance. Year 6, Q1: a payments outage cascaded into the rest of the marketplace. Three different domains, three different timelines, three different lifecycle pressures. The monolith didn't break. It just stopped fitting three teams at once. Three different incidents, one common shape. When you put them on the same axes, the pattern is hard to miss.
   </aside>
 </section>
 
@@ -883,7 +883,7 @@ public class DataBoundaryFitnessFunctions {
     <p class="lc-implies c3">→ Bulkhead for blast radius.</p>
   </div>
   <aside class="notes">
-    Search needs to be cached at the edge in eight regions. Tax needs to keep records nobody can ever rewrite. Payments needs to fail in isolation and recover without taking the rest of the platform with it. These are not traffic problems. They're data lifecycle problems. And data lifecycle is what tells you where to cut.
+    Search needs to be cached at the edge in eight regions. Tax needs to keep records nobody can ever rewrite. Payments needs to fail in isolation and recover without taking the rest of the platform with it. These are not traffic problems. They're data lifecycle problems. And data lifecycle is what tells you where to cut. Here's what cutting actually looked like.
   </aside>
 </section>
 
@@ -922,7 +922,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    Same colors. Same domains. Same teams. The only thing that changed is which boundaries became network boundaries. The seams were already drawn at Year 4. We just had to honor them.
+    Same colors. Same domains. Same teams. The only thing that changed is which boundaries became network boundaries. The seams were already drawn at Year 4. We just had to honor them. What did the first cut involve? Less than you'd think — because the seam was already there.
   </aside>
 </section>
 
@@ -944,7 +944,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    When Search was extracted, almost nothing in Search's code changed. It already consumed events. It already had its own projection of catalog data. The boundary was already there. The extraction was a deployment change, not a redesign.
+    When Search was extracted, almost nothing in Search's code changed. It already consumed events. It already had its own projection of catalog data. The boundary was already there. The extraction was a deployment change, not a redesign. Search was the easy one. Tax made the team grow up about contracts.
   </aside>
 </section>
 
@@ -966,7 +966,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    The Tax read model existed before extraction. After extraction it has a name, a version, an SLA, and consumers it didn't have before. That's the work of decomposition: making implicit contracts explicit, and giving them an owner.
+    The Tax read model existed before extraction. After extraction it has a name, a version, an SLA, and consumers it didn't have before. That's the work of decomposition: making implicit contracts explicit, and giving them an owner. Payments was the hard one — because Payments touched a five-table transaction.
   </aside>
 </section>
 
@@ -988,7 +988,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    The order placement that used to be a five-table transaction is now a process manager with compensation. Choreography for the simple paths, orchestration for the multi-step flows. The point isn't to avoid transactions. The point is to know when you have one and when you have a saga, and to never confuse the two.
+    The order placement that used to be a five-table transaction is now a process manager with compensation. Choreography for the simple paths, orchestration for the multi-step flows. The point isn't to avoid transactions. The point is to know when you have one and when you have a saga, and to never confuse the two. Process managers handle multi-step writes. What about the reads each team now keeps?
   </aside>
 </section>
 
@@ -1004,7 +1004,7 @@ public class DataBoundaryFitnessFunctions {
     </div>
   </div>
   <aside class="notes">
-    Stop apologizing for duplication. Tax has its own copy of the parts of an order it cares about. Search has its own copy of catalog data, denormalized for query performance. Both copies are owned. Both update from events. That is autonomy. The opposite of duplication isn't elegance. It's coupling.
+    Stop apologizing for duplication. Tax has its own copy of the parts of an order it cares about. Search has its own copy of catalog data, denormalized for query performance. Both copies are owned. Both update from events. That is autonomy. The opposite of duplication isn't elegance. It's coupling. If duplication is the rule, CI has to keep enforcing the same boundaries — just across the network.
   </aside>
 </section>
 
@@ -1069,7 +1069,7 @@ static final ArchRule tax_only_consumes_versioned_order_events =
     <p style="text-align:center;font-size:0.72em;color:var(--muted);font-style:italic;margin:0;letter-spacing:2px;">No flag day. No big rewrite. The seams led — the team followed.</p>
   </div>
   <aside class="notes">
-    That's it. No big rewrite. No transformation program. Three extractions, four moves, in the order the data lifecycle asked for them. Move one in Year 5: Search extracted. Aggregates became extraction boundaries. Move two in Year 6: Tax extracted. Read models became published data products with owners and SLAs. Move three through Year 6 and 7: payments extracted, distributed transactions replaced by process managers. Move four through Year 7: duplication became intentional — Tax and Search own their own projections, kept fresh by events.
+    That's it. No big rewrite. No transformation program. Three extractions, four moves, in the order the data lifecycle asked for them. Move one in Year 5: Search extracted. Aggregates became extraction boundaries. Move two in Year 6: Tax extracted. Read models became published data products with owners and SLAs. Move three through Year 6 and 7: payments extracted, distributed transactions replaced by process managers. Move four through Year 7: duplication became intentional — Tax and Search own their own projections, kept fresh by events. That's the story for one company in 2022. The reason it matters more in 2026 is that the cost of getting it wrong now compounds.
   </aside>
 </section>
 
@@ -1113,7 +1113,7 @@ static final ArchRule tax_only_consumes_versioned_order_events =
     </div>
   </div>
   <aside class="notes">
-    One reason this matters more in 2026 than in 2022 is that the cost of weak data discipline now compounds. Three findings, all about velocity meeting bad boundaries. AgentRaft 2026: 57 percent of agent tool paths over-expose data. Every team exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes — at speed. Apiiro's Fortune 50 telemetry, 2025: AI-assisted code ships with 322 percent more privilege escalation paths and 153 percent more architectural design flaws. Same telemetry: 4 times more commits, in fewer larger PRs. Reviewer attention did not scale with velocity. None of these are new failures. They're old failures at higher velocity, with wider blast radius. The fix is the one we just spent twenty minutes on. MCP is the wire format; your data product is the contract. CLAUDE.md is advisory; CI is deterministic. Same discipline. More reason to do it now.
+    One reason this matters more in 2026 than in 2022 is that the cost of weak data discipline now compounds. Three findings, all about velocity meeting bad boundaries. AgentRaft 2026: 57 percent of agent tool paths over-expose data. Every team exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes — at speed. Apiiro's Fortune 50 telemetry, 2025: AI-assisted code ships with 322 percent more privilege escalation paths and 153 percent more architectural design flaws. Same telemetry: 4 times more commits, in fewer larger PRs. Reviewer attention did not scale with velocity. None of these are new failures. They're old failures at higher velocity, with wider blast radius. The fix is the one we just spent twenty minutes on. MCP is the wire format; your data product is the contract. CLAUDE.md is advisory; CI is deterministic. Same discipline. More reason to do it now. Five things to do on Monday so you stop paying the cost.
   </aside>
 </section>
 
