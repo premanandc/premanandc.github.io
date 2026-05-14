@@ -41,7 +41,7 @@
 
     /* ── Typography ── */
     .reveal h1 { font-weight: 900; font-size: 2.2em; line-height: 1.1; text-transform: none; color: var(--r-heading-color); margin: 0 0 0.25em; }
-    .reveal h2 { font-weight: 700; font-size: 1.5em; color: var(--accent); text-transform: none; margin: 0 0 0.6em; line-height: 1.2; }
+    .reveal h2 { font-weight: 700; font-size: 1.5em; color: var(--r-heading-color); text-transform: none; margin: 0 0 0.6em; line-height: 1.2; }
     .reveal h3 { font-weight: 600; font-size: 0.9em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 0.4em; }
     .reveal p  { line-height: 1.6; margin: 0.25em 0; }
     .reveal ul, .reveal ol { padding-left: 1.2em; }
@@ -147,6 +147,83 @@
     .bg-card { padding: 18px 26px; background: rgba(15,23,41,0.6); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; }
     .bg-card-center { display: inline-block; padding: 28px 36px; background: rgba(15,23,41,0.6); border: 1px solid rgba(0,212,170,0.25); border-radius: 14px; }
 
+    /* Penultimate tile stagger (slide 5) — one click reveals all 8 in quick succession */
+    .reveal svg g.penult-tile { opacity: 0; transition: opacity 0.32s ease; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(1) { opacity: 1; transition-delay: 0s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(2) { opacity: 1; transition-delay: 0.08s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(3) { opacity: 1; transition-delay: 0.16s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(4) { opacity: 1; transition-delay: 0.24s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(5) { opacity: 1; transition-delay: 0.32s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(6) { opacity: 1; transition-delay: 0.40s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(7) { opacity: 1; transition-delay: 0.48s; }
+    .reveal svg g.penult-tiles.visible g.penult-tile:nth-of-type(8) { opacity: 1; transition-delay: 0.56s; }
+
+    /* Seamless right-pinned image — bleeds past slide canvas to cover any body-bg gap */
+    .reveal section.fade-left-bg { padding: 0 !important; overflow: visible; }
+    .reveal section.fade-left-bg > img.fade-img {
+      position: absolute;
+      top: -10%; right: -15%;
+      width: 65%;
+      height: 120%;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      object-fit: cover;
+      object-position: left center;
+      z-index: 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 20%, black 45%);
+      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.4) 20%, black 45%);
+    }
+    .reveal section.fade-left-bg > *:not(img.fade-img) { position: relative; z-index: 1; }
+
+    /* Discipline eyebrows — color-matched to the 5 chips on slide 3 */
+    .reveal .discipline-eyebrow {
+      display: flex; align-items: center; gap: 14px;
+      font-size: 0.55em; font-weight: 800; letter-spacing: 4px;
+      text-transform: uppercase; margin: 0 0 0.7em; line-height: 1;
+    }
+    .reveal .discipline-eyebrow::before {
+      content: ""; display: inline-block;
+      width: 48px; height: 3px; border-radius: 2px;
+      background: currentColor;
+    }
+    .reveal .discipline-eyebrow .disc-num {
+      font-family: var(--r-code-font); font-size: 0.95em; opacity: 0.9;
+    }
+    .reveal .discipline-eyebrow .disc-sep { opacity: 0.4; }
+    .reveal .discipline-eyebrow.disc-01 { color: var(--accent);  }
+    .reveal .discipline-eyebrow.disc-02 { color: var(--accent2); }
+    .reveal .discipline-eyebrow.disc-03 { color: var(--warn);    }
+    .reveal .discipline-eyebrow.disc-04 { color: var(--danger);  }
+    .reveal .discipline-eyebrow.disc-05 { color: #8b5cf6;        }
+    /* Centered variant for act-title slides */
+    .reveal .discipline-eyebrow.centered { justify-content: center; margin-bottom: 1.4em; }
+    .reveal .discipline-eyebrow.centered::before,
+    .reveal .discipline-eyebrow.centered::after {
+      content: ""; display: inline-block;
+      width: 48px; height: 3px; border-radius: 2px;
+      background: currentColor;
+    }
+
+    /* Safe-migrations timeline (slide ~13b) */
+    .mig-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 16px 0 12px; }
+    .mig-step { display: flex; flex-direction: column; padding: 22px 22px 20px; background: rgba(15,23,41,0.65); border-radius: 14px; border-top: 5px solid var(--danger); position: relative; }
+    .mig-step + .mig-step::before {
+      content: "→"; position: absolute; left: -22px; top: 50%;
+      transform: translateY(-50%); color: var(--danger); opacity: 0.55;
+      font-size: 1.3em; font-weight: 700;
+    }
+    .mig-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+    .mig-num { font-family: var(--r-code-font); font-size: 0.95em; color: var(--danger); font-weight: 800; letter-spacing: 1px; }
+    .mig-name { font-size: 1.05em; font-weight: 900; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+    .mig-action { font-size: 0.85em; color: #e2e8f0; margin: 0 0 10px; line-height: 1.4; }
+    .mig-rollback { font-size: 0.72em; color: #94a3b8; margin: 0; line-height: 1.4; font-style: italic; padding-top: 10px; border-top: 1px dashed rgba(148,163,184,0.2); }
+    .mig-rollback::before { content: "↺ "; color: var(--accent); font-style: normal; }
+    .mig-ci-footer { text-align: center; font-size: 0.85em; color: var(--accent); font-weight: 700; margin: 18px 0 0; letter-spacing: 1px; }
+
     /* Fitness-function grid (slide 13 — other fitness functions) */
     .ff-grid    { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 24px; flex: 1; min-height: 0; margin-top: 14px; }
     .ff-card    { display: flex; flex-direction: column; padding: 28px 32px; background: rgba(15,23,41,0.65); border-radius: 14px; border-top: 5px solid var(--accent); justify-content: center; gap: 14px; }
@@ -164,28 +241,27 @@
     .ff-card.c5 { border-top-color: #8b5cf6;        } .ff-card.c5 .ff-num { background: #8b5cf6;        }
 
     /* Lifecycle cards (slide 15 — three pressures · quality fingerprint) */
-    .lifecycle-grid  { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: 1fr; gap: 32px; flex: 1; min-height: 0; align-items: stretch; margin-top: 18px; }
-    .lifecycle-card  { display: flex; flex-direction: column; padding: 40px 44px 36px; background: rgba(15,23,41,0.65); border-radius: 16px; border-top: 6px solid var(--accent); }
-    .lc-tag          { font-size: 1.9em; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.05; }
-    .lc-axes         { display: flex; flex-direction: column; justify-content: space-between; margin: 30px 0 0; padding-top: 26px; border-top: 1px solid rgba(148,163,184,0.18); flex: 1; }
-    .lc-axis         { display: grid; grid-template-columns: 1fr auto 120px; gap: 14px; align-items: center; }
-    .lc-axis-label   { font-size: 0.72em; font-weight: 700; letter-spacing: 2px; color: #94a3b8; text-transform: uppercase; }
-    .lc-axis-value   { font-size: 0.72em; font-weight: 600; color: #e2e8f0; font-style: italic; text-align: right; }
+    /* Lifecycle matrix (slide 16) — axis labels factored out into a left column;
+       each domain column is a stack of cells that share a continuous background. */
+    .lifecycle-grid  { display: grid; grid-template-columns: 220px 1fr 1fr 1fr; column-gap: 28px; row-gap: 0; align-items: stretch; flex: 1; min-height: 0; margin-top: 18px; }
+    .lc-tag          { font-size: 1.7em; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.05; padding: 26px 28px 18px; background: rgba(15,23,41,0.65); border-top-left-radius: 16px; border-top-right-radius: 16px; border-top: 6px solid var(--accent); }
+    .lc-axis-label   { font-size: 0.95em; font-weight: 700; letter-spacing: 2.5px; color: #94a3b8; text-transform: uppercase; margin: 0; align-self: center; }
+    .lc-cell         { display: flex; align-items: center; gap: 18px; padding: 18px 28px; background: rgba(15,23,41,0.65); }
+    .lc-axis-value   { font-size: 0.85em; font-weight: 600; color: #e2e8f0; font-style: italic; white-space: nowrap; }
     .lc-dots         { display: flex; gap: 8px; }
     .lc-dot          { width: 18px; height: 18px; border-radius: 50%; background: rgba(148,163,184,0.18); }
-    .lc-dot.on       { background: var(--accent); box-shadow: 0 0 12px rgba(0,212,170,0.5); }
-    .lc-implies      { font-size: 1.1em; font-weight: 700; color: var(--accent); margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(148,163,184,0.2); line-height: 1.3; }
-    .lifecycle-card.c1 { border-top-color: var(--accent);  } .lifecycle-card.c1 .lc-implies { color: var(--accent);  } .lifecycle-card.c1 .lc-dot.on { background: var(--accent);  box-shadow: 0 0 14px rgba(0,212,170,0.55); }
-    .lifecycle-card.c2 { border-top-color: var(--accent2); } .lifecycle-card.c2 .lc-implies { color: var(--accent2); } .lifecycle-card.c2 .lc-dot.on { background: var(--accent2); box-shadow: 0 0 14px rgba(59,130,246,0.55); }
-    .lifecycle-card.c3 { border-top-color: var(--warn);    } .lifecycle-card.c3 .lc-implies { color: var(--warn);    } .lifecycle-card.c3 .lc-dot.on { background: var(--warn);    box-shadow: 0 0 14px rgba(245,158,11,0.55); }
+    .lc-implies      { font-size: 1.1em; font-weight: 700; margin: 0; padding: 22px 28px 26px; background: rgba(15,23,41,0.65); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; border-top: 1px solid rgba(148,163,184,0.2); line-height: 1.3; }
+    .lc-tag.c1 { border-top-color: var(--accent);  } .lc-implies.c1 { color: var(--accent);  } .lc-cell.c1 .lc-dot.on { background: var(--accent);  box-shadow: 0 0 14px rgba(0,212,170,0.55); }
+    .lc-tag.c2 { border-top-color: var(--accent2); } .lc-implies.c2 { color: var(--accent2); } .lc-cell.c2 .lc-dot.on { background: var(--accent2); box-shadow: 0 0 14px rgba(59,130,246,0.55); }
+    .lc-tag.c3 { border-top-color: var(--warn);    } .lc-implies.c3 { color: var(--warn);    } .lc-cell.c3 .lc-dot.on { background: var(--warn);    box-shadow: 0 0 14px rgba(245,158,11,0.55); }
 
     /* Action list (slide 27 — Monday actions) */
-    .action-list  { display: flex; flex-direction: column; gap: 14px; flex: 1; min-height: 0; margin-top: 8px; }
-    .action-item  { display: flex; align-items: center; gap: 24px; padding: 18px 28px; background: rgba(15,23,41,0.65); border-left: 5px solid var(--accent); border-radius: 0 14px 14px 0; }
-    .action-num   { width: 54px; height: 54px; line-height: 54px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 900; font-size: 1.5em; flex-shrink: 0; }
+    .action-list  { display: flex; flex-direction: column; gap: 26px; flex: 1; min-height: 0; margin-top: 12px; }
+    .action-item  { display: flex; align-items: center; gap: 28px; padding: 22px 32px; background: rgba(15,23,41,0.65); border-left: 5px solid var(--accent); border-radius: 0 14px 14px 0; }
+    .action-num   { width: 58px; height: 58px; line-height: 58px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 900; font-size: 1.5em; flex-shrink: 0; }
     .action-body  { flex: 1; min-width: 0; }
-    .action-title { font-size: 1.05em; font-weight: 800; color: #ffffff; margin: 0 0 3px; line-height: 1.25; }
-    .action-sub   { font-size: 0.7em; font-style: italic; color: #94a3b8; margin: 0; line-height: 1.45; }
+    .action-title { font-size: 1.2em; font-weight: 800; color: #ffffff; margin: 0 0 5px; line-height: 1.25; }
+    .action-sub   { font-size: 0.78em; font-style: italic; color: #94a3b8; margin: 0; line-height: 1.45; }
     .action-item.c1 { border-left-color: var(--accent);  } .action-item.c1 .action-num { background: var(--accent);  }
     .action-item.c2 { border-left-color: var(--accent2); } .action-item.c2 .action-num { background: var(--accent2); }
     .action-item.c3 { border-left-color: var(--warn);    } .action-item.c3 .action-num { background: var(--warn);    }
@@ -245,13 +321,28 @@
 <section>
   <div class="act-title">
     <p class="statement">Architecture endures when teams align on data lifecycles, not just APIs.</p>
-    <p style="font-size:0.72em;color:var(--muted);margin:2.2em 0 0.8em;letter-spacing:3px;text-transform:uppercase;font-weight:700;">Five disciplines · we'll walk all of them</p>
-    <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-      <span style="padding:10px 20px;background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">1 · Ownership</span>
-      <span style="padding:10px 20px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">2 · Contracts</span>
-      <span style="padding:10px 20px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">3 · CI fitness</span>
-      <span style="padding:10px 20px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">4 · Safe migrations</span>
-      <span style="padding:10px 20px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.35);border-radius:10px;font-size:0.75em;font-weight:700;color:#e2e8f0;">5 · Decompose along seams</span>
+    <p style="font-size:0.78em;color:var(--muted);margin:2.4em 0 1em;letter-spacing:3px;text-transform:uppercase;font-weight:700;">Five disciplines · we'll walk all of them</p>
+    <div style="display:flex;justify-content:center;gap:18px;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:14px;padding:18px 28px;background:rgba(0,212,170,0.18);border:1.5px solid rgba(0,212,170,0.55);border-radius:14px;font-size:1em;font-weight:800;color:#fff;box-shadow:0 0 24px rgba(0,212,170,0.18);">
+        <span style="font-family:var(--r-code-font);font-size:0.85em;color:var(--accent);font-weight:700;letter-spacing:1px;">01</span>
+        Ownership
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:14px;padding:18px 28px;background:rgba(59,130,246,0.18);border:1.5px solid rgba(59,130,246,0.55);border-radius:14px;font-size:1em;font-weight:800;color:#fff;box-shadow:0 0 24px rgba(59,130,246,0.18);">
+        <span style="font-family:var(--r-code-font);font-size:0.85em;color:var(--accent2);font-weight:700;letter-spacing:1px;">02</span>
+        Contracts
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:14px;padding:18px 28px;background:rgba(245,158,11,0.18);border:1.5px solid rgba(245,158,11,0.55);border-radius:14px;font-size:1em;font-weight:800;color:#fff;box-shadow:0 0 24px rgba(245,158,11,0.18);">
+        <span style="font-family:var(--r-code-font);font-size:0.85em;color:var(--warn);font-weight:700;letter-spacing:1px;">03</span>
+        CI fitness
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:14px;padding:18px 28px;background:rgba(239,68,68,0.18);border:1.5px solid rgba(239,68,68,0.55);border-radius:14px;font-size:1em;font-weight:800;color:#fff;box-shadow:0 0 24px rgba(239,68,68,0.18);">
+        <span style="font-family:var(--r-code-font);font-size:0.85em;color:var(--danger);font-weight:700;letter-spacing:1px;">04</span>
+        Safe migrations
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:14px;padding:18px 28px;background:rgba(139,92,246,0.18);border:1.5px solid rgba(139,92,246,0.55);border-radius:14px;font-size:1em;font-weight:800;color:#fff;box-shadow:0 0 24px rgba(139,92,246,0.18);">
+        <span style="font-family:var(--r-code-font);font-size:0.85em;color:#8b5cf6;font-weight:700;letter-spacing:1px;">05</span>
+        Decompose along seams
+      </span>
     </div>
   </div>
   <aside class="notes">
@@ -259,59 +350,139 @@
   </aside>
 </section>
 
-<!-- ══ Slide 4: Rot starts at the schema ═════════════════ -->
+<!-- ══ Slide 4: Rot starts at the schema (with reveal) ═══ -->
 <section data-background-image="images/metaphor/04-rot.png">
-  <h2 style="margin-bottom:0.15em;">Rot doesn't start at the deployment boundary</h2>
-  <p style="font-size:1.1em;font-weight:600;color:#fff;margin:0 0 0.6em;line-height:1.25;">It starts at the schema</p>
-  <div class="failure-grid-items">
+  <!-- Header stack: prompt initially, replaced by title on second click -->
+  <div style="position:relative;min-height:130px;">
+    <p class="fragment fade-out" data-fragment-index="1"
+       style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.5em;font-weight:800;color:#fff;line-height:1.25;margin:0;padding:0 60px;">
+      <span style="font-size:1.4em;margin-right:0.3em;vertical-align:-0.1em;">🙋</span>Raise your hand if <span style="color:var(--accent);margin:0 0.2em;font-weight:900;">none</span> of these are true in your ecosystem.
+    </p>
+    <div class="fragment fade-in" data-fragment-index="1"
+         style="position:absolute;inset:0;">
+      <h2 style="margin:0 0 0.15em;">Rot doesn't start at the deployment boundary</h2>
+      <p style="font-size:1.1em;font-weight:600;color:#fff;margin:0;line-height:1.25;">It starts at the schema</p>
+    </div>
+  </div>
+
+  <div class="failure-grid-items fragment fade-in" data-fragment-index="0">
     <div class="failure-card c1">
       <div class="fc-head"><span class="fc-icon">🔓</span><span class="fc-num">01</span></div>
-      <p class="fc-text">Anyone writes to any table.</p>
-      <p class="fc-sub">No ownership at the persistence layer.</p>
+      <p class="fc-text">Writes to any table are allowed.</p>
+      <p class="fc-sub">No persistence-layer gatekeeper.</p>
     </div>
     <div class="failure-card c2">
       <div class="fc-head"><span class="fc-icon">🔗</span><span class="fc-num">02</span></div>
       <p class="fc-text">Cross-domain joins in hot paths.</p>
-      <p class="fc-sub">Latency follows your worst dependency.</p>
+      <p class="fc-sub">Read paths span domains.</p>
     </div>
     <div class="failure-card c3">
       <div class="fc-head"><span class="fc-icon">⏳</span><span class="fc-num">03</span></div>
-      <p class="fc-text">Lifecycle and retention rules applied inconsistently.</p>
-      <p class="fc-sub">Data outlives the rules that govern it.</p>
+      <p class="fc-text">Retention rules vary across teams.</p>
+      <p class="fc-sub">Per-team, per-table policies.</p>
     </div>
     <div class="failure-card c4">
       <div class="fc-head"><span class="fc-icon">💬</span><span class="fc-num">04</span></div>
-      <p class="fc-text">Teams share a database but not a vocabulary.</p>
-      <p class="fc-sub">One schema, many implicit meanings.</p>
+      <p class="fc-text">Shared database. Different vocabularies.</p>
+      <p class="fc-sub">One schema, multiple consuming teams.</p>
     </div>
   </div>
   <aside class="notes">
-    Walk the four. 20 seconds each. Don't list and move on, name the failure mode briefly. The audience needs to feel "yes, that's my system." Close with: "Ownership in most orgs ends at the code. It never reaches the data."
+    Open with the question: "Raise your hand if NONE of these are true in your ecosystem." Wait a beat. Look around. Most hands won't go up. Click — the four cards appear. Read them quickly: writes-to-any-table, cross-domain-joins, retention-rules-vary, shared-database-mixed-vocabularies. Then ask again with a smirk: "Anyone? Still nothing?" Click — the title fades in. THESE are the failure modes. They don't look like architecture failures. They look like normal operational reality. That's exactly the point. Rot doesn't start at the deployment boundary. It starts at the schema — at four very ordinary-looking facts about how your data is governed. Ownership in most orgs ends at the code. It never reaches the data. Bridge to next slide: "Most orgs live with this. A few don't. The teams that escape it draw the line at the data, not at the deployment. Let me show you one of them."
   </aside>
 </section>
 
-<!-- ══ Slide 6: Penultimate Markets Year 4 ════════════════ -->
+<!-- ══ Slide 6: Penultimate Markets Year 4 (3-beat reveal) ═ -->
 <section>
   <h2>Penultimate Markets, 2022. One deployment. 120 engineers. 8 markets.</h2>
   <div class="diagram-frame">
-    <img src="images/diagrams/06-penultimate-year-4.svg"
-         alt="Penultimate Markets modular monolith at Year 4"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-    <div class="diagram-placeholder" style="display:none;">
-      <strong style="color:var(--accent);font-size:1.1em;">DIAGRAM: Penultimate Markets modular monolith at Year 4</strong><br><br>
-      Eight domains inside one outer "monolith" frame:<br>
-      Identity &amp; Accounts · Catalog · Orders · Payments<br>
-      Tax · Search · Fulfillment · Pricing &amp; Promotions<br><br>
-      Sidebar stats: 1M orders/day · 25M SKUs
-    </div>
+    <svg viewBox="0 0 1280 720" style="width:100%;height:100%;max-width:none;max-height:none;margin:0;" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .label-mono     { font: 800 22px 'Inter', 'Arial', sans-serif; letter-spacing: 3px; fill: #0f1729; }
+          .domain-label   { font: 700 22px 'Inter', 'Arial', sans-serif; fill: #ffffff; }
+          .one-deployment { font: 600 16px 'Inter', 'Arial', sans-serif; letter-spacing: 4px; fill: #94a3b8; }
+          .sidebar-title  { font: 700 18px 'Inter', 'Arial', sans-serif; letter-spacing: 2px; fill: #94a3b8; }
+          .stat-big       { font: 900 64px 'Inter', 'Arial', sans-serif; }
+          .stat-small     { font: 600 22px 'Inter', 'Arial', sans-serif; fill: #94a3b8; }
+        </style>
+      </defs>
+
+      <!-- Beat 1: 8 domain tiles (staggered on one click) -->
+      <g class="fragment fade-in penult-tiles" data-fragment-index="0">
+        <g class="penult-tile">
+          <rect x="64"  y="124" width="195" height="208" rx="18" fill="#00d4aa"/>
+          <text x="161" y="218" text-anchor="middle" class="domain-label">
+            <tspan x="161" dy="0">Identity &amp;</tspan>
+            <tspan x="161" dy="30">Accounts</tspan>
+          </text>
+        </g>
+        <g class="penult-tile">
+          <rect x="283" y="124" width="195" height="208" rx="18" fill="#3b82f6"/>
+          <text x="380" y="233" text-anchor="middle" class="domain-label">Catalog</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="502" y="124" width="195" height="208" rx="18" fill="#f59e0b"/>
+          <text x="600" y="233" text-anchor="middle" class="domain-label">Orders</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="721" y="124" width="195" height="208" rx="18" fill="#ef4444"/>
+          <text x="818" y="233" text-anchor="middle" class="domain-label">Payments</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="64"  y="356" width="195" height="208" rx="18" fill="#8b5cf6"/>
+          <text x="161" y="465" text-anchor="middle" class="domain-label">Tax</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="283" y="356" width="195" height="208" rx="18" fill="#22c55e"/>
+          <text x="380" y="465" text-anchor="middle" class="domain-label">Search</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="502" y="356" width="195" height="208" rx="18" fill="#06b6d4"/>
+          <text x="600" y="465" text-anchor="middle" class="domain-label">Fulfillment</text>
+        </g>
+        <g class="penult-tile">
+          <rect x="721" y="356" width="195" height="208" rx="18" fill="#f97316"/>
+          <text x="818" y="450" text-anchor="middle" class="domain-label">
+            <tspan x="818" dy="0">Pricing &amp;</tspan>
+            <tspan x="818" dy="30">Promotions</tspan>
+          </text>
+        </g>
+      </g>
+
+      <!-- Beat 2: monolith frame + MONOLITH pill + ONE DEPLOYMENT caption -->
+      <g class="fragment fade-in" data-fragment-index="1">
+        <rect x="40" y="80" width="900" height="580" rx="22"
+              fill="rgba(20,30,48,0.4)" stroke="#00d4aa" stroke-width="2" stroke-opacity="0.45"/>
+        <rect x="395" y="60" width="190" height="40" rx="20" fill="#00d4aa"/>
+        <text x="490" y="87" text-anchor="middle" class="label-mono">MONOLITH</text>
+        <text x="490" y="685" text-anchor="middle" class="one-deployment">ONE DEPLOYMENT</text>
+      </g>
+
+      <!-- Beat 3: System Scale sidebar -->
+      <g class="fragment fade-in" data-fragment-index="2">
+        <rect x="980" y="140" width="260" height="460" rx="18"
+              fill="rgba(26,35,50,0.7)" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.3"/>
+        <text x="1110" y="190" text-anchor="middle" class="sidebar-title">SYSTEM SCALE</text>
+        <line x1="1010" y1="215" x2="1210" y2="215" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.3"/>
+        <text x="1110" y="320" text-anchor="middle" class="stat-big" fill="#00d4aa">1M</text>
+        <text x="1110" y="360" text-anchor="middle" class="stat-small">orders/day</text>
+        <line x1="1010" y1="410" x2="1210" y2="410" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.3"/>
+        <text x="1110" y="515" text-anchor="middle" class="stat-big" fill="#3b82f6">25M</text>
+        <text x="1110" y="555" text-anchor="middle" class="stat-small">SKUs</text>
+      </g>
+    </svg>
   </div>
   <aside class="notes">
-    Set the scene. "By Year 4, Penultimate had 120 engineers shipping into one deployment. People asked them when they were moving to microservices. They didn't, for another four years. Here is what they did instead."
+    This is Penultimate Markets in 2022 — Year 4 of an arc that ran nine more. [CLICK] Eight domains, each owned by a different team — Identity, Catalog, Orders, Payments, Tax, Search, Fulfillment, Pricing. 120 engineers, eight teams, on the org chart this looks like microservices. [CLICK] But it isn't. One outer boundary. One deployment. People kept asking when they'd move to microservices. They didn't, for another four years. [CLICK] At the kind of scale where most teams have already migrated to microservices and are regretting it — a million orders a day, twenty-five million SKUs. Penultimate didn't decompose. Not because they were stubborn. Because they were doing something else first. The next thirty minutes is the five disciplines they got right inside that one frame. We'll walk them in order — Ownership, Contracts, CI fitness, Safe migrations, Decompose along seams. The first one is the smallest. It has a name. And it's where every team I've watched succeed starts.
   </aside>
 </section>
 
 <!-- ══ Slide 7: Aggregates own their invariants ══════════ -->
 <section data-background-image="images/metaphor/07-fortress.png" data-background-opacity="0.15">
+  <p class="discipline-eyebrow disc-01">
+    <span class="disc-num">01</span><span class="disc-sep">·</span><span>Ownership</span>
+  </p>
   <h2>Aggregates own their invariants.</h2>
   <div class="diagram-frame">
     <img src="images/diagrams/07-aggregate.svg"
@@ -328,17 +499,20 @@
   </aside>
 </section>
 
-<!-- ══ Slide 8: Wrong / Right code ═══════════════════════ -->
+<!-- ══ Slide 8: Asking / Telling code (with reveal drama) ═ -->
 <section>
-  <h2>What this looks like in practice</h2>
-  <div class="compare" style="flex:1;margin-top:14px;align-items:stretch;">
+  <p class="discipline-eyebrow disc-01">
+    <span class="disc-num">01</span><span class="disc-sep">·</span><span>Ownership</span>
+  </p>
+  <h2 style="margin-bottom:0.1em;">What this looks like in practice</h2>
+  <p style="font-size:0.95em;font-style:italic;color:var(--muted);margin:0 0 1em;letter-spacing:0.3px;">Somewhere in the tax codebase…</p>
+  <div class="compare" style="flex:1;align-items:stretch;">
     <div class="compare-bad" style="display:flex;flex-direction:column;">
-      <h4 style="font-size:1.1em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
-        <span style="display:inline-flex;width:42px;height:42px;border-radius:50%;background:rgba(239,68,68,0.18);align-items:center;justify-content:center;font-size:1.4em;line-height:1;">⊗</span>
-        <span>WRONG <span style="font-size:0.65em;font-weight:600;color:var(--muted);letter-spacing:0.18em;margin-left:6px;">· THE ASK</span></span>
+      <h4 class="fragment fade-in" data-fragment-index="1" style="font-size:1.15em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+        <span style="display:inline-flex;width:46px;height:46px;border-radius:50%;background:rgba(239,68,68,0.2);align-items:center;justify-content:center;font-size:1.4em;line-height:1;color:var(--danger);">⊗</span>
+        <span style="letter-spacing:0.18em;">ASKING</span>
       </h4>
 <pre style="font-size:0.9em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.5;">
-// Tax reaches into Order's internals
 var order = orderRepo.findById(id);
 if (order.state() != DRAFT)
     throw new IllegalStateException();
@@ -359,31 +533,31 @@ orderRepo.save(order);
 </code></pre>
     </div>
     <div class="compare-good" style="display:flex;flex-direction:column;">
-      <h4 style="font-size:1.1em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
-        <span style="display:inline-flex;width:42px;height:42px;border-radius:50%;background:rgba(0,212,170,0.2);align-items:center;justify-content:center;font-size:1.3em;line-height:1;">✓</span>
-        <span>RIGHT <span style="font-size:0.65em;font-weight:600;color:var(--muted);letter-spacing:0.18em;margin-left:6px;">· THE TELL</span></span>
+      <h4 class="fragment fade-in" data-fragment-index="1" style="font-size:1.15em;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+        <span style="display:inline-flex;width:46px;height:46px;border-radius:50%;background:rgba(0,212,170,0.22);align-items:center;justify-content:center;font-size:1.3em;line-height:1;color:var(--accent);">✓</span>
+        <span style="letter-spacing:0.18em;">TELLING</span>
       </h4>
-<pre style="font-size:0.9em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.5;">
-// Tax tells. Order owns the transition.
-orderService.applyTaxes(orderId, taxBreakdown);
-
-// Inside the Order aggregate:
-//   · validates current state
-//   · applies the tax rule
-//   · emits OrderTaxed event
-//
-// One command in. One event out.
-// Order's invariants stay in Order.
+<pre style="font-size:1.4em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.5;">
+orderService.applyTaxes(
+    orderId, taxBreakdown);
 </code></pre>
     </div>
   </div>
+  <p class="fragment fade-in" data-fragment-index="2"
+     style="text-align:center;font-size:1.5em;font-weight:900;margin:24px 0 0;letter-spacing:0.5px;">
+    <span style="color:#fff;">Tell,</span>
+    <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;"> don't ask.</span>
+  </p>
   <aside class="notes">
-    If your tax module is reaching into Order's tables, you don't have an Order aggregate. You have a database with Java in front of it. Twenty seconds on the right side: write logic encapsulated, validation at the boundary, emits an event.
+    Set up the comparison: "Somewhere in the tax codebase…" Show both snippets without labels. Ask the audience: which one is better? Wait for hands or a beat of consideration. Then click — labels appear: this is what asking looks like, this is what telling looks like. Then click — "Tell, don't ask." The principle that's been hiding in plain sight since the 1990s. If your tax module is reaching into Order's tables, you don't have an Order aggregate. You have a database with Java in front of it. The right side is one line. Write logic encapsulated. Validation at the boundary. Emits an event. One command in, one event out.
   </aside>
 </section>
 
 <!-- ══ Slide 9: Other teams consume contracts ════════════ -->
 <section data-background-image="images/metaphor/09-windows.png" data-background-opacity="0.15">
+  <p class="discipline-eyebrow disc-02">
+    <span class="disc-num">02</span><span class="disc-sep">·</span><span>Contracts</span>
+  </p>
   <h2>Other teams consume contracts, not tables.</h2>
   <div class="diagram-frame">
     <img src="images/diagrams/09-read-model.svg"
@@ -403,6 +577,9 @@ orderService.applyTaxes(orderId, taxBreakdown);
 
 <!-- ══ Slide 10: Internal model vs public contract ═══════ -->
 <section>
+  <p class="discipline-eyebrow disc-02">
+    <span class="disc-num">02</span><span class="disc-sep">·</span><span>Contracts</span>
+  </p>
   <h2>The contract is the boundary.</h2>
   <div class="compare" style="flex:1;margin-top:14px;align-items:stretch;">
     <div style="background:rgba(148,163,184,0.06);border:1px solid rgba(148,163,184,0.25);border-radius:12px;padding:20px 26px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
@@ -464,6 +641,9 @@ message OrderPlaced {
 <section data-background-image="images/metaphor/11-guard.png">
   <div class="act-title">
     <div class="bg-card-center">
+      <p class="discipline-eyebrow disc-03 centered">
+        <span class="disc-num">03</span><span class="disc-sep">·</span><span>CI fitness</span>
+      </p>
       <p class="statement" style="max-width:none;">Discipline is not a wiki page.<br>It's CI exit code 1.</p>
     </div>
   </div>
@@ -474,6 +654,9 @@ message OrderPlaced {
 
 <!-- ══ Slide 12: ArchUnit fitness functions ══════════════ -->
 <section>
+  <p class="discipline-eyebrow disc-03">
+    <span class="disc-num">03</span><span class="disc-sep">·</span><span>CI fitness</span>
+  </p>
   <h2>Fitness functions for data boundaries.</h2>
 <pre style="font-size:1em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;line-height:1.4;">
 @AnalyzeClasses(packages = "com.penultimate")
@@ -508,6 +691,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 13: Other fitness functions ═════════════════ -->
 <section>
+  <p class="discipline-eyebrow disc-03">
+    <span class="disc-num">03</span><span class="disc-sep">·</span><span>CI fitness</span>
+  </p>
   <h2>Other fitness functions you'll add</h2>
   <div class="ff-grid">
     <div class="ff-card c1">
@@ -555,10 +741,60 @@ public class DataBoundaryFitnessFunctions {
   </aside>
 </section>
 
+<!-- ══ Slide 13b: Safe migrations — expand / contract ════ -->
+<section>
+  <p class="discipline-eyebrow disc-04">
+    <span class="disc-num">04</span><span class="disc-sep">·</span><span>Safe migrations</span>
+  </p>
+  <h2 style="margin-bottom:0.1em;">Migrations expand. Then contract.</h2>
+  <p style="font-size:0.9em;color:var(--muted);margin:0 0 0.6em;letter-spacing:0.3px;">Every step is reversible. None of them is a flag day.</p>
+  <div class="mig-timeline">
+    <div class="mig-step">
+      <div class="mig-head">
+        <span class="mig-num">01</span>
+        <span class="mig-name">Expand</span>
+      </div>
+      <p class="mig-action">Add the new column nullable. Dual-write from the app.</p>
+      <p class="mig-rollback">Drop the column. Old reads were never touched.</p>
+    </div>
+    <div class="mig-step">
+      <div class="mig-head">
+        <span class="mig-num">02</span>
+        <span class="mig-name">Backfill</span>
+      </div>
+      <p class="mig-action">Populate new column from old. Idempotent, restartable.</p>
+      <p class="mig-rollback">Re-run. Or pause and resume; the script is a fact, not a flag.</p>
+    </div>
+    <div class="mig-step">
+      <div class="mig-head">
+        <span class="mig-num">03</span>
+        <span class="mig-name">Switch reads</span>
+      </div>
+      <p class="mig-action">Reads move to the new column behind a feature flag.</p>
+      <p class="mig-rollback">Flip the flag back. Both columns still hold the truth.</p>
+    </div>
+    <div class="mig-step">
+      <div class="mig-head">
+        <span class="mig-num">04</span>
+        <span class="mig-name">Contract</span>
+      </div>
+      <p class="mig-action">Stop writing the old column. Drop it in a later deploy.</p>
+      <p class="mig-rollback">Only safe once no reader has touched old for a full retention window.</p>
+    </div>
+  </div>
+  <p class="mig-ci-footer">Enforced in CI: an Expand without its Contract is a failed build.</p>
+  <aside class="notes">
+    The Monday-morning migration is the one that takes the site down. Not because the migration is wrong — because it tried to do everything at once. Expand-then-contract turns one risky deploy into four boring ones. Add the new column nullable. Backfill in the background. Switch reads behind a flag. Then, weeks later, drop the old column once the metrics say no one is reading it. Every step has a one-line rollback that doesn't lose data. And here's the trick that makes it stick — the fitness function from the previous slide watches for this. An Expand without a matching Contract eventually fails the build. The discipline isn't "write good migrations." The discipline is: the build won't let you forget to finish one.
+  </aside>
+</section>
+
 <!-- ══ Slide 14: Monolith doesn't fail — it stops fitting ═ -->
 <section data-background-image="images/metaphor/14-tree-cylinder.png">
   <div class="act-title">
     <div class="bg-card-center">
+      <p class="discipline-eyebrow disc-05 centered">
+        <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+      </p>
       <p class="statement" style="max-width:none;">The monolith doesn't fail.<br>It stops fitting.</p>
     </div>
   </div>
@@ -568,10 +804,14 @@ public class DataBoundaryFitnessFunctions {
 </section>
 
 <!-- ══ Slide 14b: Three triggers (narrative beat) ════════ -->
-<section>
+<section class="fade-left-bg">
+  <img class="fade-img" src="images/metaphor/14-three-pressures.png" alt="">
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2 style="font-size:1.6em;margin-bottom:0.15em;">Three pressures. Three triggers.</h2>
   <p style="font-size:0.95em;color:var(--muted);margin:0 0 1.2em;">Decomposition didn't start with a plan. It started with incidents.</p>
-  <div style="display:flex;flex-direction:column;gap:22px;flex:1;justify-content:center;max-width:1300px;margin:0 auto;width:100%;">
+  <div style="display:flex;flex-direction:column;gap:22px;flex:1;justify-content:center;max-width:52%;">
     <div style="display:flex;gap:28px;align-items:center;padding:24px 32px;background:rgba(15,23,41,0.6);border-left:6px solid var(--accent);border-radius:0 14px 14px 0;">
       <div style="font-family:var(--r-code-font);font-size:0.8em;color:var(--accent);letter-spacing:2px;width:130px;flex-shrink:0;font-weight:700;">Y5 · Q1</div>
       <div style="flex:1;">
@@ -601,86 +841,46 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 15: Three pressures, three lifecycles ═══════ -->
 <section>
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>The pressure was not traffic. It was lifecycle.</h2>
   <div class="lifecycle-grid">
-    <div class="lifecycle-card c1">
-      <p class="lc-tag">Search</p>
-      <div class="lc-axes">
-        <div class="lc-axis">
-          <span class="lc-axis-label">Consistency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">eventual</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Latency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">tight</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Retention</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">short</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Isolation</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">regional</span>
-        </div>
-      </div>
-      <p class="lc-implies">→ Cache at the edge.</p>
-    </div>
-    <div class="lifecycle-card c2">
-      <p class="lc-tag">Tax</p>
-      <div class="lc-axes">
-        <div class="lc-axis">
-          <span class="lc-axis-label">Consistency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">strong</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Latency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">relaxed</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Retention</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">7 years</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Isolation</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">regulated</span>
-        </div>
-      </div>
-      <p class="lc-implies">→ Append-only ledger.</p>
-    </div>
-    <div class="lifecycle-card c3">
-      <p class="lc-tag">Payments</p>
-      <div class="lc-axes">
-        <div class="lc-axis">
-          <span class="lc-axis-label">Consistency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">strong</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Latency</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">tight</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Retention</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div>
-          <span class="lc-axis-value">medium</span>
-        </div>
-        <div class="lc-axis">
-          <span class="lc-axis-label">Isolation</span>
-          <div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div>
-          <span class="lc-axis-value">bulkheaded</span>
-        </div>
-      </div>
-      <p class="lc-implies">→ Bulkhead for blast radius.</p>
-    </div>
+    <!-- Row 1: domain tags -->
+    <div></div>
+    <p class="lc-tag c1">Search</p>
+    <p class="lc-tag c2">Tax</p>
+    <p class="lc-tag c3">Payments</p>
+
+    <!-- Row 2: Consistency -->
+    <p class="lc-axis-label">Consistency</p>
+    <div class="lc-cell c1"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">eventual</span></div>
+    <div class="lc-cell c2"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">strong</span></div>
+    <div class="lc-cell c3"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">strong</span></div>
+
+    <!-- Row 3: Latency -->
+    <p class="lc-axis-label">Latency</p>
+    <div class="lc-cell c1"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">tight</span></div>
+    <div class="lc-cell c2"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">relaxed</span></div>
+    <div class="lc-cell c3"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">tight</span></div>
+
+    <!-- Row 4: Retention -->
+    <p class="lc-axis-label">Retention</p>
+    <div class="lc-cell c1"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">short</span></div>
+    <div class="lc-cell c2"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">7 years</span></div>
+    <div class="lc-cell c3"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">medium</span></div>
+
+    <!-- Row 5: Isolation -->
+    <p class="lc-axis-label">Isolation</p>
+    <div class="lc-cell c1"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">regional</span></div>
+    <div class="lc-cell c2"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot"></span><span class="lc-dot"></span></div><span class="lc-axis-value">regulated</span></div>
+    <div class="lc-cell c3"><div class="lc-dots"><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span><span class="lc-dot on"></span></div><span class="lc-axis-value">bulkheaded</span></div>
+
+    <!-- Row 6: implies -->
+    <div></div>
+    <p class="lc-implies c1">→ Cache at the edge.</p>
+    <p class="lc-implies c2">→ Append-only ledger.</p>
+    <p class="lc-implies c3">→ Bulkhead for blast radius.</p>
   </div>
   <aside class="notes">
     Search needs to be cached at the edge in eight regions. Tax needs to keep records nobody can ever rewrite. Payments needs to fail in isolation and recover without taking the rest of the platform with it. These are not traffic problems. They're data lifecycle problems. And data lifecycle is what tells you where to cut.
@@ -689,6 +889,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 16: Before / After ══════════════════════════ -->
 <section>
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>Same colors. Same domains. Same teams.</h2>
   <div class="two-col" style="flex:1;align-items:stretch;gap:32px;min-height:0;">
     <div style="display:flex;flex-direction:column;min-height:0;">
@@ -725,6 +928,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 17: Aggregates become extraction boundaries ═ -->
 <section data-background-image="images/metaphor/17-cell-division.png" data-background-opacity="0.15">
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>Aggregates become extraction boundaries.</h2>
   <div class="diagram-frame">
     <img src="images/diagrams/17-search-extraction.svg"
@@ -744,6 +950,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 18: Same contract, bigger blast radius ══════ -->
 <section data-background-image="images/metaphor/18-window-archway.png" data-background-opacity="0.15">
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>Same contract. Bigger blast radius.</h2>
   <div class="diagram-frame">
     <img src="images/diagrams/18-read-model-evolution.svg"
@@ -763,6 +972,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 19: Process managers replace transactions ═══ -->
 <section data-background-image="images/metaphor/19-relay-baton.png" data-background-opacity="0.15">
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>Process managers replace transactions.</h2>
   <div class="diagram-frame">
     <img src="images/diagrams/19-process-manager.svg"
@@ -784,6 +996,9 @@ public class DataBoundaryFitnessFunctions {
 <section data-background-image="images/metaphor/20-blueprints.png">
   <div class="act-title">
     <div class="bg-card-center" style="max-width:80%;">
+      <p class="discipline-eyebrow disc-05 centered">
+        <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+      </p>
       <p class="statement" style="max-width:none;">Duplication owned by a contract is not debt.<br>It's autonomy.</p>
       <p class="statement-attribution">Tax keeps its own copy of order line items. Search keeps its own denormalized catalog projection. Both update from events; both own their schema.</p>
     </div>
@@ -795,6 +1010,9 @@ public class DataBoundaryFitnessFunctions {
 
 <!-- ══ Slide 21: Discipline is portable ══════════════════ -->
 <section>
+  <p class="discipline-eyebrow disc-05">
+    <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+  </p>
   <h2>The discipline is portable.</h2>
 <pre style="font-size:1.2em;margin:auto 0;"><code class="language-java" data-trim style="max-height:none;">
 // Year 4 rule:
@@ -817,6 +1035,9 @@ static final ArchRule tax_only_consumes_versioned_order_events =
 <!-- ══ Slide 22: Four moves timeline ═════════════════════ -->
 <section>
   <div style="display:flex;flex-direction:column;height:100%;">
+    <p class="discipline-eyebrow disc-05 centered">
+      <span class="disc-num">05</span><span class="disc-sep">·</span><span>Decompose along seams</span>
+    </p>
     <h2 style="text-align:center;margin:0 0 0.2em;">Four moves over three years.</h2>
     <p style="text-align:center;font-size:0.95em;color:var(--muted);margin:0 0 1em;">Each one obvious, because the seams were already drawn in the data.</p>
 
@@ -854,24 +1075,56 @@ static final ArchRule tax_only_consumes_versioned_order_events =
 
 <!-- ══ Slide 23: AI bridge — cost compounds ══════════════ -->
 <section data-background-image="images/metaphor/25-dam.png">
-  <div class="big-stat">
-    <div class="bg-card-center">
-      <p style="font-size:1.6em;font-weight:800;color:#fff;line-height:1.15;margin:0 auto 18px;max-width:760px;letter-spacing:-0.01em;">In 2026, the cost compounds.</p>
-      <p class="bs-caption">AI agents over-expose data through naively converted tools. AI-assisted code ships with multi-fold more design flaws and privilege-escalation paths. LLM-led DDD nails the glossary, but bounded contexts and aggregates degrade by step five.</p>
-      <p class="bs-source">57% over-exposure · AgentRaft 2026 &nbsp;·&nbsp; +153% design flaws, +322% privilege escalation · Apiiro 2025 &nbsp;·&nbsp; arXiv 2603.26244 (2026)</p>
-      <p class="bs-punch">AI doesn't change the principles. It compounds the cost of getting them wrong.</p>
+  <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;text-align:center;padding:8px 0;">
+    <div>
+      <div style="display:inline-block;padding:20px 44px;background:rgba(15,23,41,0.78);border:1px solid rgba(0,212,170,0.4);border-radius:16px;box-shadow:0 4px 30px rgba(0,0,0,0.4);">
+        <p style="font-size:0.72em;font-weight:800;letter-spacing:5px;color:var(--accent);text-transform:uppercase;margin:0 0 0.35em;">In 2026</p>
+        <p style="font-size:2.4em;font-weight:900;color:#fff;line-height:1.05;margin:0;letter-spacing:-0.015em;">The cost compounds.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:32px;justify-content:center;max-width:1740px;margin:0 auto;width:100%;align-items:stretch;">
+      <div style="flex:1;padding:32px 36px;background:rgba(15,23,41,0.78);border:1px solid rgba(0,212,170,0.35);border-top:5px solid var(--accent);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+        <div style="font-size:4em;font-weight:900;line-height:1;margin-bottom:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">57%</div>
+        <p style="font-size:0.7em;font-weight:800;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;margin:0 0 14px;">Agent tools</p>
+        <p style="font-size:0.85em;color:#e2e8f0;line-height:1.45;margin:0;">over-expose data through naively converted APIs.</p>
+      </div>
+
+      <div style="flex:1;padding:32px 36px;background:rgba(15,23,41,0.78);border:1px solid rgba(239,68,68,0.35);border-top:5px solid var(--danger);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+        <div style="font-size:4em;font-weight:900;line-height:1;margin-bottom:14px;color:var(--danger);">+322%</div>
+        <p style="font-size:0.7em;font-weight:800;letter-spacing:2.5px;color:var(--danger);text-transform:uppercase;margin:0 0 14px;">AI-assisted code</p>
+        <p style="font-size:0.85em;color:#e2e8f0;line-height:1.45;margin:0;">privilege-escalation paths. <span style="color:var(--muted);">+153% design flaws.</span></p>
+      </div>
+
+      <div style="flex:1;padding:32px 36px;background:rgba(15,23,41,0.78);border:1px solid rgba(245,158,11,0.35);border-top:5px solid var(--warn);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+        <div style="font-size:4em;font-weight:900;line-height:1;margin-bottom:14px;color:var(--warn);">4×</div>
+        <p style="font-size:0.7em;font-weight:800;letter-spacing:2.5px;color:var(--warn);text-transform:uppercase;margin:0 0 14px;">Commit volume</p>
+        <p style="font-size:0.85em;color:#e2e8f0;line-height:1.45;margin:0;">more commits in fewer, larger PRs. <span style="color:var(--muted);">Review attention didn't scale.</span></p>
+      </div>
+    </div>
+
+    <div>
+      <p style="font-size:0.55em;color:var(--muted);font-style:italic;letter-spacing:1.5px;margin:0 0 22px;">AgentRaft 2026 &nbsp;·&nbsp; Apiiro Fortune 50 telemetry 2025</p>
+      <p style="display:inline-block;font-size:1.3em;font-weight:900;background:rgba(15,23,41,0.85);border:1px solid rgba(0,212,170,0.5);padding:22px 42px;border-radius:16px;margin:0;letter-spacing:0.2px;line-height:1.35;box-shadow:0 4px 32px rgba(0,212,170,0.18);">
+        <span style="color:#ffffff;">AI doesn't change the principles.</span>
+        <br>
+        <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">It compounds the cost of getting them wrong.</span>
+      </p>
     </div>
   </div>
   <aside class="notes">
-    One reason this matters more in 2026 than in 2022 is that the cost of weak data discipline now compounds. Every team I see exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes — AgentRaft found 57 percent of agent tool paths over-expose data. Apiiro's Fortune 50 telemetry shows AI-assisted code shipping with 153 percent more design flaws and 322 percent more privilege escalation paths. And LLM-led DDD attempts that look promising in early phases come apart at the aggregate boundary by step five. None of these are new failures. They're old failures at higher velocity, with wider blast radius. The fix is the one we just spent twenty minutes on. MCP is the wire format; your data product is the contract. CLAUDE.md is advisory; CI is deterministic. AI drafts; humans decide contracts; CI enforces them. Same discipline. More reason to do it now.
+    One reason this matters more in 2026 than in 2022 is that the cost of weak data discipline now compounds. Three findings, all about velocity meeting bad boundaries. AgentRaft 2026: 57 percent of agent tool paths over-expose data. Every team exposing internal APIs as MCP servers is rebuilding the integration database with worse failure modes — at speed. Apiiro's Fortune 50 telemetry, 2025: AI-assisted code ships with 322 percent more privilege escalation paths and 153 percent more architectural design flaws. Same telemetry: 4 times more commits, in fewer larger PRs. Reviewer attention did not scale with velocity. None of these are new failures. They're old failures at higher velocity, with wider blast radius. The fix is the one we just spent twenty minutes on. MCP is the wire format; your data product is the contract. CLAUDE.md is advisory; CI is deterministic. Same discipline. More reason to do it now.
   </aside>
 </section>
 
-<!-- ══ Slide 27: Monday actions ══════════════════════════ -->
+<!-- ══ Slide 27: Monday actions (with book cover) ════════ -->
 <section>
-  <img src="images/metaphor/27-monday-calendar.png" alt=""
-       style="position:absolute;right:0;top:0;width:48%;height:100%;object-fit:cover;z-index:0;">
-  <h2 style="position:relative;z-index:1;">Monday actions</h2>
+  <div style="position:absolute;right:0;top:0;width:48%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;z-index:0;padding:48px 0;">
+    <img src="images/metaphor/data-architecture-book-cover.png" alt="Data Architecture · A Software Architect's Guide to Building Data-Driven Systems"
+         style="max-width:68%;max-height:74%;margin:0;border:0;border-radius:6px;transform:perspective(2200px) rotateY(-14deg);transform-origin:left center;box-shadow:-25px 35px 70px rgba(0,0,0,0.55), -10px 12px 28px rgba(0,0,0,0.4);">
+    <p style="font-size:0.85em;color:var(--accent);letter-spacing:3px;text-transform:uppercase;font-weight:800;margin:0;text-align:center;">Want the deep version?</p>
+  </div>
+  <h2 style="position:relative;z-index:1;">Your Monday Morning Actions</h2>
   <div class="action-list" style="max-width:50%;position:relative;z-index:1;">
     <div class="action-item c1">
       <div class="action-num">1</div>
@@ -955,6 +1208,7 @@ static final ArchRule tax_only_consumes_versioned_order_events =
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
   Reveal.initialize({
     hash: true,
@@ -971,6 +1225,21 @@ static final ArchRule tax_only_consumes_versioned_order_events =
     minScale: 0.2,
     maxScale: 2.0,
     plugins: [ RevealNotes, RevealHighlight ]
+  });
+
+  // Confetti burst when entering slide 4 from slide 3 — kicks off the first discipline
+  Reveal.on('slidechanged', event => {
+    if (event.indexh !== 3) return;
+    const sections = Array.from(document.querySelectorAll('.reveal .slides > section'));
+    const prevIdx = event.previousSlide ? sections.indexOf(event.previousSlide) : -1;
+    if (prevIdx !== 2) return;  // only on forward transition from slide 3
+    const palette = ['#00d4aa', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+    // Two staggered bursts from left + right for symmetry
+    confetti({ particleCount: 70, spread: 65, startVelocity: 45, origin: { x: 0.2, y: 0.6 }, colors: palette });
+    confetti({ particleCount: 70, spread: 65, startVelocity: 45, origin: { x: 0.8, y: 0.6 }, colors: palette });
+    setTimeout(() => {
+      confetti({ particleCount: 50, spread: 100, startVelocity: 35, origin: { x: 0.5, y: 0.4 }, colors: palette });
+    }, 200);
   });
 </script>
 </body>
