@@ -1,24 +1,22 @@
 ---
 title: "What Does Spec-Driven Development Need to Actually Work?"
 date: 2026-05-10
-excerpt: "Most discussions of Spec-Driven Development flatten it into one step: write a spec, get the output. The version that survives real systems is a five-layer system, and the spec is only one of them."
+excerpt: "Most discussions of Spec-Driven Development flatten it into one step. Write a spec, get the output. The version that survives real systems is a five-layer system, and the spec is only one of them."
 tags: ["AI", "Software Architecture", "Spec-Driven Development"]
 coverImage: "/images/blog/two-models-of-spec-driven-development.png"
 draft: false
 unlisted: true
 ---
 
-A few days ago I shared a [visual](/images/blog/two-models-of-spec-driven-development.png) on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7458901702612766720/) comparing two models of Spec-Driven Development: continuous evolution and front-loaded specification. The question was simple. Which model do you prefer, and why?
+A few days ago I shared a [visual](/images/blog/two-models-of-spec-driven-development.png) on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7458901702612766720/) comparing two models of Spec-Driven Development. The two models were continuous evolution and front-loaded specification. The question was simple. Which model do you prefer, and why?
 
-The responses were thoughtful and split along predictable lines. Several practitioners argued that continuous evolution fits the way modern teams actually work, where boundaries between engineering, product, and analysis blur. Others pointed out that the choice is conditional: front-loaded works when you can keep the entire spec current and evolve it carefully, while continuous works when the cost of small iterations is low. Some framed it as a team-shape decision, with front-loaded fitting larger or more junior teams and continuous fitting smaller senior ones. One asked a sharper question underneath all of it: why bother keeping specs at all when code and commit messages already document what was built.
+The responses split along predictable lines. Some preferred continuous evolution as a better fit for blurred boundaries between engineering, product, and analysis. Some preferred front-loaded specification for larger teams or stable domains. Some called the choice conditional on the cost of iteration. Underneath all of it, one commenter asked the sharper question. Why bother keeping specs at all, when code and commit messages already document what was built?
 
-The skepticism that runs through these comments is not new. It tracks with the pushback I have heard from clients directly. Spec-Driven Development, in the form most often demonstrated, is seen as a PoC pattern. Greenfield. Solo developer. Curated stage. The moment it meets a real codebase, the argument goes, it falls apart and the generated code is sub-standard.
+That question tracks with pushback I have heard from clients directly. Spec-Driven Development, in the form most often demonstrated, is seen as a PoC pattern. Greenfield. Solo developer. Curated stage. The moment it meets a real codebase, the argument goes, it falls apart and the generated code is sub-standard.
 
-That critique is largely correct, and I want to take it seriously.
+That critique is largely correct, and I want to take it seriously. Most public demonstrations of SDD are shaped to look cleaner than the systems any of us actually work in. A skeptic pattern-matching to "this will not survive my codebase" is reading the evidence accurately.
 
-Most public demonstrations of SDD are shaped to look cleaner than the systems any of us actually work in. A skeptic pattern-matching to "this will not survive my codebase" is not being cynical. They are reading the evidence accurately. But the conclusion they draw, that the methodology is broken, points at the wrong target.
-
-The discussion of SDD has flattened into one step: write a good spec, feed it to the AI, get the output. That is the version that triggers the skepticism, and that version really does fail at scale. The version I am proposing is not one step. It is a system. Five layers, each doing work the others cannot. Take any one away and natural-language spec-driven development does not hold together for serious work.
+But they are diagnosing the wrong thing. The methodology is not broken. The discussion of it has flattened into one step. Write a good spec, feed it to the AI, get the output. That is the version the skeptics are seeing, and that version really does fail at scale. The version I am proposing is not one step. It is a system. Five layers, each doing work the others cannot. Take any one away and natural-language spec-driven development does not hold together for serious work.
 
 ## A Five-Layer System
 
@@ -26,21 +24,35 @@ The model I am proposing has five layers, and each exists because of a specific 
 
 ![Five-layer pipeline: functional decomposition, cross-cutting concerns, specification craft, harness, and human reflection, with a generate-verify loop, reflection feedback arrows, and outcome indicator](/images/blog/sdd-five-layer-system.png)
 
-The system starts with functional decomposition: breaking the problem into bounded contexts. Around and across those contexts sit the cross-cutting concerns, the architectural, platform, security, and quality decisions that would otherwise be reinvented inside each context. With both in place, specification craft elaborates each context, functional intent first and architectural choices second. The automated harness then verifies what gets generated. Human reflection wraps the cycle, catching what slipped through and improving both spec and harness for the next pass.
+The system starts with functional decomposition, which breaks the problem into bounded contexts. Around and across those contexts sit the cross-cutting concerns, the architectural, platform, security, and quality decisions that would otherwise be reinvented inside each context. With both in place, specification craft elaborates each context, functional intent first and architectural choices second. The automated harness then verifies what gets generated. Human reflection wraps the cycle, catching what slipped through and improving both spec and harness for the next pass.
 
 Two patterns run through this list.
 
-**Function before form.** The same principle shows up at every scope. At system scope: functional decomposition before cross-cutting concerns. At context scope: functional elaboration before architectural choices within specification craft. Understand what the work must do before deciding how to build it.
+**Function before form.** Decide what before how, at every level. When breaking the system into contexts, ask what work each must do before deciding the platform or stack. When writing the spec for one context, name the behavior before the architecture. Invert this and the wrong shape gets locked in early, when changing it is most expensive.
 
-**The pattern is fractal.** The five layers apply at the system scope, where most practitioner decisions get made. They also apply inside a bounded context, where each context has its own functional decomposition into sub-parts, its own cross-cutting concerns, its own specs, its own harness, its own reflection. The pattern recurs because the reasons recur: complex problems need decomposition at any scope, natural language is ambiguous at any scope, verification has a residual at any scope.
+**The same shape repeats at every level.** A bounded context is itself a small system, and so is each part inside it. The five moves recur all the way down. Each level needs its own decomposition, its own settling of what cuts across the parts, its own specs, its own verification, and its own reflection on what slipped. The weight of each layer scales with the work, but the shape does not change. Complexity still needs decomposition. Natural language is still ambiguous. Verification still leaves a residual.
 
 The rest of this post walks through each layer in turn.
 
 ## Functional Decomposition
 
-The first move is to break the problem into smaller, collaborating, independent parts with clear ownership, defined contracts with their neighbors, and a scope small enough that a spec can describe each without ambiguity leaking across boundaries.
+The first move is to break the problem into smaller, independent parts with clear ownership, clean contracts, and a scope small enough that a spec can describe each without bleeding into its neighbors.
 
-This is upstream of everything else. A system that has not been decomposed cleanly will defeat the best spec, the best harness, and the most attentive human review. AI tools amplify whatever shape they are pointed at. Pointed at clean contexts, they accelerate good outcomes. Pointed at a tangled codebase, they accelerate rework.
+Most discussions of SDD skip past this. In a demo it looks easy. In a real codebase it is the hardest layer in the system. Brownfield boundaries rarely announce themselves. They are tangled, mis-named, and built up over years of features whose original lines no longer hold. Anyone who hears "decompose into bounded contexts" and thinks "easy for you to say" is right.
+
+One thing to be clear about first. Bounded contexts are logical, not physical. They can live as modules in a monolith, packages with visibility rules, separate schemas in one database, or different teams sharing a codebase. They might become separate services later if that pays off. SDD does not require you to break up your monolith. It requires boundaries clear enough that a spec can describe one without leaking into another.
+
+Three things have made this work easier than it used to be.
+
+**The code is already in front of you, and AI makes it readable at scale.** Existing systems hold evidence about where the boundaries are. Files that change together in commits usually belong together. A `User` or `Order` type that turns up in twenty modules is often two or three contexts pretending to be one. Tables that always join cluster into a context. Tables that never join probably do not. Team ownership and existing anti-corruption layers add more signal. No one can hold a 500-module call graph in their head. Tools like graphify make this evidence usable in minutes rather than weeks.
+
+**Experiments are cheap now.** Before AI, building three candidate decompositions in code was too expensive. Teams whiteboarded, committed, and found out six months later that the boundary was wrong. Now you can stand up three candidates in an afternoon, stress them against a few real scenarios, and throw two away. This works in greenfield too. Brownfield gives you evidence in the code. Greenfield gives you fewer constraints to fight.
+
+**Domain experts catch what AI cannot.** AI knows the code. It does not know the business. The codebase uses "Customer" everywhere, but the expert knows "Customer in marketing" and "Customer in billing" are different things that happen to share a table. Where the code and the expert agree, you have a strong candidate. Where they disagree, you have the most valuable signal of the whole exercise. The code drifted from the business. Or the expert is describing a wish, not the reality. Or there is an undocumented constraint nobody surfaced. Pull that thread.
+
+Two pieces of discipline keep this honest. Throwaway experiments have to actually be thrown away. Running code has gravity, and teams that build three prototypes often keep the first one that compiled, not the one that taught them the most. And the scenarios have to be the revealing ones. Happy paths show nothing. Cross-cutting transactions, retries, partial failure, and bulk operations are where weak decompositions break.
+
+So decomposition is not a gate the team passes through before SDD begins. It is the first move in a loop. Code archaeology proposes candidates. Cheap experiments stress them. Experts confirm them. The spec layer commits to one, and when the spec strains, that strain feeds back into the decomposition. AI amplifies whatever shape it is pointed at. With this loop running, the shape gets better with each pass.
 
 ## Cross-cutting Concerns
 
@@ -48,35 +60,43 @@ Some decisions span every bounded context. Architecture (deployment topology, in
 
 These are typically owned by specialists who do not write code inside any single context but whose decisions shape what every context must do. Some constraints are inherited (the cloud, the regulatory regime, the existing identity provider) and cannot be deferred. Others are chosen once and applied everywhere.
 
-Not every technology decision is cross-cutting. The contracts between contexts are shared agreements. Every context that participates in a contract must build to the same specification, which is why these decisions are cross-cutting. The internals of each context can vary; the contracts cannot. But the language a context is implemented in, the framework it uses, its data store, its internal architecture: these can vary across contexts as long as the cross-cutting contracts are honored. One context in Java, another in Ruby, another in Rust can all integrate cleanly through agreed contracts. Those choices belong inside specification craft, not here.
+Not every technology decision is cross-cutting. The contracts between contexts are shared agreements. Every context that participates in a contract must build to the same specification, which is why these decisions are cross-cutting. The internals of each context can vary. The contracts cannot. The language a context is implemented in, the framework it uses, its data store, and its internal architecture can all vary across contexts, as long as the cross-cutting contracts are honored. One context in Java, another in Ruby, another in Rust can all integrate cleanly through agreed contracts. Those choices belong inside specification craft, not here.
 
-With AI-assisted generation, the marginal cost of polyglot has fallen, but so has the reason to deviate. Defaulting to a standard stack across contexts is sensible unless a context has a real reason to differ: performance, regulatory, or library ecosystem. The AI's productivity advantage is uneven across languages, and exotic per-context choices erode it.
+With AI-assisted generation, the marginal cost of polyglot has fallen, but so has the reason to deviate. Defaulting to a standard stack across contexts is sensible unless a context has a real reason to differ, such as performance, regulation, or library ecosystem. The AI's productivity advantage is uneven across languages, and exotic per-context choices erode it.
 
 Without these cross-cutting decisions made explicit, each context invents its own answer and the resulting system cannot integrate without painful retrofit. With them made explicit, each context's specification has constraints it can take as given.
 
 ## Specification Craft
 
-With contexts identified and cross-cutting constraints established, the spec describes what each context must do and how it will be built. Functional elaboration comes first: behavior, contracts, invariants, acceptance criteria, the intent of the system from the domain perspective. Then architectural and technology choices for the context, made within the cross-cutting constraints from the previous layer.
+A framing note before getting into the work. The two previous layers, functional decomposition and cross-cutting concerns, are prerequisites to spec writing, not specs themselves. They establish the constraints the spec lives within. The better you understand them, the better the spec you can write.
 
-Specs earn their keep when they encode what code cannot: the intent behind the affirmative decisions and the decisions not taken, the regeneration contract that lets the next cycle improve the system at the spec level rather than at the code level, and the artifact that is consumable by non-technical stakeholders (regulators, domain experts, product owners) who cannot validate intent by reading source.
+With those constraints in hand, the spec describes what each context must do and how it will be built. Functional elaboration comes first. The spec names behaviors, contracts, invariants, acceptance criteria, and the intent of the system from the domain perspective. Architectural and technology choices for the context come next, made within the cross-cutting constraints already settled.
+
+Specs earn their keep by encoding what code cannot. They record the intent behind decisions made and decisions deliberately not taken, so future work does not have to reconstruct the reasoning by guessing. They are also the artifact non-technical stakeholders (regulators, domain experts, product owners) can validate when they cannot read source.
+
+The spec is an expression of linguistic intent. The harness is its executable contract. The code is the implementation, and it has to agree with both. Three views of the same agreement, each in a different language. The spec captures intent humans can read. The harness captures intent a machine can verify. The code is what actually runs. None of the three is redundant. The spec carries meaning the harness cannot encode. The harness proves conformance the spec cannot. The code is the only one that executes. When two of them disagree, one is wrong. Finding which is the work.
+
+Most importantly, the spec can serve as the regeneration contract. The next iteration of the system may be produced by regenerating against an updated spec rather than by editing the previous code. When that discipline holds, defects, new requirements, and refactors all get expressed at the spec level, and the code becomes downstream output rather than the artifact you protect.
 
 ## The Harness
 
-Concretely, the harness is a set of executable expectations: coverage thresholds, mutation testing, fitness functions, static analysis, contract validation, security gates. It does not reach into generation. It decides what survives generation. In agentic setups, the harness closes a loop: generate, verify, regenerate against the failure, verify again. The better the harness, the higher the ceiling on what gets through.
+The harness is a set of executable expectations. These include static analysis, automated tests, coverage thresholds, mutation testing, contract validation, fitness functions, security gates, etc. Birgitta Böckeler's [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) treats this layer in depth.
+
+The harness does not reach into generation. It decides what survives generation. In agentic setups, it closes a loop. The agent generates, verifies, regenerates against any failure, and verifies again. The better the harness, the higher the ceiling on what gets through.
 
 Prompts and specs request good behavior. Harnesses make undesirable outcomes hard to ship. The harness is where verification is automated, and automation is what makes the verification scale.
 
-Birgitta Böckeler's [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) goes into more depth on this layer.
-
 ## Human Reflection
 
-There will always be a residual: the spec that asked for the wrong system, the generated code that passes every test but behaves incorrectly in production, the integration assumption that nothing in the test suite anticipated. The human's job is not to verify every output, which does not scale. It is to watch for what the harness missed and feed corrections back upstream. A failure caught in production becomes a new fitness function. A spec that produced misleading code becomes a clearer spec. A pattern of brittle generation becomes a refinement to the prompt or the bounded context.
+There will always be a residual. A spec asks for the wrong system. Generated code passes every test but behaves incorrectly in production. An integration assumption slips past the entire test suite. The human's job is not to verify every output, which does not scale. It is to watch for what the harness missed and feed corrections back upstream. A failure caught in production becomes a new fitness function. A spec that produced misleading code becomes a clearer spec. A pattern of brittle generation becomes a refinement to the prompt or the bounded context.
+
+Reflection *appears to* sit last in the sequence, but applies at every layer. After every decomposition choice, every cross-cutting decision, every spec change, every harness addition. The discipline is to keep the touches light. SDD's value comes from speed, and intervening at every step erases that gain. The aim is to step in where the system needs human judgment and let it run where it does not.
 
 This is the layer that improves the system over time. Without it, the same errors recur. With it, every cycle of generation makes the next one more reliable.
 
 ## Back to the Original Question
 
-The question I started with was: front-loaded specification or continuously evolving? The answer, once the five layers are in place, is that the choice becomes a property of the work, not a team preference. A bounded context with a stable, well-understood domain and high coordination cost calls for front-loaded specification. A context with exploratory work, fast feedback, and emergent requirements calls for continuously evolving specification. Most enterprise systems contain both kinds of work, often within the same system, sometimes within the same context over time.
+I started with one question. Front-loaded specification or continuously evolving? The answer, once the five layers are in place, is that the choice becomes a property of the work, not a team preference. A bounded context with a stable, well-understood domain and high coordination cost calls for front-loaded specification. A context with exploratory work, fast feedback, and emergent requirements calls for continuously evolving specification. Most enterprise systems contain both kinds of work, often within the same system, sometimes within the same context over time.
 
 ![Three spec-style timelines: upfront, evolving, and hybrid](/images/blog/spec-style-timelines.png)
 
