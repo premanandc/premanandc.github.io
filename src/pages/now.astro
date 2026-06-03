@@ -62,6 +62,20 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
     </div>
 
     <div class="now-section">
+      <h2>Upcoming</h2>
+      <ul class="now-list">
+        {now.upcoming.map(item => (
+          <li>
+            <strong>
+              {item.url ? <a href={item.url}>{item.name}</a> : item.name}
+            </strong>
+            <span class="now-desc"> — {item.description}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now-section">
       <h2>Recently</h2>
       <ul class="now-list">
         {latestPost && (

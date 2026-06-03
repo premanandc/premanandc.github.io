@@ -8,11 +8,6 @@ export const now = {
       url: '/talks/your-problem-isnt-the-monolith/',
     },
     {
-      name: 'Effective AI-Native Development with Harness Engineering',
-      description: 'A full-day workshop at QCon SF on November 20, 2026, on harness engineering for AI coding agents in real codebases.',
-      url: 'https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering',
-    },
-    {
       name: 'premonition.dev',
       description: 'This site — building it as a living portfolio with Astro, React, and Claude Code.',
       url: '/',
@@ -37,5 +32,13 @@ export const now = {
     'Playing in the tennis cricket league',
     'Following the IPL',
     'Tinkering with Home Assistant for home automation',
+  ],
+
+  upcoming: [
+    {
+      name: 'Effective AI-Native Development with Harness Engineering',
+      description: 'A full-day workshop at QCon SF on November 20, 2026, on harness engineering for AI coding agents in real codebases.',
+      url: 'https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering',
+    },
   ],
 };
