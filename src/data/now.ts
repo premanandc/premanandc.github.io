@@ -1,5 +1,5 @@
 export const now = {
-  lastUpdated: '2026-05-03',
+  lastUpdated: '2026-06-03',
 
   building: [
     {
@@ -7,9 +7,9 @@ export const now = {
       description: 'A new conference talk on how data ownership, contracts, and events should be the structuring force of architecture — not service boundaries.',
     },
     {
-      name: 'Effective AI-Assisted Development Workshop',
-      description: 'A full-day workshop at QCon SF (November 2026) on harness engineering for AI-assisted development.',
-      url: 'https://qconsf.com',
+      name: 'Effective AI-Native Development with Harness Engineering',
+      description: 'A full-day workshop at QCon SF on November 20, 2026, on harness engineering for AI coding agents in real codebases.',
+      url: 'https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering',
     },
     {
       name: 'premonition.dev',
