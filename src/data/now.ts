@@ -5,6 +5,7 @@ export const now = {
     {
       name: 'Your Problem Isn\'t the Monolith. It\'s the Data.',
       description: 'A new conference talk on how data ownership, contracts, and events should be the structuring force of architecture — not service boundaries.',
+      url: '/talks/your-problem-isnt-the-monolith/',
     },
     {
       name: 'Effective AI-Native Development with Harness Engineering',
