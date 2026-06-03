@@ -17,7 +17,6 @@ export const talks: Talk[] = [
     description: 'Architecture endures when teams align on data lifecycles, not just APIs. A walk through one company that built a disciplined monolith, then decomposed without trauma.',
     url: '/talks/your-problem-isnt-the-monolith/',
     eventUrl: 'https://ldx3.london',
-    unlisted: true,
   },
   {
     title: 'AI-Assisted Development: What Actually Works',
