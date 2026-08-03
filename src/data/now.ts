@@ -1,5 +1,5 @@
 export const now = {
-  lastUpdated: '2026-06-03',
+  lastUpdated: '2026-08-03',
 
   building: [
     {
