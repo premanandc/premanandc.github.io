@@ -11,6 +11,14 @@ export interface Talk {
 
 export const talks: Talk[] = [
   {
+    title: 'Making Your Data Ready for Agentic AI',
+    event: 'O\'Reilly Architecture SuperStream',
+    date: 'March 2026',
+    description: 'Making data infrastructure ready for AI agents. Data contracts, quarantines, medallion architecture, and traceability. Co-presented with Pramod Sadalage.',
+    url: '/talks/data-ready-for-agentic-ai/',
+    eventUrl: 'https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/',
+  },
+  {
     title: "Your Problem Isn't the Monolith. It's the Data.",
     event: 'LDX3 London 2026',
     date: '2026',

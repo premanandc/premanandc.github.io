@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic Layers — Teaching Agents What Your Data Means</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/monokai.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --r-background-color: #0f1729;
+      --r-main-font: 'Inter', sans-serif;
+      --r-heading-font: 'Inter', sans-serif;
+      --r-code-font: 'JetBrains Mono', monospace;
+      --r-main-font-size: 28px;
+      --r-main-color: #e2e8f0;
+      --r-heading-color: #ffffff;
+      --accent: #00d4aa;
+      --accent2: #3b82f6;
+      --muted: #94a3b8;
+      --surface: #1a2332;
+      --surface2: #141e30;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+    }
+
+    .reveal {
+      font-family: var(--r-main-font);
+    }
+
+    .reveal h1 {
+      font-weight: 900;
+      font-size: 2.2em;
+      line-height: 1.1;
+      text-transform: none;
+    }
+
+    .reveal h2 {
+      font-weight: 700;
+      font-size: 1.5em;
+      color: var(--accent);
+      text-transform: none;
+      margin-bottom: 0.6em;
+    }
+
+    .reveal h3 {
+      font-weight: 600;
+      font-size: 0.9em;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .reveal p {
+      line-height: 1.6;
+    }
+
+    .reveal .slides section {
+      text-align: left;
+    }
+
+    /* ── Gradient text ── */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Two-column layout ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .two-col-60-40 {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .two-col-40-60 {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 10px 0;
+    }
+
+    .card-accent {
+      border-left: 4px solid var(--accent);
+    }
+
+    .card-danger {
+      border-left: 4px solid var(--danger);
+    }
+
+    .card-warn {
+      border-left: 4px solid var(--warn);
+    }
+
+    .card h4 {
+      margin: 0 0 8px 0;
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 0.75em;
+      color: var(--muted);
+    }
+
+    /* ── Stat callouts ── */
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin: 30px 0;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 3.2em;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.65em;
+      color: var(--muted);
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .stat-source {
+      font-size: 0.5em;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    /* ── Big stat hero ── */
+    .big-stat {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .big-stat .number {
+      font-size: 5em;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .big-stat .label {
+      font-size: 1em;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* ── Flow diagram ── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 10px 0;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .flow-num {
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--r-background-color);
+      font-weight: 800;
+      font-size: 0.85em;
+      flex-shrink: 0;
+    }
+
+    .flow-content {
+      font-size: 0.75em;
+    }
+
+    .flow-content strong {
+      color: #fff;
+    }
+
+    .flow-content em {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.9em;
+    }
+
+    .flow-arrow {
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.7em;
+      padding: 2px 0 2px 20px;
+      opacity: 0.5;
+    }
+
+    /* ── Steps (Monday morning) ── */
+    .action-steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .action-step {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 20px 22px;
+      position: relative;
+    }
+
+    .action-step .step-num {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--r-background-color);
+      font-weight: 800;
+      font-size: 0.65em;
+    }
+
+    .action-step h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.75em;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .action-step p {
+      margin: 0;
+      font-size: 0.6em;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Code styling ── */
+    .reveal pre {
+      background: var(--surface2);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 0.5em;
+      width: 100%;
+      box-shadow: none;
+    }
+
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+      max-height: 500px;
+    }
+
+    /* ── Comparison layout ── */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .compare-side {
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .compare-bad {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .compare-good {
+      background: rgba(0, 212, 170, 0.08);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+    }
+
+    .compare-side h4 {
+      font-size: 0.8em;
+      margin: 0 0 12px 0;
+    }
+
+    .compare-side pre {
+      border-left: none !important;
+      margin: 0;
+      font-size: 0.85em;
+    }
+
+    /* ── Quote ── */
+    .quote-block {
+      border-left: 4px solid var(--accent);
+      padding: 16px 24px;
+      margin: 20px 0;
+      background: rgba(0, 212, 170, 0.05);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .quote-block p {
+      font-size: 0.9em;
+      font-style: italic;
+      color: var(--r-main-color);
+      margin: 0;
+    }
+
+    .quote-block .attribution {
+      font-style: normal;
+      font-size: 0.7em;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* ── Tags / Pills ── */
+    .pill {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.6em;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .pill-accent {
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--accent);
+    }
+
+    .pill-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent2);
+    }
+
+    .pill-warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warn);
+    }
+
+    /* ── Muted text ── */
+    .muted { color: var(--muted); }
+    .small { font-size: 0.7em; }
+    .tiny { font-size: 0.55em; }
+    .accent { color: var(--accent); }
+    .danger { color: var(--danger); }
+    .center { text-align: center; }
+
+    /* ── Table component ── */
+    .icon-table {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .icon-row {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .icon-row:last-child {
+      border-bottom: none;
+    }
+
+    .icon-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+    }
+
+    .icon-circle-accent { background: rgba(0, 212, 170, 0.15); }
+    .icon-circle-blue { background: rgba(59, 130, 246, 0.15); }
+    .icon-circle-warn { background: rgba(245, 158, 11, 0.15); }
+
+    .icon-row-text h4 {
+      margin: 0;
+      font-size: 0.8em;
+      color: #fff;
+    }
+
+    .icon-row-text p {
+      margin: 2px 0 0 0;
+      font-size: 0.65em;
+      color: var(--muted);
+    }
+
+    /* ── Knowledge graph teaser ── */
+    .kg-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin: 20px 0;
+    }
+
+    .kg-node {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55em;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .kg-edge {
+      width: 50px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      position: relative;
+    }
+
+    .kg-edge::after {
+      content: '→';
+      position: absolute;
+      right: -6px;
+      top: -10px;
+      color: var(--accent2);
+      font-size: 0.8em;
+    }
+
+    .kg-edge-label {
+      font-size: 0.4em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: -8px;
+    }
+
+    /* ── Pipeline diagram ── */
+    .pipeline {
+      display: grid;
+      grid-template-columns: 1fr 28px 1fr 28px 1fr;
+      gap: 0;
+      margin: 16px 0;
+      align-items: stretch;
+    }
+
+    .pipeline-lane {
+      padding: 16px 14px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pipeline-lane-header {
+      font-size: 0.55em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      margin-bottom: 2px;
+    }
+
+    .pipeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pipeline-num {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      line-height: 28px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.6em;
+      flex-shrink: 0;
+    }
+
+    .pipeline-step-text {
+      font-size: 0.6em;
+      line-height: 1.5;
+      padding-top: 3px;
+    }
+
+    .pipeline-step-text strong {
+      color: #fff;
+    }
+
+    .pipeline-connector {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+    }
+
+    .pipeline-connector-arrow {
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+<a href="/" class="site-back-link">← premonition.dev</a>
+<style>.site-back-link{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(0,0,0,0.45);color:#fff;padding:6px 10px;border-radius:6px;font:12px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-decoration:none;opacity:.6;transition:opacity .15s ease}.site-back-link:hover{opacity:1}:fullscreen .site-back-link{display:none}</style>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 1: TITLE                          -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <div style="text-align: center;">
+          <h3>O'Reilly Architecture SuperStream · Making Data AI-Ready</h3>
+          <br>
+          <h1 class="gradient-text" style="font-size: 2.6em;">Semantic Layers</h1>
+          <h1 style="font-size: 1.6em; font-weight: 400; color: var(--muted);">Teaching Agents What Your Data Means</h1>
+          <br><br>
+          <p class="muted" style="font-size: 0.8em;">Pramod Sadalage & Premanand Chandrasekaran · ThoughtWorks</p>
+        </div>
+        <aside class="notes">
+          This is Topic 1 of our session "Making Data AI-Ready for Agentic AI."
+          We're starting with the most foundational shift: when AI agents become the primary consumers of your data, they need explicit context that human analysts carry implicitly. A semantic layer provides that context.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 2: THE PROBLEM                    -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>Your agent doesn't know what "revenue" means</h2>
+        <div class="two-col">
+          <div>
+            <div class="card card-warn" style="margin-bottom: 16px;">
+              <h4>The agent receives:</h4>
+              <p style="font-size: 0.85em; color: var(--warn);">"What was Q3 revenue for Product X?"</p>
+            </div>
+            <div class="card card-danger">
+              <h4>It doesn't know:</h4>
+              <p>→ Which table to query</p>
+              <p>→ Gross sales or net of returns?</p>
+              <p>→ What "Q3" maps to in your fiscal calendar</p>
+              <p>→ Which joins connect products → orders → revenue</p>
+            </div>
+          </div>
+          <div>
+            <div class="card card-accent">
+              <h4>Your analyst knows all of this</h4>
+              <p>Two years of institutional knowledge, absorbed through osmosis, tribal docs, and Slack threads.</p>
+              <br>
+              <p style="color: var(--accent); font-weight: 600;">Your agent has <em style="color: var(--danger);">none of it</em>.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Set up the core problem with a concrete scenario. A human analyst carries enormous implicit context — institutional knowledge about what terms mean, how tables relate, what the business rules are. An agent has zero institutional memory unless you explicitly encode it. This is the gap a semantic layer fills.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 3: THE ACCURACY GAP               -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <div class="big-stat">
+          <div class="number">
+            <span class="danger">&lt;20%</span>
+            <span class="muted" style="font-size: 0.5em; font-weight: 400;"> → </span>
+            <span class="accent">95%+</span>
+          </div>
+          <div class="label">
+            LLM accuracy on business queries<br>
+            <strong>raw schema</strong> vs. <strong>governed semantic layer</strong>
+          </div>
+        </div>
+
+        <div class="quote-block" style="max-width: 700px; margin: 20px auto;">
+          <p>"The differentiator wasn't the model. It was the context."</p>
+          <div class="attribution">— AtScale benchmark, 2025</div>
+        </div>
+
+        <aside class="notes">
+          AtScale ran benchmarks where LLMs queried raw data models without semantic context — accuracy was below 20%. With a governed semantic layer, accuracy exceeded 95%. The model didn't change. The context did. This is the single most important number in this talk. You don't need a better model — you need better context for the model you already have.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 4: WHAT IT IS                     -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>What a semantic layer actually is</h2>
+        <p class="muted small">A declarative translation layer between business language and data</p>
+
+        <div class="two-col" style="gap: 40px; align-items: stretch;">
+          <div>
+            <div class="icon-table">
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-accent">📐</div>
+                <div class="icon-row-text">
+                  <h4>Metric Definitions</h4>
+                  <p>How "revenue" is calculated — <code>order_amount - discount_amount</code></p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-blue">🔗</div>
+                <div class="icon-row-text">
+                  <h4>Entity Relationships</h4>
+                  <p>How customers → orders → products connect — join paths, foreign keys, cardinality</p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-warn">📏</div>
+                <div class="icon-row-text">
+                  <h4>Business Rules</h4>
+                  <p>Fiscal calendars, access controls, valid dimensions per metric, time grains</p>
+                </div>
+              </div>
+            </div>
+
+            <p style="margin-top: 12px;">
+              <span class="pill pill-accent">Version-controlled</span>
+              <span class="pill pill-blue">Peer-reviewed</span>
+              <span class="pill pill-warn">CI/CD testable</span>
+            </p>
+          </div>
+
+          <!-- Architecture layer diagram -->
+          <div style="display: flex; flex-direction: column; gap: 0; margin-top: 4px;">
+            <div style="background: var(--surface); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 16px 20px; text-align: center;">
+              <div style="font-size: 0.7em; font-weight: 700; color: var(--accent2);">Agents &amp; BI Consumers</div>
+              <div style="font-size: 0.5em; color: var(--muted); margin-top: 4px;">Natural language queries, dashboards, APIs</div>
+            </div>
+            <div style="text-align: center; color: var(--accent); font-size: 0.65em; padding: 6px 0; opacity: 0.6;">▲ governed access ▼</div>
+            <div style="background: rgba(0, 212, 170, 0.1); border: 2px solid var(--accent); border-radius: 10px; padding: 18px 20px; text-align: center;">
+              <div style="font-size: 0.8em; font-weight: 800; color: var(--accent);">Semantic Layer</div>
+              <div style="font-size: 0.5em; color: var(--muted); margin-top: 4px;">Metrics · Entities · Rules · Access controls</div>
+              <div style="font-size: 0.45em; color: var(--accent); margin-top: 6px;">Defined as YAML in Git — single source of truth</div>
+            </div>
+            <div style="text-align: center; color: var(--muted); font-size: 0.65em; padding: 6px 0; opacity: 0.6;">▲ abstracts ▼</div>
+            <div style="background: var(--surface); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 10px; padding: 16px 20px; text-align: center;">
+              <div style="font-size: 0.7em; font-weight: 700; color: var(--muted);">Raw Data Layer</div>
+              <div style="font-size: 0.5em; color: #475569; margin-top: 4px;">Tables, schemas, views, warehouses</div>
+            </div>
+            <p class="tiny muted" style="text-align: center; margin-top: 10px;">Change "revenue" once → propagates <strong>everywhere</strong></p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Define this concretely for the technical audience. A semantic layer is a set of declarative definitions — typically YAML — that encodes three things: how metrics are calculated, how entities relate to each other, and what the business rules are. The critical property: these are defined as code in Git, go through pull requests, get tested in CI. When the definition of "revenue" changes, you change one YAML file and it propagates everywhere. The architecture diagram on the right shows where it sits: between the raw data and the consumers. Agents never touch the raw layer directly — they go through the semantic layer, which constrains and governs their access.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 5: CODE EXAMPLE                   -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>Metrics as code</h2>
+        <div class="two-col-60-40">
+          <div>
+            <pre><code class="language-yaml" data-trim data-noescape>
+semantic_models:
+  - name: orders
+    entities:
+      - name: order_id
+        type: primary
+      - name: customer_id
+        type: foreign
+    measures:
+      - name: revenue
+        agg: sum
+        expr: order_amount - discount_amount
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+            </code></pre>
+          </div>
+          <div>
+            <div class="card card-warn" style="margin-bottom: 14px;">
+              <h4 style="color: var(--warn);">Agent asks:</h4>
+              <p style="font-size: 0.85em; color: var(--warn); font-style: italic;">"What was Q3 revenue for Product X?"</p>
+            </div>
+            <div class="flow-arrow" style="padding-left: 0; text-align: left; font-size: 0.6em;">▼ semantic layer resolves to</div>
+            <pre style="font-size: 0.42em; margin: 0; border-left-color: var(--accent);"><code class="language-sql" data-trim data-noescape>
+SELECT SUM(order_amount - discount_amount)
+  FROM orders o
+  JOIN products p ON o.product_id = p.id
+ WHERE p.name = 'Product X'
+   AND o.order_date
+       BETWEEN '2025-07-01'
+           AND '2025-09-30'
+            </code></pre>
+            <br>
+            <p class="tiny muted">dbt MetricFlow — similar patterns in Cube.js, Snowflake Semantic Views, Databricks Metric Views</p>
+          </div>
+        </div>
+        <aside class="notes">
+          Walk through the YAML on the left. Point out that the business logic — revenue equals order_amount minus discount_amount — lives right here in the semantic layer, not buried in a BI tool or SQL view. Then show the right side: the agent receives a natural language question, and the semantic layer resolves it to correct, constrained SQL. The agent doesn't guess table names or join paths — it uses the definition. This is dbt MetricFlow syntax, but Cube.js, Snowflake, and Databricks all follow similar patterns. The tool matters less than the discipline of getting this into version-controlled code.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 6: BEFORE / AFTER COMPARISON       -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>Same question, very different SQL</h2>
+        <p class="muted small">"What was Q3 revenue for Product X?"</p>
+
+        <div class="compare">
+          <div class="compare-side compare-bad">
+            <h4 style="color: var(--danger);">Without semantic layer</h4>
+            <pre style="font-size: 0.85em;"><code class="language-sql" data-trim data-noescape>
+-- Agent guesses table names
+SELECT SUM(amount)
+  FROM sales_data
+ WHERE product = 'Product X'
+   AND quarter = 'Q3'
+            </code></pre>
+            <p class="tiny" style="color: var(--danger); margin-top: 12px;">
+              Wrong table &middot; Uses gross <code>amount</code> not net &middot; No fiscal calendar mapping &middot; Missing join to products
+            </p>
+          </div>
+          <div class="compare-side compare-good">
+            <h4 style="color: var(--accent);">With semantic layer</h4>
+            <pre style="font-size: 0.85em;"><code class="language-sql" data-trim data-noescape>
+-- Constrained by metric definition
+SELECT SUM(order_amount
+         - discount_amount)
+  FROM orders o
+  JOIN products p
+    ON o.product_id = p.id
+ WHERE p.name = 'Product X'
+   AND o.order_date
+       BETWEEN '2025-07-01'
+           AND '2025-09-30'
+            </code></pre>
+            <p class="tiny" style="color: var(--accent); margin-top: 12px;">
+              Correct table &middot; Net revenue formula &middot; Fiscal Q3 resolved &middot; Valid join path
+            </p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          This is the same question from slide 2 — now we see the actual SQL difference. On the left, the agent without a semantic layer guesses at table names, uses the wrong column, has no fiscal calendar mapping, and misses the join. On the right, the semantic layer constrains the agent to the correct table, the net revenue formula from the YAML definition, the fiscal calendar dates, and the valid join path. The audience can see this isn't a subtle difference — it's the difference between a wrong answer and a right one.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 7: THE FLOW                       -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>How agents use it</h2>
+
+        <!-- Forward flow: 1 → 2/3 → 4 -->
+        <div style="display: flex; align-items: stretch; gap: 0; margin: 24px 0 14px;">
+
+          <!-- Step 1: Agent -->
+          <div style="flex: 0 0 200px; background: rgba(59, 130, 246, 0.06); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 14px; padding: 16px 18px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.1em;">🤖</span>
+              <span style="font-size: 0.5em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2);">Agent</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="width: 26px; height: 26px; min-width: 26px; line-height: 26px; text-align: center; border-radius: 50%; background: var(--accent2); color: #0f1729; font-weight: 800; font-size: 0.55em;">1</div>
+              <div>
+                <div style="font-size: 0.65em; font-weight: 700; color: #fff;">NL question</div>
+                <div style="font-size: 0.5em; color: var(--muted); font-style: italic; margin-top: 2px;">"Revenue by region, Q3"</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Connector: 1 → 2 -->
+          <div style="flex: 0 0 44px; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 100%; height: 3px; background: linear-gradient(90deg, rgba(59, 130, 246, 0.5), rgba(0, 212, 170, 0.5)); border-radius: 2px;"></div>
+            <div style="position: absolute; right: -3px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid rgba(0, 212, 170, 0.5);"></div>
+          </div>
+
+          <!-- Steps 2–3: Semantic Layer (THE STAR) -->
+          <div style="flex: 1; background: rgba(0, 212, 170, 0.06); border: 2px solid rgba(0, 212, 170, 0.35); border-radius: 14px; padding: 16px 20px; box-shadow: 0 0 40px rgba(0, 212, 170, 0.1), 0 0 80px rgba(0, 212, 170, 0.05);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.1em;">🧠</span>
+              <span style="font-size: 0.5em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent);">Semantic Layer</span>
+              <span class="pill pill-accent" style="font-size: 0.7em; margin-left: auto;">MCP</span>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <!-- Step 2 -->
+              <div style="flex: 1; display: flex; align-items: flex-start; gap: 10px;">
+                <div style="width: 26px; height: 26px; min-width: 26px; line-height: 26px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 800; font-size: 0.55em;">2</div>
+                <div>
+                  <div style="font-size: 0.65em; font-weight: 700; color: #fff;">Metric lookup</div>
+                  <div style="font-size: 0.5em; color: var(--muted); margin-top: 2px;">Definitions, valid dimensions, join paths, access rules</div>
+                </div>
+              </div>
+              <!-- Internal arrow -->
+              <div style="flex: 0 0 20px; display: flex; align-items: center; justify-content: center; align-self: center; color: var(--accent); font-size: 0.65em; opacity: 0.5;">→</div>
+              <!-- Step 3 -->
+              <div style="flex: 1; display: flex; align-items: flex-start; gap: 10px;">
+                <div style="width: 26px; height: 26px; min-width: 26px; line-height: 26px; text-align: center; border-radius: 50%; background: var(--accent); color: #0f1729; font-weight: 800; font-size: 0.55em;">3</div>
+                <div>
+                  <div style="font-size: 0.65em; font-weight: 700; color: #fff;">Constrained SQL</div>
+                  <div style="font-size: 0.5em; color: var(--muted); margin-top: 2px;">Only valid dimensions — no guessing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Connector: 3 → 4 -->
+          <div style="flex: 0 0 44px; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 100%; height: 3px; background: linear-gradient(90deg, rgba(0, 212, 170, 0.5), rgba(148, 163, 184, 0.3)); border-radius: 2px;"></div>
+            <div style="position: absolute; right: -3px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid rgba(148, 163, 184, 0.3);"></div>
+          </div>
+
+          <!-- Step 4: Data Warehouse -->
+          <div style="flex: 0 0 200px; background: rgba(148, 163, 184, 0.06); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 14px; padding: 16px 18px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1.1em;">🗄️</span>
+              <span style="font-size: 0.5em; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);">Data Warehouse</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+              <div style="width: 26px; height: 26px; min-width: 26px; line-height: 26px; text-align: center; border-radius: 50%; background: var(--muted); color: #0f1729; font-weight: 800; font-size: 0.55em;">4</div>
+              <div>
+                <div style="font-size: 0.65em; font-weight: 700; color: #fff;">Query execution</div>
+                <div style="font-size: 0.5em; color: var(--muted); margin-top: 2px;">Runs constrained SQL against governed tables</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Return path: Step 5 -->
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 10px; border: 1px dashed rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.04); margin-bottom: 14px;">
+          <div style="width: 26px; height: 26px; min-width: 26px; line-height: 26px; text-align: center; border-radius: 50%; background: var(--accent2); color: #0f1729; font-weight: 800; font-size: 0.55em;">5</div>
+          <div style="font-size: 0.6em; line-height: 1.5;">
+            <strong style="color: #fff;">← Result returns to agent with lineage</strong> <span style="color: var(--muted);">— which definition was used, how it was calculated, full audit trail</span>
+          </div>
+        </div>
+
+        <p class="small muted">The semantic layer <strong>constrains</strong> the LLM — only valid dimensions appear for selected metrics. That's a feature, not a bug.</p>
+
+        <aside class="notes">
+          Walk through the pipeline left to right. The agent sends a natural language question (step 1). The semantic layer (center, green glow) is the star: it looks up metric definitions, valid dimensions, join paths, and access rules via MCP (step 2), then generates constrained SQL (step 3) — both happen inside the same component. The data warehouse executes the query (step 4). The result flows back to the agent with full lineage metadata (step 5, dashed return path). The critical architectural insight: the semantic layer CONSTRAINS what the agent can ask for. dbt's semantic layer dynamically shows only the dimensions applicable to selected metrics. This prevents the agent from generating plausible-sounding but incorrect queries. Step 5 is the foundation for traceability in Topic 4.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 8: THE THREE NUMBERS               -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>The numbers</h2>
+        <br>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-number accent">~66%</div>
+            <div class="stat-label">reduction in gen AI<br>data errors</div>
+            <div class="stat-source">Looker semantic layer</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: var(--accent2);">83%</div>
+            <div class="stat-label">natural language query accuracy</div>
+            <div class="stat-source">dbt Semantic Layer</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: var(--warn);">+54%</div>
+            <div class="stat-label">accuracy boost with knowledge graphs</div>
+            <div class="stat-source">2023 KG+LLM study</div>
+          </div>
+        </div>
+        <br>
+        <p class="center small muted" style="margin-bottom: 8px;">Robinhood scaled agentic customer service on this foundation: <strong>500M → 5B tokens/day</strong>, <strong style="color: var(--accent);">80% cost reduction</strong></p>
+        <p class="center" style="font-size: 1.1em;"><strong>You don't need a better model. You need better context.</strong></p>
+
+        <aside class="notes">
+          Quick impact slide. Three data points that make the case. The Looker semantic layer study found a ~66% reduction in gen AI data errors. dbt: 83% accuracy for natural language questions. 2023 research: 54% boost with knowledge graphs added. Robinhood is the real-world proof: they built their agentic customer service on end-to-end data lineage and semantic context, scaling from 500M to 5B tokens daily with 80% cost reduction. The takeaway reinforces the core thesis: the bottleneck isn't the model, it's the data architecture.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 9: MONDAY MORNING                  -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>What you can do Monday morning</h2>
+
+        <div class="action-steps">
+          <div class="action-step">
+            <div class="step-num">1</div>
+            <h4>Audit your tribal knowledge</h4>
+            <p>Identify your top 10-15 business metrics. Document how they're <em>actually</em> calculated today. You'll find 2-3 conflicting definitions for the important ones.</p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">2</div>
+            <h4>Define metrics as code</h4>
+            <p>Pick a tool that fits your stack:<br>
+              <span class="pill pill-accent" style="font-size: 0.85em;">dbt → MetricFlow</span>
+              <span class="pill pill-blue" style="font-size: 0.85em;">Standalone → Cube.js</span><br>
+              <span class="pill pill-warn" style="font-size: 0.85em;">Snowflake → Semantic Views</span>
+            </p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">3</div>
+            <h4>Expose it to your agents</h4>
+            <p>Connect via MCP server or API. The agent queries the semantic layer, <strong>never the raw schema</strong>.</p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">4</div>
+            <h4>Test with adversarial questions</h4>
+            <p>Ask ambiguous terms, edge cases, cross-domain joins. Every hallucination = a gap in your semantic definitions.</p>
+          </div>
+        </div>
+
+        <div class="card card-danger" style="margin-top: 16px; padding: 14px 20px;">
+          <p style="margin: 0; font-size: 0.7em; color: var(--danger);"><strong>Anti-pattern:</strong> Don't boil the ocean — start with the metrics your first use case needs, not a full warehouse model.</p>
+        </div>
+
+        <aside class="notes">
+          This is the take-it-home slide. Make it concrete.
+
+          Step 1: Most organizations have conflicting definitions for their most important metrics. Revenue is the classic — gross vs. net, with or without returns. Find these conflicts. That's your biggest agent risk and quick win.
+
+          Step 2: The tool matters less than the discipline. If you're already using dbt, MetricFlow is natural. If you need standalone, Cube.js is excellent. Snowflake and Databricks native features are maturing fast.
+
+          Step 3: dbt, Cube, and AtScale all have MCP servers. The agent should never touch your raw schema.
+
+          Step 4: Best way to find gaps is adversarial testing. Every hallucination points to a missing definition. Fix the definition, not the prompt.
+
+          Anti-pattern: Don't boil the ocean. Start with the metrics your first agent use case needs.
+        </aside>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SLIDE 10: KNOWLEDGE GRAPHS TEASER        -->
+      <!-- ═══════════════════════════════════════ -->
+      <section>
+        <h2>Next level: Knowledge Graphs</h2>
+
+        <div class="two-col" style="gap: 36px; align-items: stretch;">
+          <!-- Left: question + context -->
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <p class="muted small" style="margin: 0;">When relationships matter more than metrics</p>
+
+            <div class="card card-warn" style="margin: 0;">
+              <p style="color: var(--warn); font-size: 0.85em; font-style: italic; margin: 0;">
+                "Which customers bought Product X but churned after we changed the pricing in Q2?"
+              </p>
+            </div>
+
+            <p class="small" style="margin: 0;">Multi-hop reasoning across <strong>entities, events, and time</strong> — flat tables can't answer this.</p>
+
+            <div style="margin-top: auto;">
+              <span class="pill pill-accent">GraphRAG</span>
+              <span class="muted tiny"> — TW Radar: Trial</span>
+              <br style="margin-bottom: 6px;">
+              <span class="pill pill-blue" style="margin-top: 6px;">Graphiti</span>
+              <span class="muted tiny"> — TW Radar: Assess · Temporally-aware</span>
+            </div>
+          </div>
+
+          <!-- Right: knowledge graph visual — horizontal chain -->
+          <div style="display: flex; flex-direction: column; justify-content: center; gap: 16px; background: rgba(0, 212, 170, 0.03); border: 1px solid rgba(0, 212, 170, 0.1); border-radius: 14px; padding: 24px 20px;">
+            <!-- Node → edge → Node → edge → Node -->
+            <div style="display: flex; align-items: center; gap: 0; width: 100%;">
+              <!-- Customer node -->
+              <div style="flex: 0 0 auto; background: var(--surface); border: 2px solid var(--accent); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; justify-content: center; font-size: 0.52em; font-weight: 700; color: var(--accent); box-shadow: 0 0 20px rgba(0, 212, 170, 0.12); white-space: nowrap;">Customer</div>
+              <!-- "bought" edge -->
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0 4px;">
+                <span style="font-size: 0.4em; color: var(--muted); font-weight: 600; font-style: italic;">bought</span>
+                <div style="width: 100%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; position: relative;">
+                  <div style="position: absolute; right: -3px; top: -4px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid var(--accent2);"></div>
+                </div>
+              </div>
+              <!-- Product X node -->
+              <div style="flex: 0 0 auto; background: var(--surface); border: 2px solid var(--accent2); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; justify-content: center; font-size: 0.52em; font-weight: 700; color: var(--accent2); box-shadow: 0 0 20px rgba(59, 130, 246, 0.12); white-space: nowrap;">Product X</div>
+              <!-- "churned after" edge -->
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0 4px;">
+                <span style="font-size: 0.38em; color: var(--muted); font-weight: 600; font-style: italic; white-space: nowrap;">churned after</span>
+                <div style="width: 100%; height: 2px; background: linear-gradient(90deg, var(--accent2), var(--warn)); border-radius: 2px; position: relative;">
+                  <div style="position: absolute; right: -3px; top: -4px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid var(--warn);"></div>
+                </div>
+              </div>
+              <!-- Pricing Change node -->
+              <div style="flex: 0 0 auto; background: var(--surface); border: 2px solid var(--warn); border-radius: 10px; padding: 14px 12px; display: flex; align-items: center; justify-content: center; font-size: 0.48em; font-weight: 700; color: var(--warn); box-shadow: 0 0 20px rgba(245, 158, 11, 0.12); white-space: nowrap;">Pricing Change</div>
+            </div>
+            <!-- Label -->
+            <p style="text-align: center; font-size: 0.42em; color: var(--muted); margin: 0;">3 entities · 2 relationships · multi-hop traversal</p>
+          </div>
+        </div>
+
+        <!-- Summary bar -->
+        <div class="card" style="text-align: center; background: rgba(0, 212, 170, 0.05); border: 1px solid rgba(0, 212, 170, 0.2); padding: 12px; margin-top: 14px;">
+          <p style="font-size: 0.7em; color: var(--accent); margin: 0;">
+            Semantic layers → <strong>structured metrics</strong> &nbsp;|&nbsp;
+            Knowledge graphs → <strong>relationship reasoning</strong> &nbsp;|&nbsp;
+            Together → <strong>institutional memory</strong>
+          </p>
+        </div>
+
+        <div class="card card-accent" style="margin-top: 10px; padding: 12px 20px;">
+          <p style="margin: 0; font-size: 0.7em; color: var(--accent);">Next up: Agents understand your data &mdash; but can they <strong>act</strong> on it? &rarr; <strong>From Searchable to Actionable</strong></p>
+        </div>
+
+        <aside class="notes">
+          Brief teaser. Semantic layers excel at structured metric queries — "what was revenue by region." But some agent tasks need richer relationship reasoning — traversing connections across entities, events, and time. The graph on the right shows the multi-hop query: Customer bought Product X, then churned after a Pricing Change. This requires traversing three entities and two relationships — flat tables can't do this. GraphRAG uses community detection for abstract queries traditional RAG can't handle. Graphiti builds temporally-aware knowledge graphs for evolving facts. ThoughtWorks Radar Vol. 32: GraphRAG at Trial, Graphiti at Assess. Position as "where this goes next" — semantic layers plus knowledge graphs together give agents institutional memory.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      plugins: [RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traceability & Governance — Auditing Autonomous Agents</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/monokai.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --r-background-color: #0f1729;
+      --r-main-font: 'Inter', sans-serif;
+      --r-heading-font: 'Inter', sans-serif;
+      --r-code-font: 'JetBrains Mono', monospace;
+      --r-main-font-size: 28px;
+      --r-main-color: #e2e8f0;
+      --r-heading-color: #ffffff;
+      --accent: #00d4aa;
+      --accent2: #3b82f6;
+      --muted: #94a3b8;
+      --surface: #1a2332;
+      --surface2: #141e30;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+    }
+
+    .reveal {
+      font-family: var(--r-main-font);
+    }
+
+    .reveal h1 {
+      font-weight: 900;
+      font-size: 2.2em;
+      line-height: 1.1;
+      text-transform: none;
+    }
+
+    .reveal h2 {
+      font-weight: 700;
+      font-size: 1.5em;
+      color: var(--accent);
+      text-transform: none;
+      margin-bottom: 0.6em;
+    }
+
+    .reveal h3 {
+      font-weight: 600;
+      font-size: 0.9em;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .reveal p {
+      line-height: 1.6;
+    }
+
+    .reveal .slides section {
+      text-align: left;
+    }
+
+    /* -- Gradient text -- */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* -- Two-column layout -- */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .two-col-60-40 {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .two-col-40-60 {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    /* -- Cards -- */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 10px 0;
+    }
+
+    .card-accent {
+      border-left: 4px solid var(--accent);
+    }
+
+    .card-danger {
+      border-left: 4px solid var(--danger);
+    }
+
+    .card-warn {
+      border-left: 4px solid var(--warn);
+    }
+
+    .card h4 {
+      margin: 0 0 8px 0;
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 0.75em;
+      color: var(--muted);
+    }
+
+    /* -- Stat callouts -- */
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin: 30px 0;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 3.2em;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.65em;
+      color: var(--muted);
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .stat-source {
+      font-size: 0.5em;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    /* -- Big stat hero -- */
+    .big-stat {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .big-stat .number {
+      font-size: 5em;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .big-stat .label {
+      font-size: 1em;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* -- Flow diagram -- */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 10px 0;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .flow-num {
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--r-background-color);
+      font-weight: 800;
+      font-size: 0.85em;
+      flex-shrink: 0;
+    }
+
+    .flow-content {
+      font-size: 0.75em;
+    }
+
+    .flow-content strong {
+      color: #fff;
+    }
+
+    .flow-content em {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.9em;
+    }
+
+    .flow-arrow {
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.7em;
+      padding: 2px 0 2px 20px;
+      opacity: 0.5;
+    }
+
+    /* -- Steps (Monday morning) -- */
+    .action-steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .action-step {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 20px 22px;
+      position: relative;
+    }
+
+    .action-step .step-num {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--r-background-color);
+      font-weight: 800;
+      font-size: 0.65em;
+    }
+
+    .action-step h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.75em;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .action-step p {
+      margin: 0;
+      font-size: 0.6em;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* -- Code styling -- */
+    .reveal pre {
+      background: var(--surface2);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 0.5em;
+      width: 100%;
+      box-shadow: none;
+    }
+
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+      max-height: 500px;
+    }
+
+    /* -- Comparison layout -- */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .compare-side {
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .compare-bad {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .compare-good {
+      background: rgba(0, 212, 170, 0.08);
+      border: 1px solid rgba(0, 212, 170, 0.25);
+    }
+
+    .compare-side h4 {
+      font-size: 0.8em;
+      margin: 0 0 12px 0;
+    }
+
+    .compare-side pre {
+      border-left: none !important;
+      margin: 0;
+      font-size: 0.85em;
+    }
+
+    /* -- Quote -- */
+    .quote-block {
+      border-left: 4px solid var(--accent);
+      padding: 16px 24px;
+      margin: 20px 0;
+      background: rgba(0, 212, 170, 0.05);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .quote-block p {
+      font-size: 0.9em;
+      font-style: italic;
+      color: var(--r-main-color);
+      margin: 0;
+    }
+
+    .quote-block .attribution {
+      font-style: normal;
+      font-size: 0.7em;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* -- Tags / Pills -- */
+    .pill {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.6em;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .pill-accent {
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--accent);
+    }
+
+    .pill-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent2);
+    }
+
+    .pill-warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warn);
+    }
+
+    /* -- Muted text -- */
+    .muted { color: var(--muted); }
+    .small { font-size: 0.7em; }
+    .tiny { font-size: 0.55em; }
+    .accent { color: var(--accent); }
+    .danger { color: var(--danger); }
+    .center { text-align: center; }
+
+    /* -- Table component -- */
+    .icon-table {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .icon-row {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .icon-row:last-child {
+      border-bottom: none;
+    }
+
+    .icon-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+    }
+
+    .icon-circle-accent { background: rgba(0, 212, 170, 0.15); }
+    .icon-circle-blue { background: rgba(59, 130, 246, 0.15); }
+    .icon-circle-warn { background: rgba(245, 158, 11, 0.15); }
+
+    .icon-row-text h4 {
+      margin: 0;
+      font-size: 0.8em;
+      color: #fff;
+    }
+
+    .icon-row-text p {
+      margin: 2px 0 0 0;
+      font-size: 0.65em;
+      color: var(--muted);
+    }
+
+    /* -- Trace/span diagram -- */
+    .trace-container {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px 20px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .trace-header {
+      font-size: 0.65em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .span-item {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 6px 0 6px 12px;
+      border-left: 2px solid rgba(0, 212, 170, 0.2);
+      margin-left: 8px;
+    }
+
+    .span-num {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.5em;
+      flex-shrink: 0;
+    }
+
+    .span-content {
+      font-size: 0.58em;
+      line-height: 1.5;
+    }
+
+    .span-content strong {
+      color: #fff;
+    }
+
+    .span-meta {
+      font-size: 0.85em;
+      color: var(--muted);
+    }
+
+    /* -- Staged autonomy -- */
+    .stage-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stage-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    .stage-num {
+      width: 34px;
+      height: 34px;
+      line-height: 34px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.6em;
+    }
+
+    .stage-text h4 {
+      margin: 0;
+      font-size: 0.7em;
+      color: #fff;
+    }
+
+    .stage-text p {
+      margin: 2px 0 0 0;
+      font-size: 0.55em;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<a href="/" class="site-back-link">← premonition.dev</a>
+<style>.site-back-link{position:fixed;top:12px;left:12px;z-index:9999;background:rgba(0,0,0,0.45);color:#fff;padding:6px 10px;border-radius:6px;font:12px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-decoration:none;opacity:.6;transition:opacity .15s ease}.site-back-link:hover{opacity:1}:fullscreen .site-back-link{display:none}</style>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- =========================================== -->
+      <!-- SLIDE 1: TITLE                               -->
+      <!-- =========================================== -->
+      <section>
+        <div style="text-align: center;">
+          <h3>O'Reilly Architecture SuperStream &middot; Making Data AI-Ready</h3>
+          <br>
+          <h1 class="gradient-text" style="font-size: 2.6em;">Traceability &amp; Governance</h1>
+          <h1 style="font-size: 1.6em; font-weight: 400; color: var(--muted);">Auditing Autonomous Agents</h1>
+          <br><br>
+          <p class="muted" style="font-size: 0.8em;">Pramod Sadalage &amp; Premanand Chandrasekaran &middot; ThoughtWorks</p>
+        </div>
+        <aside class="notes">
+          This is Topic 4 — the final content topic. In Topic 3 we established that data needs to be trusted — contracts, quality gates, quarantine patterns. But even with perfect data, when agents act autonomously, who's watching? How do you audit what happened? How do you answer a regulator who asks "why did the agent do this?" That's what this topic addresses. The shift from "what happened" to "why it happened" is the fundamental challenge of agentic governance.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 2: THE AUDIT GAP                       -->
+      <!-- =========================================== -->
+      <section>
+        <h2>The audit gap</h2>
+        <div class="two-col">
+          <div>
+            <div class="card card-warn" style="margin-bottom: 10px;">
+              <h4 style="color: var(--warn);">Trade finance scenario</h4>
+              <p style="font-size: 0.7em;">Agent processes letter of credit: checks customer KYC, verifies compliance rules, approves <strong style="color: #fff;">$2.4M transaction</strong> &mdash; all in <strong style="color: var(--warn);">30 seconds</strong>.</p>
+            </div>
+            <div class="card card-danger">
+              <h4 style="color: var(--danger);">6 months later&hellip;</h4>
+              <p style="font-size: 0.75em; color: var(--danger);">A regulator asks: <strong style="color: #fff;">"Why was this approved?"</strong></p>
+              <p style="font-size: 0.65em; margin-top: 6px;">Can you answer with full reasoning chains? Or just timestamps and table names?</p>
+            </div>
+          </div>
+          <div>
+            <div class="card card-accent">
+              <h4 style="color: var(--accent);">Traditional audit</h4>
+              <p style="margin-bottom: 10px;"><strong style="color: #fff;">"What"</strong> happened &mdash; which tables were accessed, timestamps, user IDs</p>
+            </div>
+            <div class="card" style="border-left: 4px solid var(--accent2); margin-top: 10px;">
+              <h4 style="color: var(--accent2);">Agentic audit</h4>
+              <p style="margin-bottom: 6px;"><strong style="color: #fff;">"Why"</strong> &mdash; which sources did the agent consult, what reasoning chain led to the decision, what alternatives were considered and rejected</p>
+              <p style="font-size: 0.65em; margin-top: 8px; color: var(--accent2);">The gap between these two is where regulatory risk lives.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          The trade finance scenario makes the stakes concrete. DBS Bank built their agentic AI for trade finance, and governance architecture was the key innovation. Imagine: an agent processes a letter of credit — it checks KYC data, verifies the customer isn't on a sanctions list, evaluates credit terms, and approves a $2.4 million transaction. All in 30 seconds. Six months later, a regulator asks: "Why was this approved?" Traditional audit logs can answer "what happened" — which database tables were queried, at what time, by which service account. But they can't answer "why" — why did the agent decide to check the sanctions list before the credit terms? Why did it approve despite a minor discrepancy in the documentation? What alternatives did it consider? The gap between "what" and "why" is where regulatory risk lives. The EU AI Act Article 12 requires exactly this kind of reasoning chain.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 3: AGENTIC LINEAGE                     -->
+      <!-- =========================================== -->
+      <section>
+        <h2>Agentic lineage</h2>
+        <p class="muted small" style="margin-bottom: 10px;">Not just "what was accessed" &mdash; but "WHY the agent decided to access it"</p>
+        <div class="two-col-60-40">
+          <div>
+            <div class="trace-container">
+              <div class="trace-header">&#9654; Trace: Process letter of credit #LC-4892</div>
+
+              <div class="span-item">
+                <div class="span-num" style="background: var(--accent); color: var(--r-background-color);">1</div>
+                <div class="span-content">
+                  <strong>Retrieved customer KYC data</strong><br>
+                  <span class="span-meta">source: compliance DB &rarr; result: <span style="color: var(--accent);">verified</span></span>
+                </div>
+              </div>
+
+              <div class="span-item">
+                <div class="span-num" style="background: var(--accent2); color: #fff;">2</div>
+                <div class="span-content">
+                  <strong>Checked sanctions list</strong><br>
+                  <span class="span-meta">source: OFAC API &rarr; result: <span style="color: var(--accent);">clear</span></span>
+                </div>
+              </div>
+
+              <div class="span-item">
+                <div class="span-num" style="background: var(--warn); color: var(--r-background-color);">3</div>
+                <div class="span-content">
+                  <strong>Evaluated credit terms</strong><br>
+                  <span class="span-meta">source: policy engine &rarr; result: <span style="color: var(--accent);">within limits</span></span>
+                </div>
+              </div>
+
+              <div class="span-item" style="border-left-color: rgba(0, 212, 170, 0.5);">
+                <div class="span-num" style="background: var(--accent); color: var(--r-background-color);">&#10003;</div>
+                <div class="span-content">
+                  <strong style="color: var(--accent);">Decision: APPROVE</strong><br>
+                  <span class="span-meta">confidence: <span style="color: var(--accent);">94%</span> &middot; reasoning: "All compliance checks passed, credit within policy limits"</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="icon-table">
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-accent" style="font-size: 0.65em; font-weight: 800; color: var(--accent);">T</div>
+                <div class="icon-row-text">
+                  <h4>Traces</h4>
+                  <p>End-to-end agent workflow, like a distributed request</p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-blue" style="font-size: 0.65em; font-weight: 800; color: var(--accent2);">S</div>
+                <div class="icon-row-text">
+                  <h4>Spans</h4>
+                  <p>Individual steps &mdash; data access, reasoning, decisions</p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-warn" style="font-size: 0.65em; font-weight: 800; color: var(--warn);">A</div>
+                <div class="icon-row-text">
+                  <h4>Annotations</h4>
+                  <p>Confidence scores, reasoning chains, sources consulted</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 14px;">
+              <span class="pill pill-accent">Langfuse</span>
+              <span class="pill pill-blue">Arize</span>
+              <span class="pill pill-warn">OpenTelemetry for AI</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Agentic lineage extends traditional data lineage. Traditional lineage tracks "which sources were accessed." Agentic lineage tracks "WHY the agent decided to access X because it found Y in source Z." The left side shows a concrete trace for our trade finance scenario. The trace represents the end-to-end workflow: processing letter of credit LC-4892. Within the trace, each span represents an individual step. Span 1: retrieved customer KYC data from the compliance database — result: verified. Span 2: checked sanctions list via the OFAC API — result: clear. Span 3: evaluated credit terms against the policy engine — result: within limits. The final span is the decision: APPROVE, with a 94% confidence score and the reasoning chain. This is exactly what a regulator needs. Not just "the agent accessed the compliance database at 14:32:07" — but "the agent checked KYC first, then sanctions, then credit terms, and approved because all three checks passed." The traces/spans model is adapted from distributed systems observability — engineers already understand this mental model from tools like Jaeger and Zipkin. Langfuse, Arize, and OpenTelemetry for AI are the emerging tools for agentic observability.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 4: EU AI ACT                           -->
+      <!-- =========================================== -->
+      <section>
+        <div class="big-stat">
+          <div class="number danger" style="font-size: 4.5em;">&euro;35M</div>
+          <div class="label">
+            or <strong>7% global turnover</strong> &mdash; EU AI Act penalties<br>for non-compliance
+          </div>
+        </div>
+
+        <div class="card card-warn" style="max-width: 750px; margin: 16px auto; padding: 18px 24px;">
+          <h4 style="color: var(--warn);">Article 12 requirements</h4>
+          <p style="margin-bottom: 6px;"><strong style="color: #fff;">Log actions with reasoning chains</strong> &mdash; not just timestamps</p>
+          <p style="margin-bottom: 6px;"><strong style="color: #fff;">Retain for 6+ months</strong> &mdash; full audit trail with decision context</p>
+          <p><strong style="color: #fff;">Explain "why"</strong> &mdash; which data sources, what logic, what alternatives were considered</p>
+        </div>
+
+        <p class="center muted small" style="margin-top: 10px;">Not just EU &mdash; similar regulations emerging in <strong style="color: #fff;">US</strong> (NIST AI RMF), <strong style="color: #fff;">UK</strong>, <strong style="color: #fff;">Singapore</strong></p>
+
+        <aside class="notes">
+          Make the regulatory context concrete and urgent. EU AI Act Article 12 is the most specific regulation — it requires high-risk AI systems to log actions with reasoning chains, retained for at least 6 months. The penalties are massive: up to 35 million euros or 7% of global annual turnover, whichever is higher. For context, 7% of global turnover for a major bank could be billions. Three specific requirements from Article 12: First, log actions with reasoning chains — not just "what happened" but "why." Second, retain those logs for at least 6 months — this means your observability infrastructure needs to handle long-term storage. Third, be able to explain "why" — which data sources were consulted, what logic was applied, what alternatives were considered and rejected. This isn't just an EU issue. The US has the NIST AI Risk Management Framework. The UK has its AI Safety Institute. Singapore has its Model AI Governance Framework. The direction is clear globally: if you deploy autonomous AI systems, you will need to explain what they did and why.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 5: STAGED AUTONOMY                     -->
+      <!-- =========================================== -->
+      <section>
+        <h2>Staged autonomy</h2>
+        <p class="muted small" style="margin-bottom: 10px;">Trust is earned, not assumed</p>
+        <div class="two-col">
+          <div>
+            <div class="stage-stack">
+              <div class="stage-item">
+                <div class="stage-num" style="background: rgba(148, 163, 184, 0.15); color: var(--muted);">1</div>
+                <div class="stage-text">
+                  <h4 style="color: var(--muted);">Shadow mode</h4>
+                  <p>Agent recommends, human decides. Full logging of what agent <em>would</em> have done.</p>
+                </div>
+              </div>
+
+              <div style="text-align: center; padding: 0; line-height: 1;">
+                <span style="color: var(--muted); font-size: 0.6em; opacity: 0.4;">&#9660;</span>
+              </div>
+
+              <div class="stage-item">
+                <div class="stage-num" style="background: rgba(59, 130, 246, 0.15); color: var(--accent2);">2</div>
+                <div class="stage-text">
+                  <h4 style="color: var(--accent2);">Supervised</h4>
+                  <p>Agent acts, human approves before execution. Full audit trail.</p>
+                </div>
+              </div>
+
+              <div style="text-align: center; padding: 0; line-height: 1;">
+                <span style="color: var(--muted); font-size: 0.6em; opacity: 0.4;">&#9660;</span>
+              </div>
+
+              <div class="stage-item">
+                <div class="stage-num" style="background: rgba(0, 212, 170, 0.15); color: var(--accent);">3</div>
+                <div class="stage-text">
+                  <h4 style="color: var(--accent);">Autonomous with guardrails</h4>
+                  <p>Agent acts within defined boundaries. Alerts on exceptions.</p>
+                </div>
+              </div>
+
+              <div style="text-align: center; padding: 0; line-height: 1;">
+                <span style="color: var(--muted); font-size: 0.6em; opacity: 0.4;">&#9660;</span>
+              </div>
+
+              <div class="stage-item" style="box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);">
+                <div class="stage-num" style="background: rgba(245, 158, 11, 0.2); color: var(--warn);">4</div>
+                <div class="stage-text">
+                  <h4 style="color: var(--warn);">Full autonomy</h4>
+                  <p>Agent acts independently. Continuous monitoring, spot-check audits.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card card-accent" style="margin-bottom: 14px;">
+              <h4 style="color: var(--accent);">The analogy</h4>
+              <p style="font-size: 0.72em;">Like onboarding a new employee. You don't give them the CEO's email password on day one.</p>
+              <p style="font-size: 0.65em; margin-top: 8px;">New hire starts with supervision, earns autonomy as trust builds. <strong style="color: #fff;">Same principle for agents.</strong></p>
+            </div>
+
+            <div class="card card-warn">
+              <h4 style="color: var(--warn);">Each stage requires</h4>
+              <p style="font-size: 0.65em; margin-bottom: 4px;">&#8226; <strong style="color: #fff;">More trust</strong> &mdash; proven reliability at the previous level</p>
+              <p style="font-size: 0.65em; margin-bottom: 4px;">&#8226; <strong style="color: #fff;">More observability</strong> &mdash; increasing monitoring scope</p>
+              <p style="font-size: 0.65em;">&#8226; <strong style="color: #fff;">More governance</strong> &mdash; stronger audit trails and controls</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Staged autonomy is the practical governance framework. You don't deploy an agent with full autonomy on day one — just like you don't give a new employee unrestricted access. Stage 1: Shadow mode — the agent recommends actions but doesn't execute them. A human makes the final decision. The agent's recommendations are fully logged, so you can track accuracy over time. This is the lowest-risk starting point. Stage 2: Supervised — the agent prepares the action but waits for human approval before executing. The human reviews and clicks "approve" or "reject." Full audit trail of both the agent's proposal and the human's decision. Stage 3: Autonomous with guardrails — the agent acts within defined boundaries. Transactions under $10K might be auto-approved, but anything above triggers a human review. Alerts fire on exceptions. Stage 4: Full autonomy — the agent acts independently with continuous monitoring and periodic spot-check audits. This is earned — you get here only after the agent has proven reliable at each previous stage. The analogy resonates with any manager: you wouldn't give a new hire the corporate credit card on day one. They start with purchase requests, graduate to supervised spending, then eventually earn a card with limits. Agents should follow the same trust-building path.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 6: DELEGATED ACCESS & JIT CREDENTIALS  -->
+      <!-- =========================================== -->
+      <section>
+        <h2>Delegated access &amp; JIT credentials</h2>
+        <div class="two-col">
+          <div>
+            <div class="compare">
+              <div class="compare-side compare-bad">
+                <h4 style="color: var(--danger);">&#10007; Broad service account</h4>
+                <div style="font-size: 0.55em; color: var(--muted); line-height: 1.7;">
+                  <p style="margin: 0 0 6px 0;">Agent uses <strong style="color: #fff;">shared credentials</strong></p>
+                  <p style="margin: 0 0 6px 0;">Accesses <strong style="color: var(--danger);">all customer data</strong></p>
+                  <p style="margin: 0 0 6px 0;">Persistent tokens &mdash; never expire</p>
+                  <p style="margin: 0;"><strong style="color: var(--danger);">"Who did this?"</strong> &mdash; no attribution</p>
+                </div>
+              </div>
+              <div class="compare-side compare-good">
+                <h4 style="color: var(--accent);">&#10003; Delegated + JIT</h4>
+                <div style="font-size: 0.55em; color: var(--muted); line-height: 1.7;">
+                  <p style="margin: 0 0 6px 0;">Agent inherits <strong style="color: #fff;">user's permissions</strong></p>
+                  <p style="margin: 0 0 6px 0;">Scoped access &mdash; <strong style="color: var(--accent);">only Alice's data</strong></p>
+                  <p style="margin: 0 0 6px 0;">Short-lived token &mdash; expires after task</p>
+                  <p style="margin: 0;"><strong style="color: var(--accent);">Full attribution</strong> &mdash; who, what, why</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="icon-table">
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-accent" style="font-size: 0.65em; font-weight: 800; color: var(--accent);">&#128274;</div>
+                <div class="icon-row-text">
+                  <h4>Delegated access</h4>
+                  <p>Agents inherit invoking user's permissions, not broad service accounts</p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-warn" style="font-size: 0.65em; font-weight: 800; color: var(--warn);">&#9201;</div>
+                <div class="icon-row-text">
+                  <h4>Just-in-time credentials</h4>
+                  <p>Short-lived tokens issued per task, expire on completion</p>
+                </div>
+              </div>
+              <div class="icon-row">
+                <div class="icon-circle icon-circle-blue" style="font-size: 0.65em; font-weight: 800; color: var(--accent2);">&#8595;</div>
+                <div class="icon-row-text">
+                  <h4>Least privilege</h4>
+                  <p>Minimum access needed for the specific task &mdash; nothing more</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Two critical security patterns for agentic systems. First: delegated access. When Alice asks the agent to check her account, the agent should act with Alice's permissions — not a broad service account that can see all customer data. If the agent uses a shared service account, you lose attribution. When the regulator asks "who accessed this customer's data?", the answer is "the service account" — which tells you nothing. With delegated access, the answer is "Alice's agent, acting on Alice's behalf, with Alice's permissions." Second: just-in-time credentials. Instead of giving the agent a persistent API key that never expires, you issue a short-lived token for each specific task. The agent needs to check the sanctions list? Issue a token that grants OFAC API read access, scoped to the specific customer, valid for 5 minutes. When the task completes, the token expires. No persistent credentials sitting around waiting to be compromised. Third: least privilege. The agent gets the minimum access needed for the specific task. Processing a letter of credit doesn't need access to HR systems or marketing data. These three patterns together solve the attribution and scope problems that plague most current agentic deployments.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 7: DBS BANK CASE STUDY                 -->
+      <!-- =========================================== -->
+      <section>
+        <h2>Case study: DBS Bank</h2>
+        <p class="muted small" style="margin-bottom: 14px;">Trade finance &mdash; one of the most heavily regulated domains in financial services</p>
+
+        <div class="stat-row" style="margin: 20px 0;">
+          <div class="stat-item">
+            <div class="stat-number accent">60%</div>
+            <div class="stat-label">faster<br>processing</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: #fff;">0</div>
+            <div class="stat-label">compliance<br>violations</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: var(--warn);">$2.4M</div>
+            <div class="stat-label">average<br>transaction value</div>
+          </div>
+        </div>
+
+        <div class="quote-block" style="max-width: 700px; margin: 14px auto;">
+          <p>"The innovation wasn't the AI model. It was the <strong>governance architecture</strong>."</p>
+        </div>
+
+        <div class="card card-accent" style="max-width: 700px; margin: 10px auto; padding: 14px 20px;">
+          <p style="font-size: 0.7em; color: var(--accent); margin: 0;">Every agent action logged with full reasoning chains. Staged autonomy for appropriate oversight. Regulatory compliance <strong style="color: #fff;">built in from day one</strong> &mdash; not retrofitted.</p>
+        </div>
+
+        <aside class="notes">
+          DBS Bank is the proof point. They deployed agentic AI for trade finance — one of the most heavily regulated domains in financial services. Letters of credit, trade documentation, compliance checks — all with significant regulatory oversight. The key innovation wasn't the AI model — it was the governance architecture. Three numbers tell the story. 60% faster processing — governance didn't slow things down, it actually enabled faster deployment because the bank had confidence in the system. Zero compliance violations — not one. In a domain where a single violation can mean millions in fines and reputational damage. $2.4 million average transaction value — these aren't toy transactions, these are real, significant financial operations. What made it work: every agent action is logged with full reasoning chains — exactly the traces and spans we showed on slide 3. Staged autonomy ensures appropriate human oversight — the agents didn't start with full autonomy, they earned it through proven reliability. And critically, governance was built in from day one. It wasn't retrofitted after a compliance incident. It was designed as a core part of the architecture from the start.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 8: THE NUMBERS                         -->
+      <!-- =========================================== -->
+      <section>
+        <h2>The numbers</h2>
+        <br>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-number danger">48%</div>
+            <div class="stat-label">of orgs lack ability to<br>audit agent actions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" style="color: var(--warn);">&euro;35M</div>
+            <div class="stat-label">max EU AI Act<br>penalty</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number accent">60%</div>
+            <div class="stat-label">faster processing at DBS<br>with governance-first</div>
+          </div>
+        </div>
+        <br>
+
+        <div class="card card-danger" style="padding: 14px 20px;">
+          <p style="margin: 0; font-size: 0.75em; color: var(--danger);">The organizations that skip governance will be the ones that get burned.</p>
+        </div>
+
+        <p class="center" style="font-size: 1.05em; margin-top: 16px;"><strong>Governance isn't a tax on innovation.<br><span class="accent">It's the foundation that makes innovation sustainable.</span></strong></p>
+
+        <aside class="notes">
+          Three numbers that capture the landscape. First: 48% of organizations lack the ability to audit what their agents are doing. Nearly half. These are organizations deploying autonomous systems that make decisions and take actions, and they can't explain what happened or why. That's a ticking time bomb for regulatory compliance. Second: 35 million euros — the maximum EU AI Act penalty. Or 7% of global turnover, whichever is higher. This is not theoretical — enforcement timelines are already in effect. Third: 60% faster processing at DBS Bank with a governance-first approach. This is the counter-narrative to "governance slows us down." DBS proved the opposite — governance enabled faster, more confident deployment. The thesis: governance isn't a tax on innovation. It's the foundation that makes innovation sustainable. Skip it, and you're building on sand. When the regulatory tide comes in — and it will — the organizations without governance foundations will be the ones that get burned.
+        </aside>
+      </section>
+
+      <!-- =========================================== -->
+      <!-- SLIDE 9: MONDAY MORNING                      -->
+      <!-- =========================================== -->
+      <section>
+        <h2>What you can do Monday morning</h2>
+
+        <div class="action-steps">
+          <div class="action-step">
+            <div class="step-num">1</div>
+            <h4>Instrument from day one</h4>
+            <p>Add traces and spans to every agent workflow. Use Langfuse, Arize, or OpenTelemetry. Retrofitting observability is 10x harder than building it in.</p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">2</div>
+            <h4>Start in shadow mode</h4>
+            <p>Deploy agents that recommend but don't act. Build the audit trail before you need it. Measure accuracy before granting autonomy.</p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">3</div>
+            <h4>Implement delegated access</h4>
+            <p>Agents inherit user permissions, not service accounts. Issue JIT credentials for every task. No persistent tokens.</p>
+          </div>
+          <div class="action-step">
+            <div class="step-num">4</div>
+            <h4>Build for the regulator</h4>
+            <p>Design audit trails to answer "why did the agent do this?" not just "what did the agent do?" Think EU AI Act Article 12.</p>
+          </div>
+        </div>
+
+        <div class="card card-accent" style="margin-top: 16px; padding: 14px 20px;">
+          <p style="margin: 0; font-size: 0.7em; color: var(--accent);">We've covered all four pillars. Next &rarr; <strong>The reference architecture that ties it all together.</strong></p>
+        </div>
+
+        <aside class="notes">
+          Four concrete steps they can take immediately. Step 1: Instrument from day one — the single most important action. Adding observability after deployment is dramatically harder than building it in. Every agent workflow should emit traces with spans for each step, including the reasoning and data sources consulted. Use Langfuse, Arize, or OpenTelemetry for AI — the tooling is mature enough for production. Step 2: Start in shadow mode — the lowest-risk, highest-learning starting point. Deploy agents that recommend actions but don't execute them. A human reviews and decides. This builds the audit trail before you need it for compliance, and it lets you measure agent accuracy before granting autonomy. Step 3: Implement delegated access — agents should inherit the invoking user's permissions, not use broad service accounts. Issue just-in-time credentials for every task with short expiry windows. No persistent tokens sitting around waiting to be compromised. Step 4: Build for the regulator — even if you're not in a regulated industry today, designing your audit trail to answer "why" makes your systems more debuggable, more trustworthy, and more defensible. When regulations arrive — and they will — you'll be ready instead of scrambling. The closing teaser bridges to the final segment: we've covered all four pillars — semantic layers, actionable data, data contracts, and traceability. Next, we'll synthesize everything into the reference architecture that ties it all together.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      plugins: [RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+</html>
