@@ -1,0 +1,236 @@
+---
+title: "The Architect's Playbook for AI-Assisted Development"
+date: 2026-08-06
+excerpt: "AI coding tools change what an architect does, not whether they're needed. Here is how to create the conditions where AI-generated code stays correct, safe, and architecturally sound."
+tags: ["AI", "Software Architecture", "Engineering Leadership"]
+coverImage: "/images/blog/ai-playbook-architect.png"
+series:
+  name: "Role Playbooks for AI-Assisted Development"
+  part: 1
+  total: 4
+draft: false
+unlisted: true
+---
+
+import Callout from '../../components/blog/Callout.tsx';
+
+If you're an architect or tech lead, AI coding tools change what you do. They don't change whether you're needed.
+
+Your job used to be to design the system, make technology choices, and guide the team's technical direction. Now it also includes creating the conditions under which AI-generated code is correct, safe, and architecturally sound. As [Karpathy](https://x.com/karpathy/status/1886192184808149383) put it, "You're not writing code directly 99% of the time. You're orchestrating agents and acting as oversight." That does not mean AI is useless for your own work. It is genuinely useful, in ways that go well beyond code generation.
+
+This is the first of four role-based playbooks. It is written for architects and tech leads. Later parts cover the developer, the tester, and the engineering manager.
+
+---
+
+## Your role has changed
+
+The leverage here is higher than it sounds. Coding is a small slice of delivery time. Microsoft Research surveyed 484 developers in its [Time Warp study](https://arxiv.org/abs/2502.15287) and found actual coding lands at roughly 11% of the workweek. [Software.com](https://www.software.com/reports/code-time-report) telemetry across 250,000 developers converges on the same figure. Other measures put it higher, closer to a quarter of the week, depending on what you count. Either way, most of the work is not typing. Architecture decisions cascade into much of the rest.
+
+On one recent project, AI tools genuinely accelerated delivery. On two others, they accelerated rework. The difference was architectural clarity.
+
+<Callout variant="insight" label="The Two-Sided Formula" client:visible>
+AI coding tools accelerate delivery when the work before coding (requirements, architecture) is sufficiently understood AND the work after coding (testing, review, deployment) is representable in the coding process. Architecture is where both sides meet. It builds the shared understanding that pre-coding needs. It also makes post-coding representable. Your job is to shepherd both sides.
+</Callout>
+
+A quick note on the tools themselves, because the baseline moved. Frontier models now run with a million-token context that stays usable end to end, an effort dial you can turn up for hard problems, and reasoning on by default. They also self-verify. If you carried over a prompt habit of telling the model to "add a verification step," drop it. On current models that produces over-verification, not better output.
+
+---
+
+## Promote understanding, craft a blueprint, let it evolve
+
+This is your primary lever. Not settling everything upfront. Making sure the team has enough shared understanding of the problem, and an initial direction, before AI amplifies every decision at speed.
+
+When coding was expensive, teams invested in understanding before building. When coding is cheap, that pressure disappears. Teams code against assumptions. Assumptions change. They rebuild. Each iteration is fast. But total time is dominated by the cycle of assumption, invalidation, and rebuild. This is the **Speculative Coding Trap**.
+
+The trap is easy to miss because it feels productive. A [controlled study from METR](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) found experienced developers were 19% slower with AI on familiar codebases, while believing they were 20% faster. Speed you can feel is not the same as speed you can measure.
+
+The remedy is not to block coding until everything is decided. That is neither realistic nor desirable while you are still coming to grips with the problem. The remedy is to invest enough in the big picture that the team's first pass is directionally sound, and to design the architecture so it can evolve as understanding deepens.
+
+### Use AI for your daily architecture work
+
+AI is useful to architects well beyond code generation. A sharp insight from [Sharad Bharadwaj](https://isharadbharadwaj.medium.com/system-design-risk-the-essential-trade-offs-in-monolith-vs-microservices-a32b001ff4b6). "AI is great at listing pros and cons. But architecture isn't about lists. It's about weighting those lists based on your specific constraints." AI generates the options. You apply the judgment.
+
+Ask questions, and keep asking. AI does not judge you for asking the same thing twice, or for asking something obvious. Use that. Don't settle for the first option. Ask what the alternatives are. Then ask about the trade-offs for your specific constraints. Then ask what could go wrong. The cost of a follow-up question is near zero. The cost of building on something you don't understand compounds with every line that follows.
+
+- **Architecture Decision Records.** The [Y-statement format](https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html) works well with AI. "In the context of X, facing Y, we decided Z, to achieve W, accepting Q." [Equal Experts](https://www.equalexperts.com/blog/our-thinking/accelerating-architectural-decision-records-adrs-with-generative-ai/) use a meta-prompt that generates a decision-specific prompt for each ADR. One limitation to watch. AI often invents references, and it tends to suggest an unnecessary "hybrid" option. Your judgment filters the output.
+- **Trade-off analysis.** Work in three modes by changing your prompt. First discovery, where you ask for plausible approaches. Then analysis, where you compare two options against your real constraints. Then prototyping, where a coding agent builds quick proofs of concept. AI defaults to balanced answers that are technically true and practically useless, and it leans toward microservices. It lacks the scars of production. Treat its output as a starting point.
+- **Threat modeling.** [STRIDE GPT](https://github.com/mrwadams/stride-gpt) takes an architecture diagram and generates a threat model by STRIDE category with mitigations. It also emits Gherkin test cases, connecting security analysis to your test suite.
+- **Diagrams and reverse engineering.** Most tools generate C4 models from plain-English descriptions in Mermaid, which renders on GitHub and stays version-controlled. On brownfield work, create lightweight context files and ask AI to map the end-to-end flows. [Nick Tune](https://www.oreilly.com/radar/reverse-engineering-your-software-architecture-with-claude-code-to-help-claude-code/) uses this approach to discover architecture across repositories. Subagents help here, because they isolate the dirty context of searching irrelevant files in a scratch space that disappears when the task ends.
+
+### Formalize context
+
+The single most valuable thing an architect can do is create formal artifacts that clarify the problem and the solution, and keep them current. These artifacts do double duty. They align the team, and they become the shared context every AI coding session draws from.
+
+On a greenfield Java project, AI helped process the functional spec, weigh Java against .NET, identify twelve bounded contexts with event-driven integration, and set quality thresholds. The result was four living documents: `requirements.md`, `architecture.md`, `technologies.md`, and `quality.md`. They became the foundation for every coding session that followed. A directionally sound starting point that evolved as understanding deepened.
+
+On a brownfield Python project, this did not happen. Decisions lived in conversations and Slack threads. A single-agent prototype was reworked for multi-agent reality. Models built from a CLI reference were rebuilt two or three times when the real MCP server arrived with different APIs. The team was always moving fast, just not always forward.
+
+The form matters less than the discipline. Good artifacts share four traits. They state what is understood so far, not a final answer. They make implicit decisions explicit and reviewable. They evolve as understanding deepens. And they live in the repo, linked from the agent's context files so every session starts from the same place.
+
+---
+
+## Encode architecture as a harness
+
+Architecture that lives only in documents drifts. Architecture encoded in executable checks is enforced. This matters more with AI. Agents start fresh each session, drawing on training data rather than your decisions. They can violate an architectural rule across every file they touch, and everything still looks green.
+
+The frame that has taken hold for this is **harness engineering**. I dug into it with Birgitta Böckeler on a recent [Thoughtworks Technology Podcast](https://www.thoughtworks.com/insights/podcasts/technology-podcasts/what-harness-engineering). The idea is cybernetic. You wrap an unreliable model in guides that steer it and sensors that catch what slips through.
+
+Böckeler splits sensors into two kinds in [her work on maintainability sensors](https://martinfowler.com/articles/sensors-for-coding-agents.html). Computational sensors are deterministic. Linters, type checks, dependency rules, mutation testing. Inferential sensors use an LLM to judge things a rule cannot express, like semantic modularity or naming intent. Computational sensors work best when the failure message carries a "why" the agent can learn from.
+
+Here is the ladder, sorted by how much you can trust it.
+
+| What to enforce | Sensor type | Mechanism | Determinism |
+|---|---|---|---|
+| Module boundaries, layering rules | Computational | ArchUnit / module tests | 100% |
+| Type contracts, API shapes | Computational | Interfaces, schemas, Protobuf | 100% |
+| Build, test, lint before commit | Computational | Pre-commit hooks | 100% |
+| Blocked patterns (`rm -rf`, `--force`) | Computational | Agent hooks (PreToolUse) | 100% |
+| Dependency approvals | Computational | Agent hooks + review policy | 100% |
+| Cross-cutting architectural policy | Inferential | LLM-based review | ~90% |
+| Coding philosophy, conventions | Advisory | Context files | ~80% |
+
+The hierarchy is the point. Hooks enforce at 100%. Configuration enforces at 100%. Rules files are advisory at around 80%. If something must hold every time, it belongs in a hook, not a markdown file.
+
+On the greenfield Java project, ArchUnit rules, coverage thresholds, and mutation testing all ran locally. AI generated code that passed the gates because the gates were part of the session. On the brownfield Python project, the same gates ran only in CI, so code that looked clean locally failed twenty minutes later. Same principle, opposite outcomes.
+
+AI agents also love adding dependencies. Require explicit approval for any new library, and enforce it with a deterministic hook, not a note in a rules file.
+
+---
+
+## The three files that carry your intent
+
+Context files are the highest-leverage artifacts you create on an engagement. They load into AI sessions and shape every interaction. The landscape settled into three distinct files, and they are not competitors.
+
+- **AGENTS.md** is the cross-tool project context. It is now a vendor-neutral standard under the Linux Foundation's [Agentic AI Foundation](https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation), alongside MCP. Most coding tools read it natively.
+- **CLAUDE.md** is Claude's layered memory. Project root, child directories, and personal overrides.
+- **SKILL.md** files are invokable capabilities the agent loads on demand.
+
+Whichever file your team uses, the same rules apply. Keep it concise, ideally under about 200 lines. [Research from HumanLayer](https://www.humanlayer.dev/blog/writing-a-good-claude-md) suggests frontier models reliably follow roughly 150 to 200 instructions, and the system prompt already spends part of that budget. The longer the file, the more the agent ignores the bottom of it.
+
+Link, don't inline. The context file loads into every session. Referenced files do not. The agent reads them on demand when it works in a relevant area. Always carry a map. Visit the library when you need a specific book. A concise example:
+
+```markdown
+## Architecture
+- Spring Modulith, 12 bounded contexts, event-driven integration
+- Pure functions for business logic; mutations only at service boundaries
+- Data flow: API to Service to Domain to Repository (never reverse)
+
+## Boundaries: Do NOT
+- Add dependencies without explicit approval
+- Bypass published interfaces with cross-module imports
+- Touch auth/** or payments/** without a security-review comment
+
+## Commands
+- Build: ./mvnw clean test
+- Full:  ./mvnw clean package (ArchUnit, mutation, REST Docs)
+
+## Context Documents
+- docs/architecture.md for module boundaries and integration
+- docs/quality.md for testing strategy and thresholds
+```
+
+Two more habits. Encode decisions, not just conventions. "We use event-driven integration between bounded contexts" constrains the agent far more than "follow clean architecture." And treat corrections as rules. After every correction, have the agent write the lesson into a rules file. [Boris Cherny](https://howborisusesclaudecode.com/) calls the model "eerily good at writing rules for itself." Over time this becomes a failure-driven spec tuned to your codebase.
+
+---
+
+## Enable your team
+
+You don't just design architecture. You make it usable by the tools and the people.
+
+**Design the review pipeline.** AI compresses coding time. Review capacity stays flat. The bottleneck does not disappear, it shifts. One 2026 analysis by LinearB, drawn from 8.1 million pull requests, found review time rose 91% on AI-heavy teams, AI-generated PRs waited 4.6 times longer to be picked up, and 31% of PRs merged with zero review. That last number is the failure mode to fear. **Rubber Stamp Reviews**, where the volume is so high that reviewers approve what they have not read. Design against it with three layers:
+
+1. **AI self-review.** Spawn a fresh session, not the one that wrote the code, to critique for security, edge cases, and architecture violations.
+2. **Human architectural review.** Focus on the critical path, system structure, and boundary violations.
+3. **Human intent review.** Does this serve the roadmap, not just the ticket?
+
+At [Builder.io](https://www.builder.io/blog/claude-code) they found the fresh session earns its place. "Claude often finds bugs that humans miss. Humans nitpick variable names. Claude finds actual logic errors and security issues."
+
+**Put quality gates in the dev loop, not just CI.** If the agent cannot see the gate while coding, it writes code that fails the gate later. ArchUnit, coverage, mutation testing, and linting should all run locally.
+
+**Treat security as a gate, not a request.** Telling a model to "be secure" does not work. The [VibeSec argument](https://martinfowler.com/articles/vibesec-reckoning.html) is that you need three layers. Security rules in context files, computational checks in the pipeline, and a human accountability gate for sensitive areas. Prompt-level intentions fail silently. Gates do not.
+
+**Ship golden paths with AI context baked in.** Starter templates should include the context files, pre-configured hooks, and architecture-specific skills. [Drupal added an AGENTS.md](https://www.drupal.org/project/drupal_cms_site_template_base/issues/3577370) to their starter kit precisely to stop agents from suggesting legacy patterns.
+
+**Watch for skill atrophy.** [Anthropic's research](https://www.anthropic.com/research/AI-assistance-coding-skills) shows a comprehension gap. Developers who actively engaged, asking questions and reading the code, scored above 65%. Those who passively delegated scored below 40%, becoming what one veteran called a "human clipboard." It is a small study, 52 mostly-junior engineers, so read it as suggestive rather than settled. But it points the same way as the broader trust data. The [2025 Stack Overflow survey](https://survey.stackoverflow.co/2025) found 84% of developers use AI while trust in its accuracy fell to 29%. As [Martin Fowler notes](https://refactoring.fm/p/growing-the-development-forest-with), "One of the most important properties of a junior developer is that you can turn them into a senior developer." Protect that pipeline.
+
+---
+
+## Orchestrate the human-AI system
+
+This is the genuinely new part of the role. You are no longer only designing the software system. You are designing the collaboration between humans and agents that produces it.
+
+### Your agents, your judgment
+
+AI agents are most useful to an architect as thinking partners with isolated context, not as code generators.
+
+- **Fresh-context critique.** A long session goes blind to its own assumptions. When you need to validate a decision, spawn a fresh agent with zero prior context and ask it to attack the approach. Same model, clean eyes. It catches things the original session cannot.
+- **Planner-executor.** For large tasks, use a reasoning model to plan and a faster model to execute each step. This enforces decomposition discipline for free.
+- **Subagents for parallel exploration.** When weighing options, spawn several subagents to explore different approaches at once, each in its own context window. You synthesize the results.
+
+### Many agents, one architecture
+
+When five developers each drive an agent, that is five sessions interpreting your architecture. Each starts fresh from training data rather than your decisions. Without coordination they diverge. Different naming, different patterns for the same problem, different structural assumptions.
+
+This is why the context file is a coordination mechanism, not just configuration. It is the one artifact that aligns every session on the same intent. But it only works if it is committed and current, if it encodes decisions rather than platitudes, and if the harness backs it up. Advisory rules for conventions, deterministic hooks for the non-negotiables.
+
+Make fresh-session review a team norm. Before any PR, the developer spawns a new session to review the diff. The fresh session has no loyalty to code it did not write.
+
+### When not to use AI
+
+Not everything benefits from assistance.
+
+| Use AI for | Avoid AI for |
+|---|---|
+| Boilerplate, DTOs, API clients | Security-critical code (auth, encryption, access control) |
+| Test generation and scaffolding | Decisions needing production scars |
+| Code exploration and navigation | Novel algorithm design |
+| Documentation, ADRs, PR descriptions | Business logic with unstated requirements |
+| Refactoring assistance | Code you cannot explain in a review |
+
+### Be deliberate about cost
+
+AI is not free autocomplete. It has measurable token costs, and most teams work within a budget.
+
+The strongest recent move here is tiered delegation. Simon Willison describes it in ["Judgement"](https://simonwillison.net/2026/Jul/3/judgement/). Keep judgment, review, and synthesis on the top-tier model in the main loop. Dispatch implementation to cheaper models in subagents. You cut cost with little quality loss, because the expensive reasoning happens where it matters and the cheap volume work happens where it does not.
+
+A few more principles. Context hygiene is cost hygiene, since every token you carry costs money. Parallelism is expensive, because agent teams can use several times the tokens of a single session. Set session limits to stop runaway loops. When budgets are tight, point AI at the highest-leverage work first. Formalize context, generate ADRs, run trade-off analysis, self-review before PRs. High-judgment, low-volume tasks return the most value per token.
+
+---
+
+## Architecture decisions at AI speed
+
+AI makes experimentation cheap. Deciding what to carry forward is the new bottleneck. On one project, AI-built prototypes were fast, but they fed the same slow decision cycle with the product owner. More iterations, not faster delivery.
+
+Sometimes the highest-leverage move is to not build yet. The alternative is **Architecture by Accumulation**, where the structure of the system is whatever the AI happened to produce. That is how codebases rot. The rot is now measurable. [DORA's 2025 research](https://dora.dev/dora-report-2025/) frames AI as an amplifier whose returns depend on the surrounding system, and GitClear's 2026 maintainability analysis found code duplication up 81% as copy-paste replaced refactoring across AI-heavy repositories.
+
+Before you start implementation, run five questions.
+
+1. Can you describe the module boundaries and integration points? If not, settle them first.
+2. Are external interfaces stable, or at least agreed? References diverge from real APIs, so verify.
+3. Does the framework support the patterns you need? Have you checked the version, not assumed it?
+4. Is there a testing strategy that runs in the dev loop, not just CI? Invisible gates guarantee rework.
+5. If requirements change, which components can change independently? If the answer is none, the architecture is not modular enough for parallel AI work.
+
+If any answer is no, resolve it first, using AI to explore the options, before generating implementation code.
+
+---
+
+## Quick reference
+
+**The formula.** Pre-coding sufficiently understood, plus post-coding representable, equals AI accelerates delivery. Break either side and AI accelerates rework.
+
+**Context documents.** `requirements.md`, `architecture.md`, `technologies.md`, `quality.md`. Living, committed, linked.
+
+**The harness.** Computational sensors for what a rule can express, inferential sensors for what it cannot. Hooks 100%, settings 100%, rules files 80%. If it must hold every time, it is a hook.
+
+**Orchestration checklist.** Context file committed and current? Fresh-session review before PRs? "When not to use AI" shared? Contracts agreed before implementation? Judgment on the top model, volume on cheaper ones?
+
+**Anti-patterns to watch for.**
+
+- **Speculative Coding Trap.** Coding against assumptions because rebuilding is cheap.
+- **Silent Restructure.** The agent changes system structure while tests stay green.
+- **Dependency Creep.** New libraries added without approval.
+- **Architecture by Accumulation.** No deliberate design, just whatever the AI produced.
+- **Rubber Stamp Reviews.** Approving AI changes without reading them.
+
+The through-line is simple. AI amplifies whatever shape you point it at. Point it at clarity and it accelerates you. Point it at confusion and it accelerates the confusion. Your job is to supply the clarity, and to build the harness that keeps it.
