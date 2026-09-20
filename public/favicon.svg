@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Premonition favicon</title>
+  <desc id="desc">A geometric lowercase p with a forward signal point.</desc>
+  <rect width="512" height="512" rx="96" fill="#111216"/>
+  <path
+    fill="#F5F2EA"
+    fill-rule="evenodd"
+    d="M144 408V176c0-36 20-56 56-56h80c76 0 128 48 128 120s-52 120-128 120c-34 0-62-10-84-28v76h-52Zm64-224v94c16 17 38 26 70 26 40 0 66-24 66-64s-26-64-66-64h-62c-5 0-8 3-8 8Z"
+  />
+  <circle cx="388" cy="104" r="24" fill="#F05A3C"/>
+</svg>
