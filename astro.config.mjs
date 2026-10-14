@@ -7,7 +7,6 @@ import rehypeExternalLinks from 'rehype-external-links';
 // Slugs of blog posts marked `unlisted: true` in their frontmatter.
 // Keep in sync when flipping an unlisted post to published or vice versa.
 const UNLISTED_BLOG_SLUGS = [
-  'spec-driven-development-not-just-the-spec',
   'engineer-what-surrounds-the-model',
 ];
 
