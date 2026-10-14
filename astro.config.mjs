@@ -8,6 +8,7 @@ import rehypeExternalLinks from 'rehype-external-links';
 // Keep in sync when flipping an unlisted post to published or vice versa.
 const UNLISTED_BLOG_SLUGS = [
   'spec-driven-development-not-just-the-spec',
+  'engineer-what-surrounds-the-model',
 ];
 
 // Folder names under public/talks/ for talks marked `unlisted: true` in src/data/talks.ts.

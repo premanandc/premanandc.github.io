@@ -1,0 +1,101 @@
+---
+title: "Engineer What Surrounds the Model"
+date: 2026-10-14
+excerpt: "A coding agent has a model at its center and two rings around it. The vendor builds the inner ring. You build the outer ring, and a better model will not build it for you."
+tags: ["AI", "Developer Experience", "Harness Engineering"]
+coverImage: "/images/blog/engineer-what-surrounds-the-model-thumbnail.png"
+draft: false
+unlisted: true
+---
+
+Give a coding agent a codebase that it has never seen. Ask it how one feature works. The answer arrives in seconds, and it reads well. Some of it is wrong. The wrong parts read as well as the right parts.
+
+When this happens, I hear the same conclusion from many teams. The model is not good enough yet, so they wait for the next one.
+
+I think that conclusion is wrong. The next model also will not know your codebase. It will not know which README lines are out of date. It will not know which tests prove nothing. It will not stop at a boundary that nobody set. These gaps are in what surrounds the model.
+
+## The Model and Its Two Rings
+
+![A model at the center with two rings around it. The inner ring is built by the vendor and holds the loop, tools, system prompt, cache, and compaction. The outer ring is built by you. Before the agent acts, context and permissions apply. After it acts, sensors and gates apply.](/images/blog/engineer-what-surrounds-the-model-4x5.gif)
+
+A coding agent has a model at its center and two rings around it.
+
+The vendor builds the inner ring. This ring contains the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Claude Code, Codex CLI, OpenCode, and Copilot CLI all build this ring from the same parts. You can configure some of it. You do not own it. The vendor changes it every few weeks.
+
+You build the outer ring. It has four parts. Two parts work before the agent acts, and two parts work after it acts.
+
+- **Context** is what you give the agent to read. Examples are an AGENTS.md file, skills, and MCP tools.
+- **Permissions** are what the agent may do. Examples are allow, ask, and deny rules, and a container with a firewall.
+- **Sensors** catch the agent's mistakes. Examples are tests, linters, hooks, and review agents.
+- **Gates** are the checks that the agent's work must pass. Examples are CI checks and human review.
+
+In this post, the harness is both rings together. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) gives a good vocabulary for the outer ring. My claim here is narrower. The inner ring improves without your help. The outer ring does not.
+
+## The Inner Ring Matters, but You Do Not Own It
+
+The inner ring has a measurable effect. [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) runs each model in two harnesses. One is the agent from the model's vendor. The other is Terminus 2, a neutral harness from the benchmark team.
+
+- GPT-5.4 scores 77.3% in Codex CLI and 54.8% in Terminus 2.
+- Opus 4.6 scores 70.1% in Claude Code and 63.8% in Terminus 2.
+- Gemini 3.1 Pro scores 67.1% in Gemini CLI and 70.7% in Terminus 2.
+
+So the vendor's harness can add more than 20 points. It can also cost a few points.
+
+The result is different when you compare mature agents with each other. Arena's [HarnessTax](https://arena.ai/blog/coding-agents-harness-tax) study ran seven models in Claude Code, Codex CLI, and Pi. Success rates were within about 2 to 5 points of each other. Cost differed by up to 2 times. The sample was small, with 30 tasks per benchmark. Among mature agents, the choice of agent changed cost more than it changed success.
+
+There is one more limit. These benchmarks use public tasks, and the models may have seen them in training. I found no published harness comparison on an unfamiliar brownfield codebase. That is where most of us work.
+
+## What a Better Model Removes
+
+Anthropic's engineering team wrote this about [harness design](https://www.anthropic.com/engineering/harness-design-long-running-apps): "every component in a harness encodes an assumption about what the model can't do on its own."
+
+They acted on that idea. When Opus 4.5 arrived, they removed context resets from their harness. When Opus 4.6 arrived, they removed sprint decomposition. The new models did not need those parts.
+
+A part that compensates for a model weakness goes out of date when the weakness goes away. Most of the inner ring is this kind of part. The vendor removes it as the model improves, and you get the benefit without any work.
+
+A part that encodes a fact about your codebase does not go out of date with a new model. A test that defines correct behavior stays correct. A permission that keeps the agent away from production secrets stays necessary. A review gate stays useful, because the agent that wrote the code is a poor judge of it. These parts depend on your system.
+
+Most of the outer ring is this second kind. The exception is instructions that steer the agent's habits, such as "use the language server before grep." Those instructions compensate for a model weakness. Review them when the model changes, and delete the ones that no longer help.
+
+## The Four Parts of the Outer Ring
+
+Each part answers one question that the model cannot answer by itself.
+
+**Context answers "What is true in this codebase?"** The fast step is to generate a context file, for example with `/init`. The evidence says this does not help. Gloaguen and colleagues at ETH Zurich [tested AGENTS.md files](https://arxiv.org/abs/2602.11988) on real tasks. Files that a model generated did not improve task success. They added about 20% to cost. A useful context file records what you verified against the code. Write it after you understand the code.
+
+**Permissions answer "What may the agent do?"** A codebase that you did not write is untrusted input. A README or a code comment can contain instructions for the agent. Rules in a settings file do not make a boundary. A rule that denies `curl` matches the text `curl`. It does not match `/usr/bin/curl` or `wget`. Rules match text. Boundaries match behavior. A container limits which files the agent can reach. A firewall blocks the network request, whatever command the agent types.
+
+**Sensors answer "Is this change correct?"** A sensor runs after the agent acts and gives a result that the agent can read. A test fails. A linter reports a violation. An architecture fitness test finds a forbidden dependency. If the message says what to fix, the agent corrects itself on the next attempt. Write sensor messages with the agent as the reader.
+
+**Gates answer "May this change merge?"** Do not let the agent that wrote the code also approve it. Use an independent review first, then CI, then a human. Each gate uses attention or compute. Put the cheap checks close to the agent and the expensive checks later.
+
+## The Outer Ring Keeps What You Learn
+
+The model starts each session with no memory of your codebase. The outer ring keeps what you learned. A fact that you verify today goes into the context file, and tomorrow's session starts with it. A mistake that a reviewer finds today becomes a new sensor or rule. When the agent makes that mistake again, the sensor tells it at once.
+
+A better model does not do this for you. It improves the inner ring for everybody, and it still knows nothing about your codebase.
+
+## Building the Outer Ring, One Week at a Time
+
+On Monday 19 October 2026, I start leading the [InfoQ Certified AI-Assisted Engineering Program](https://certification.qconferences.com/ai-assisted-engineering). It has five weekly sessions of four hours each. Participants work on a legacy codebase that arrives as a single-commit handover, with stale documents and planted security problems. Each week adds one part of the outer ring.
+
+- **Week 1.** Onboard the agent with least privilege, and comprehend the codebase. Write a context file that records only what you verified.
+- **Week 2.** Turn a thin ticket into a requirement that you can verify. Pin current behavior in tests. Add sensors so that the agent corrects itself.
+- **Week 3.** Review the change independently before a human sees it. Widen the agent's permissions only now, because review exists.
+- **Week 4.** Make CI the team's harness. Put each check where its cost and signal fit. Run unattended agents with least privilege.
+- **Week 5.** Turn recurring review findings into rules and skills. Compare five weeks of measurements with your week-one predictions.
+
+Trust in the agent grows only as the checks around it grow.
+
+If five weeks is too much, I also teach a one-day version at QCon San Francisco on 20 November 2026. [Effective AI-Native Development with Harness Engineering](https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering) covers the same outer ring in one day.
+
+## The Next Time an Agent Gets It Wrong
+
+Do not start by asking which model to try next. Ask which part of the outer ring was missing.
+
+- Did the agent read something false, or miss something true?
+- Did it do something that it should not have been able to do?
+- Did no sensor fire?
+- Did a gate pass work that it should have stopped?
+
+Each answer points to a part that you can build. Which part of your outer ring is the weakest today? I want to hear how you found out.
