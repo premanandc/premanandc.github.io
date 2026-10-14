@@ -69,7 +69,9 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
             <strong>
               {item.url ? <a href={item.url}>{item.name}</a> : item.name}
             </strong>
-            <span class="now-desc"> — {item.description}</span>
+            <span class="now-desc"> — {item.description}{item.coInstructor && (
+              <> Co-taught with <a href={item.coInstructor.url}>{item.coInstructor.name}</a>.</>
+            )}</span>
           </li>
         ))}
       </ul>

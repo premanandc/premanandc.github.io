@@ -1,5 +1,5 @@
 export const now = {
-  lastUpdated: '2026-08-03',
+  lastUpdated: '2026-10-14',
 
   building: [
     {
@@ -39,6 +39,7 @@ export const now = {
       name: 'Effective AI-Native Development with Harness Engineering',
       description: 'A full-day workshop at QCon SF on November 20, 2026, on harness engineering for AI coding agents in real codebases.',
       url: 'https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering',
+      coInstructor: { name: 'Zichuan Xiong', url: 'https://www.linkedin.com/in/zichuan-xiong-94aa3b13/' },
     },
   ],
 };
