@@ -8,6 +8,8 @@ draft: false
 unlisted: true
 ---
 
+import Callout from '../../components/blog/Callout.tsx';
+
 Give a coding agent a codebase that it has never seen. Ask it how one feature works. The answer arrives in seconds, and it reads well. Some of it is wrong. The wrong parts read as well as the right parts.
 
 When this happens, we hear the same conclusion from many teams. The model is not good enough yet, so they wait for the next one.
@@ -20,7 +22,7 @@ We think that conclusion is wrong. The next model also will not know your codeba
 
 A coding agent has a model at its center and two rings around it.
 
-The vendor builds the inner ring. This ring contains the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Claude Code, Codex CLI, OpenCode, and Copilot CLI all build this ring from the same parts. You can configure some of it. You do not own it. The vendor changes it every few weeks.
+The vendor builds the inner ring. This ring contains the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Claude Code, Codex CLI, OpenCode, and Copilot CLI all build this ring from the same parts. You can configure some of it, but the vendor maintains it and changes it every few weeks.
 
 You build the outer ring. It has four parts. Two parts work before the agent acts, and two parts work after it acts.
 
@@ -31,7 +33,7 @@ You build the outer ring. It has four parts. Two parts work before the agent act
 
 In this post, the harness is both rings together. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) gives a good vocabulary for the outer ring. Our claim here is narrower. The inner ring improves without your help. The outer ring does not.
 
-## The Inner Ring Matters, but You Do Not Own It
+## The Inner Ring Matters, but the Vendor Maintains It
 
 The inner ring has a measurable effect. [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) runs each model in two harnesses. One is the agent from the model's vendor. The other is Terminus 2, a neutral harness from the benchmark team.
 
@@ -41,7 +43,7 @@ The inner ring has a measurable effect. [Terminal-Bench 2.1](https://www.tbench.
 
 So the vendor's harness can add more than 20 points. It can also cost a few points.
 
-The result is different when you compare mature agents with each other. Arena's [HarnessTax](https://arena.ai/blog/coding-agents-harness-tax) study ran seven models in Claude Code, Codex CLI, and Pi. Success rates were within about 2 to 5 points of each other. Cost differed by up to 2 times. The sample was small, with 30 tasks per benchmark. Among mature agents, the choice of agent changed cost more than it changed success.
+The result is different when you compare mature agents with each other. Arena's [HarnessTax](https://arena.ai/blog/coding-agents-harness-tax) study ran seven models in Claude Code, Codex CLI, and Pi. Success rates were within about 2 to 5 points of each other. On average, Claude Code cost about 2 times as much as Pi. Pi has only four built-in tools: read, write, edit, and bash. The sample was small, with 30 tasks per benchmark. Among mature agents, the choice of agent changed cost more than it changed success.
 
 There is one more limit. These benchmarks use public tasks, and the models may have seen them in training. We found no published harness comparison on an unfamiliar brownfield codebase. That is where most of us work.
 
@@ -56,6 +58,22 @@ A part that compensates for a model weakness goes out of date when the weakness 
 A part that encodes a fact about your codebase does not go out of date with a new model. A test that defines correct behavior stays correct. A permission that keeps the agent away from production secrets stays necessary. A review gate stays useful, because the agent that wrote the code is a poor judge of it. These parts depend on your system.
 
 Most of the outer ring is this second kind. The exception is instructions that steer the agent's habits, such as "use the language server before grep." Those instructions compensate for a model weakness. Review them when the model changes, and delete the ones that no longer help.
+
+## When You Can Edit the Inner Ring
+
+The line between the rings is less clean than the diagram shows. [Pi](https://pi.dev), Mario Zechner's minimal coding agent, has had [extensions](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/extensions.md) since January 2026. A Pi extension can replace the system prompt, replace built-in tools, and change compaction. On 1 October 2026, Claude Code added [mods](https://code.claude.com/docs/en/plugins/mods/overview). A mod can rewrite sections of the system prompt, rewrite tool descriptions, and choose the model for one request. In both agents, the agent can write an extension for itself and reload it.
+
+Pi showed the idea first. Anthropic has now put it into a mainstream agent. We expect the other major coding agents to add a similar feature. When they do, every team will be able to edit the inner ring, and every team will need a rule for which edits it accepts.
+
+The boundary between the rings does not go away. It moves from who writes the code to what the code encodes.
+
+A mod that compensates for a model weakness is inner-ring work. Examples are a system prompt rewrite that stops a bad habit, or a forced model switch for one kind of request. When you write it, you take over work that the vendor did. The next model can make it unnecessary or harmful, and you must find out which.
+
+A mod that encodes a fact about your codebase is outer-ring work. A mod that refuses edits to generated code is a permission. A mod that runs your architecture check after each edit is a sensor. These mods stay useful when the model changes.
+
+<Callout variant="warning" label="Use Mods with Caution" client:visible>
+A mod is powerful because it runs inside the agent. That also makes it dangerous. The Claude Code docs say "Mods aren't sandboxed." A mod runs with your permissions. It can read your secrets, rewrite your prompts, and approve a tool call that an ask rule would stop. Install mods only from authors that you trust. Before you load a mod, read its code, or run `claude plugin validate` to list what it does. When the agent writes a mod for itself, review that code as you review any code that runs as you.
+</Callout>
 
 ## The Four Parts of the Outer Ring
 
