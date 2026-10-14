@@ -10,9 +10,9 @@ unlisted: true
 
 Give a coding agent a codebase that it has never seen. Ask it how one feature works. The answer arrives in seconds, and it reads well. Some of it is wrong. The wrong parts read as well as the right parts.
 
-When this happens, I hear the same conclusion from many teams. The model is not good enough yet, so they wait for the next one.
+When this happens, we hear the same conclusion from many teams. The model is not good enough yet, so they wait for the next one.
 
-I think that conclusion is wrong. The next model also will not know your codebase. It will not know which README lines are out of date. It will not know which tests prove nothing. It will not stop at a boundary that nobody set. These gaps are in what surrounds the model.
+We think that conclusion is wrong. The next model also will not know your codebase. It will not know which README lines are out of date. It will not know which tests prove nothing. It will not stop at a boundary that nobody set. These gaps are in what surrounds the model.
 
 ## The Model and Its Two Rings
 
@@ -29,7 +29,7 @@ You build the outer ring. It has four parts. Two parts work before the agent act
 - **Sensors** catch the agent's mistakes. Examples are tests, linters, hooks, and review agents.
 - **Gates** are the checks that the agent's work must pass. Examples are CI checks and human review.
 
-In this post, the harness is both rings together. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) gives a good vocabulary for the outer ring. My claim here is narrower. The inner ring improves without your help. The outer ring does not.
+In this post, the harness is both rings together. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) gives a good vocabulary for the outer ring. Our claim here is narrower. The inner ring improves without your help. The outer ring does not.
 
 ## The Inner Ring Matters, but You Do Not Own It
 
@@ -43,7 +43,7 @@ So the vendor's harness can add more than 20 points. It can also cost a few poin
 
 The result is different when you compare mature agents with each other. Arena's [HarnessTax](https://arena.ai/blog/coding-agents-harness-tax) study ran seven models in Claude Code, Codex CLI, and Pi. Success rates were within about 2 to 5 points of each other. Cost differed by up to 2 times. The sample was small, with 30 tasks per benchmark. Among mature agents, the choice of agent changed cost more than it changed success.
 
-There is one more limit. These benchmarks use public tasks, and the models may have seen them in training. I found no published harness comparison on an unfamiliar brownfield codebase. That is where most of us work.
+There is one more limit. These benchmarks use public tasks, and the models may have seen them in training. We found no published harness comparison on an unfamiliar brownfield codebase. That is where most of us work.
 
 ## What a Better Model Removes
 
@@ -77,7 +77,7 @@ A better model does not do this for you. It improves the inner ring for everybod
 
 ## Building the Outer Ring, One Week at a Time
 
-On Monday 19 October 2026, I start leading the [InfoQ Certified AI-Assisted Engineering Program](https://certification.qconferences.com/ai-assisted-engineering). It has five weekly sessions of four hours each. Participants work on a legacy codebase that arrives as a single-commit handover, with stale documents and planted security problems. Each week adds one part of the outer ring.
+On Monday 19 October 2026, we start to lead the [InfoQ Certified AI-Assisted Engineering Program](https://certification.qconferences.com/ai-assisted-engineering). We are Prem Chandrasekaran and [Zichuan Xiong](https://www.linkedin.com/in/zichuan-xiong-94aa3b13/), and we teach it together. It has five weekly sessions of four hours each. Participants work on a legacy codebase that arrives as a single-commit handover, with stale documents and planted security problems. Each week adds one part of the outer ring.
 
 - **Week 1.** Onboard the agent with least privilege, and comprehend the codebase. Write a context file that records only what you verified.
 - **Week 2.** Turn a thin ticket into a requirement that you can verify. Pin current behavior in tests. Add sensors so that the agent corrects itself.
@@ -87,7 +87,7 @@ On Monday 19 October 2026, I start leading the [InfoQ Certified AI-Assisted Engi
 
 Trust in the agent grows only as the checks around it grow.
 
-If five weeks is too much, I also teach a one-day version at QCon San Francisco on 20 November 2026. [Effective AI-Native Development with Harness Engineering](https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering) covers the same outer ring in one day.
+If five weeks is too much, we also teach a one-day version at QCon San Francisco on 20 November 2026. [Effective AI-Native Development with Harness Engineering](https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering) covers the same outer ring in one day.
 
 ## The Next Time an Agent Gets It Wrong
 
@@ -98,4 +98,4 @@ Do not start by asking which model to try next. Ask which part of the outer ring
 - Did no sensor fire?
 - Did a gate pass work that it should have stopped?
 
-Each answer points to a part that you can build. Which part of your outer ring is the weakest today? I want to hear how you found out.
+Each answer points to a part that you can build. Which part of your outer ring is the weakest today? We want to hear how you found out.
