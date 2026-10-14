@@ -283,6 +283,32 @@ th {
   color: var(--callout-insight-border);
 }
 
+/* Pull quote that repeats a line from nearby text (martinfowler.com soundbite style) */
+.soundbite {
+  margin: 24px 0;
+  padding: 14px 18px;
+  border-top: 3px solid var(--accent);
+  background: var(--callout-info-bg);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+@media (min-width: 768px) {
+  .soundbite {
+    float: right;
+    width: 240px;
+    margin: 6px 0 16px 28px;
+  }
+
+  /* Keep headings and boxed callouts from wrapping beside a floated soundbite */
+  .soundbite ~ h2,
+  .soundbite ~ .callout {
+    clear: right;
+  }
+}
+
 .expandable {
   border: 1px solid var(--border);
   border-radius: 8px;

@@ -9,6 +9,7 @@ unlisted: true
 ---
 
 import Callout from '../../components/blog/Callout.tsx';
+import Soundbite from '../../components/blog/Soundbite.astro';
 
 Give a coding agent a codebase that it has never seen. Ask it how one feature works. The answer arrives in seconds, and it reads well. Some of it is wrong. The wrong parts read as well as the right parts.
 
@@ -30,6 +31,8 @@ You build the outer ring. Its parts fall into four broad categories. Two categor
 - **Permissions** are what the agent may do. Examples are allow, ask, and deny rules, and a container with a firewall.
 - **Sensors** catch the agent's mistakes. Examples are tests, linters, hooks, and review agents.
 - **Gates** are the checks that the agent's work must pass. Examples are CI checks and human review.
+
+<Soundbite>The inner ring improves without your help. The outer ring does not.</Soundbite>
 
 The four categories are our grouping. Other authors divide the outer ring differently. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) uses two kinds of control. Guides steer the agent before it acts, and sensors check its work after it acts. Our categories build on that split. Some parts sit at the edges of all four categories. Examples are workflow (plans and subagents), the environment the agent runs in, and traces of the agent itself.
 
@@ -67,6 +70,8 @@ The line between the rings is less clean than the diagram shows. [Pi](https://pi
 
 Pi showed the idea first. Anthropic has now put it into a mainstream agent. We expect the other major coding agents to add a similar feature. When they do, every team will be able to edit the inner ring, and every team will need a rule for which edits it accepts.
 
+<Soundbite>The boundary between the rings moves from who writes the code to what the code encodes.</Soundbite>
+
 The boundary between the rings does not go away. It moves from who writes the code to what the code encodes.
 
 A mod that compensates for a model weakness is inner-ring work. Examples are a system prompt rewrite that stops a bad habit, or a forced model switch for one kind of request. When you write it, you take over work that the vendor did. The next model can make it unnecessary or harmful, and you must find out which.
@@ -82,6 +87,8 @@ A mod is powerful because it runs inside the agent. That also makes it dangerous
 Each category answers one question that the model cannot answer by itself.
 
 **Context answers "What is true in this codebase?"** The fast step is to generate a context file, for example with `/init`. The evidence says this does not help. Gloaguen and colleagues at ETH Zurich [tested AGENTS.md files](https://arxiv.org/abs/2602.11988) on real tasks. Files that a model generated did not improve task success. They added about 20% to cost. A useful context file records what you verified against the code. Write it after you understand the code.
+
+<Soundbite>Rules match text. Boundaries match behavior.</Soundbite>
 
 **Permissions answer "What may the agent do?"** A codebase that you did not write is untrusted input. A README or a code comment can contain instructions for the agent. Rules in a settings file do not make a boundary. A rule that denies `curl` matches the text `curl`. It does not match `/usr/bin/curl` or `wget`. Rules match text. Boundaries match behavior. A container limits which files the agent can reach. A firewall blocks the network request, whatever command the agent types.
 
