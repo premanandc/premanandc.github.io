@@ -22,7 +22,7 @@ We think that conclusion is wrong. The next model also will not know your codeba
 
 A coding agent has a model at its center and two rings around it.
 
-The vendor builds the inner ring. This ring contains the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Claude Code, Codex CLI, OpenCode, and Copilot CLI all build this ring from the same parts. You can configure some of it, but the vendor maintains it and changes it every few weeks.
+The vendor builds the inner ring. This ring contains parts such as the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Coding agents such as Claude Code, Codex CLI, OpenCode, Copilot CLI, Pi, etc., all build this ring from the same parts. You can configure some of it, but the vendor maintains it and changes it every few weeks.
 
 You build the outer ring. It has four parts. Two parts work before the agent acts, and two parts work after it acts.
 
@@ -35,7 +35,7 @@ In this post, the harness is both rings together. Birgitta Böckeler's article [
 
 ## The Inner Ring Matters, but the Vendor Maintains It
 
-The inner ring has a measurable effect. [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) runs each model in two harnesses. One is the agent from the model's vendor. The other is Terminus 2, a neutral harness from the benchmark team.
+The inner ring has a measurable effect. [Terminal-Bench 2.1](https://www.tbench.ai/news/terminal-bench-2-1) runs each model in two harnesses. One is the agent from the model's vendor. The other is Terminus 2, a neutral harness from the benchmark team. These are three of the results:
 
 - GPT-5.4 scores 77.3% in Codex CLI and 54.8% in Terminus 2.
 - Opus 4.6 scores 70.1% in Claude Code and 63.8% in Terminus 2.
@@ -61,7 +61,7 @@ Most of the outer ring is this second kind. The exception is instructions that s
 
 ## When You Can Edit the Inner Ring
 
-The line between the rings is less clean than the diagram shows. [Pi](https://pi.dev), Mario Zechner's minimal coding agent, has had [extensions](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/extensions.md) since January 2026. A Pi extension can replace the system prompt, replace built-in tools, and change compaction. On 1 October 2026, Claude Code added [mods](https://code.claude.com/docs/en/plugins/mods/overview). A mod can rewrite sections of the system prompt, rewrite tool descriptions, and choose the model for one request. In both agents, the agent can write an extension for itself and reload it.
+The line between the rings is less clean than the diagram shows. [Pi](https://pi.dev), Mario Zechner's minimal coding agent, has had [extensions](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/extensions.md) since January 2026. A Pi extension can change parts such as the system prompt, the built-in tools, compaction, etc. On 1 October 2026, Claude Code added [mods](https://code.claude.com/docs/en/plugins/mods/overview). For example, a mod can rewrite sections of the system prompt, rewrite tool descriptions, and choose the model for one request. In both agents, the agent can write an extension for itself and reload it.
 
 Pi showed the idea first. Anthropic has now put it into a mainstream agent. We expect the other major coding agents to add a similar feature. When they do, every team will be able to edit the inner ring, and every team will need a rule for which edits it accepts.
 
@@ -72,7 +72,7 @@ A mod that compensates for a model weakness is inner-ring work. Examples are a s
 A mod that encodes a fact about your codebase is outer-ring work. A mod that refuses edits to generated code is a permission. A mod that runs your architecture check after each edit is a sensor. These mods stay useful when the model changes.
 
 <Callout variant="warning" label="Use Mods with Caution" client:visible>
-A mod is powerful because it runs inside the agent. That also makes it dangerous. The Claude Code docs say "Mods aren't sandboxed." A mod runs with your permissions. It can read your secrets, rewrite your prompts, and approve a tool call that an ask rule would stop. Install mods only from authors that you trust. Before you load a mod, read its code, or run `claude plugin validate` to list what it does. When the agent writes a mod for itself, review that code as you review any code that runs as you.
+A mod is powerful because it runs inside the agent. That also makes it dangerous. The Claude Code docs say "Mods aren't sandboxed." A mod runs with your permissions. For example, it can read your secrets, rewrite your prompts, and approve a tool call that an ask rule would stop. Install mods only from authors that you trust. Before you load a mod, read its code, or run `claude plugin validate` to list what it does. When the agent writes a mod for itself, review that code as you review any code that runs as you.
 </Callout>
 
 ## The Four Parts of the Outer Ring
