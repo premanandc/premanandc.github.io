@@ -36,6 +36,12 @@ export const now = {
 
   upcoming: [
     {
+      name: 'InfoQ Certified AI-Assisted Engineering Program',
+      description: 'A five-week program starting October 19, 2026, on building production-grade software with AI coding agents on code you didn\'t write.',
+      url: 'https://certification.qconferences.com/ai-assisted-engineering',
+      coInstructor: { name: 'Zichuan Xiong', url: 'https://www.linkedin.com/in/zichuan-xiong-94aa3b13/' },
+    },
+    {
       name: 'Effective AI-Native Development with Harness Engineering',
       description: 'A full-day workshop at QCon SF on November 20, 2026, on harness engineering for AI coding agents in real codebases.',
       url: 'https://qconsf.com/training/nov2026/effective-ai-native-development-harness-engineering',
