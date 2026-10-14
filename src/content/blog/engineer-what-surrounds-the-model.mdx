@@ -24,14 +24,16 @@ A coding agent has a model at its center and two rings around it.
 
 The vendor builds the inner ring. This ring contains parts such as the agent loop, the tool definitions, the system prompt, the prompt cache, and compaction. Coding agents such as Claude Code, Codex CLI, OpenCode, Copilot CLI, Pi, etc., all build this ring from the same parts. You can configure some of it, but the vendor maintains it and changes it every few weeks.
 
-You build the outer ring. It has four parts. Two parts work before the agent acts, and two parts work after it acts.
+You build the outer ring. Its parts fall into four broad categories. Two categories work before the agent acts, and two work after it acts.
 
 - **Context** is what you give the agent to read. Examples are an AGENTS.md file, skills, and MCP tools.
 - **Permissions** are what the agent may do. Examples are allow, ask, and deny rules, and a container with a firewall.
 - **Sensors** catch the agent's mistakes. Examples are tests, linters, hooks, and review agents.
 - **Gates** are the checks that the agent's work must pass. Examples are CI checks and human review.
 
-In this post, the harness is both rings together. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) gives a good vocabulary for the outer ring. Our claim here is narrower. The inner ring improves without your help. The outer ring does not.
+The four categories are our grouping. Other authors divide the outer ring differently. Birgitta Böckeler's article [Harness engineering for coding agent users](https://martinfowler.com/articles/harness-engineering.html) uses two kinds of control. Guides steer the agent before it acts, and sensors check its work after it acts. Our categories build on that split. Some parts sit at the edges of all four categories. Examples are workflow (plans and subagents), the environment the agent runs in, and traces of the agent itself.
+
+In this post, the harness is both rings together. Our main claim is simple. The inner ring improves without your help. The outer ring does not.
 
 ## The Inner Ring Matters, but the Vendor Maintains It
 
@@ -75,9 +77,9 @@ A mod that encodes a fact about your codebase is outer-ring work. A mod that ref
 A mod is powerful because it runs inside the agent. That also makes it dangerous. The Claude Code docs say "Mods aren't sandboxed." A mod runs with your permissions. For example, it can read your secrets, rewrite your prompts, and approve a tool call that an ask rule would stop. Install mods only from authors that you trust. Before you load a mod, read its code, or run `claude plugin validate` to list what it does. When the agent writes a mod for itself, review that code as you review any code that runs as you.
 </Callout>
 
-## The Four Parts of the Outer Ring
+## The Four Categories of the Outer Ring
 
-Each part answers one question that the model cannot answer by itself.
+Each category answers one question that the model cannot answer by itself.
 
 **Context answers "What is true in this codebase?"** The fast step is to generate a context file, for example with `/init`. The evidence says this does not help. Gloaguen and colleagues at ETH Zurich [tested AGENTS.md files](https://arxiv.org/abs/2602.11988) on real tasks. Files that a model generated did not improve task success. They added about 20% to cost. A useful context file records what you verified against the code. Write it after you understand the code.
 
@@ -95,7 +97,7 @@ A better model does not do this for you. It improves the inner ring for everybod
 
 ## Building the Outer Ring, One Week at a Time
 
-On Monday 19 October 2026, we start to lead the [InfoQ Certified AI-Assisted Engineering Program](https://certification.qconferences.com/ai-assisted-engineering). We are Prem Chandrasekaran and [Zichuan Xiong](https://www.linkedin.com/in/zichuan-xiong-94aa3b13/), and we teach it together. It has five weekly sessions of four hours each. Participants work on a legacy codebase that arrives as a single-commit handover, with stale documents and planted security problems. Each week adds one part of the outer ring.
+On Monday 19 October 2026, we start to lead the [InfoQ Certified AI-Assisted Engineering Program](https://certification.qconferences.com/ai-assisted-engineering). We are Prem Chandrasekaran and [Zichuan Xiong](https://www.linkedin.com/in/zichuan-xiong-94aa3b13/), and we teach it together. It has five weekly sessions of four hours each. Participants work on a legacy codebase that arrives as a single-commit handover, with stale documents and planted security problems. Each week builds more of the outer ring.
 
 - **Week 1.** Onboard the agent with least privilege, and comprehend the codebase. Write a context file that records only what you verified.
 - **Week 2.** Turn a thin ticket into a requirement that you can verify. Pin current behavior in tests. Add sensors so that the agent corrects itself.
