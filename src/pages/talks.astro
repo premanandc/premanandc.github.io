@@ -47,4 +47,10 @@ const publicTalks = talks.filter(t => !t.unlisted);
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
+
+  @media (max-width: 640px) {
+    .talks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

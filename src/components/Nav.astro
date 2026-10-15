@@ -90,4 +90,30 @@ const links = [
   .nav-links a.active {
     color: var(--accent);
   }
+
+  /* Narrow screens: keep the avatar, drop the name, tighten the gaps */
+  @media (max-width: 640px) {
+    nav {
+      padding: 16px;
+    }
+
+    .nav-name {
+      display: none;
+    }
+
+    .nav-right {
+      gap: 12px;
+    }
+
+    .nav-links {
+      gap: 16px;
+    }
+  }
+
+  /* Very narrow screens: the avatar already links home */
+  @media (max-width: 400px) {
+    .nav-links a[href='/'] {
+      display: none;
+    }
+  }
 </style>

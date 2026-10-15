@@ -137,4 +137,25 @@ const lastCommitDate = await getLastCommitDate('premanandc');
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
+
+  @media (max-width: 640px) {
+    .talks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Narrow screens: photo above the intro text */
+  @media (max-width: 640px) {
+    .hero {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 32px 0;
+    }
+
+    .hero-image {
+      width: 96px;
+      height: 96px;
+    }
+  }
 </style>

@@ -173,6 +173,20 @@ th {
   min-width: 0;
 }
 
+/* Phones: cover above the text, so the title gets the full width */
+@media (max-width: 480px) {
+  .posts-list .post-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .posts-list .post-cover {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}
+
 .posts-list .post-meta {
   display: flex;
   align-items: center;
@@ -529,6 +543,13 @@ th {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text-secondary);
+}
+
+/* The keyboard shortcut hint is noise on phones and costs nav width */
+@media (max-width: 640px) {
+  .search-shortcut {
+    display: none;
+  }
 }
 
 .search-overlay {

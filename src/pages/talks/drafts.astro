@@ -55,6 +55,12 @@ const drafts = talks.filter(t => t.unlisted);
     gap: 20px;
   }
 
+  @media (max-width: 640px) {
+    .talks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .talks-empty {
     padding: 40px 0;
     color: var(--text-secondary);

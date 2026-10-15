@@ -71,6 +71,20 @@ const formattedDate = date.toLocaleDateString('en-US', {
     min-width: 0;
   }
 
+  /* Phones: cover above the text, so the title gets the full width */
+  @media (max-width: 480px) {
+    .post-card.has-cover {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .post-cover {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+    }
+  }
+
   .post-meta {
     display: flex;
     align-items: center;
