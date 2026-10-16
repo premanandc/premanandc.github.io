@@ -4732,7 +4732,7 @@ slaProperties:   # the rule that catches the stale price
             </div>
             <div class="fragment" data-fragment-index="4">
               <div class="gate">
-                <div class="box"><b>Contract</b><span>ODCS YAML in Git</span></div>
+                <div class="box"><b>Contract</b><span>ODCS YAML in source control</span></div>
                 <div class="arrow">&rarr;</div>
                 <div class="box"><b>In CI</b><span>Data Contract CLI tests it</span></div>
                 <div class="arrow">&rarr;</div>
@@ -5296,7 +5296,7 @@ slaProperties:   # the rule that catches the stale price
 
       <!-- S3.3: THREE MODELS, ONE VOCABULARY -->
       <section>
-        <h2>Nouns, numbers, <em>and verbs</em></h2>
+        <h2>Nouns, numbers, and verbs: <em>the context layer</em></h2>
         <div class="parts-of-speech">
           <p class="sent">&ldquo;<span class="w-verb" style="--c: var(--warn); --tint: rgba(168, 107, 0, 0.1);">Refund<small>verb</small></span> what <span class="w-noun" style="--c: var(--accent); --tint: rgba(11, 110, 117, 0.08);">Acme<small>noun</small></span> was <span class="w-num" style="--c: var(--accent2); --tint: rgba(31, 78, 140, 0.08);">overcharged in Q3<small>number</small></span>.&rdquo;</p>
           <div class="specs">
@@ -5314,14 +5314,14 @@ slaProperties:   # the rule that catches the stale price
 <span class="more">...</span></div><p><strong>How numbers are computed.</strong> The same SQL every time.</p></div>
           </div>
         </div>
-        <p class="takeaway fragment" data-fragment-index="3">Each is a guarantee <strong>in the business vocabulary</strong>, <strong>declared in Git</strong>, not guessed by the agent.</p>
+        <p class="takeaway fragment" data-fragment-index="3">Each is a guarantee <strong>in the business vocabulary</strong>, <strong>declared in source control</strong>, not guessed by the agent.</p>
         <p class="source fragment" data-fragment-index="3">Nouns, numbers and verbs: from Aleix Verg&eacute;s, &ldquo;Agent Ready Data&rdquo;</p>
         <aside class="notes">
           <p>A semantic layer defines your metrics, so every consumer gets the same numbers. But take a request that acts. These files are sketches, not a product's format.</p>
           <p>[click] Acme is a noun. The domain model says what exists and how it connects. The agent reads it to plan.</p>
           <p>[click] Overcharged in Q3 is a number. The semantic model compiles one versioned formula. Correctness lives in the compiler, not in the agent's guess.</p>
           <p>[click] Refund is a verb. The capability model is the curated set of operations the agent may run on live systems.</p>
-          <p>[click] Nouns, numbers and verbs together make the context layer. Which raises a fair question.</p>
+          <p>[click] Which raises a fair question.</p>
         </aside>
       </section>
 
@@ -5402,7 +5402,7 @@ metric: revenue
             <div class="note fragment" data-fragment-index="3" style="color: var(--accent);"><div class="where"><span>Apache Ossie</span><span>5 / 5</span></div><h4>Same idea, vendor-neutral</h4><p>Entities on Gold tables; a fiscal-calendar dimension, so &ldquo;Q3&rdquo; means your Q3.</p></div>
           </div>
         </div>
-        <p class="takeaway fragment" data-fragment-index="4">The discipline, not the tool: <strong>one agreed definition per metric, in Git, compiled against Gold</strong>.</p>
+        <p class="takeaway fragment" data-fragment-index="4">The discipline, not the tool: <strong>each metric defined once, in source control, compiled against Gold</strong>.</p>
         <aside class="notes">
           <p>The business logic lives in the definition, not in a BI tool or an ad-hoc view. This is dbt MetricFlow, which most of you will meet first.</p>
           <p>[click] The keys decide the joins.</p>
@@ -5545,7 +5545,7 @@ metric: revenue
             <div class="ln no"><span>time: calendar_quarter</span><span class="from">tables</span><span class="v">&#10007;</span></div>
             <div class="ln yes"><span>time: fiscal_quarter (Feb start)</span><span class="from">product metadata</span><span class="v">&check;</span></div>
           </div>
-          <div class="ver fragment" data-fragment-index="1"><b>semantic/revenue.yml &middot; v1</b><p>Narrow, correct, under version control. Grows with the next use case.</p><div class="who">approved: finance-data-owner</div></div>
+          <div class="ver fragment" data-fragment-index="1"><b>semantic/revenue.yml &middot; v1</b><p>Narrow, correct, under source control. Grows with the next use case.</p><div class="who">approved: finance-data-owner</div></div>
           <span class="review fragment custom" data-fragment-index="0" style="display: none;"></span>
         </div>
         <p class="takeaway fragment" data-fragment-index="2">The draft is a starting point. <strong>Narrow and correct beats sprawling and half-agreed.</strong></p>
@@ -5563,7 +5563,7 @@ metric: revenue
         <p class="lede">Fix the definition, not the prompt.</p>
         <div class="stairs four">
           <div class="step s1 fragment custom"><span class="n">1</span><h4>Find conflicting metrics</h4><p>Gross vs net, with or without returns. Resolve them before an agent picks one.</p></div>
-          <div class="step s2 fragment custom"><span class="n">2</span><h4>Discipline over tools</h4><p>One agreed definition per metric, in version control. Any mainstream tool will do.</p></div>
+          <div class="step s2 fragment custom"><span class="n">2</span><h4>Discipline over tools</h4><p>One agreed definition per metric, in source control. Any mainstream tool will do.</p></div>
           <div class="step s3 fragment custom"><span class="n">3</span><h4>Route through the context layer</h4><p>Never the raw schema. The point is the abstraction, not the protocol.</p></div>
           <div class="step s4 fragment custom"><span class="n">4</span><h4>Test adversarially</h4><p>Ambiguous, tricky questions. Every hallucination points to a missing definition.</p></div>
           <div class="landing fragment custom"><b>Next &middot; 04 Operational &rarr;</b><p>Trusted data, governance, context. Can agents actually <em>act</em>?</p></div>
@@ -5972,7 +5972,7 @@ metric: revenue
           <span class="at" style="--c: var(--accent2);"><svg class="icon"><use href="#i-book"/></svg>Contextual</span>
           <span class="cl">Definitions in BI tools and people&rsquo;s heads</span>
           <span class="cl">Some metrics as code; agents may hit the raw schema</span>
-          <span class="cl me" style="--c: var(--accent2);">Context layer in Git; agents never touch the raw schema</span>
+          <span class="cl me" style="--c: var(--accent2);">Context layer in source control; agents never touch the raw schema</span>
           <span class="at" style="--c: var(--warn);"><svg class="icon"><use href="#i-trace"/></svg>Traceable</span>
           <span class="cl">Logs show who and when, not why</span>
           <span class="cl me" style="--c: var(--warn);">Traces on some agent workflows</span>
