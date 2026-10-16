@@ -8,6 +8,8 @@ draft: false
 unlisted: false
 ---
 
+import Figure from '../../components/blog/Figure.astro';
+
 For thirty years, we built data systems for human analysts. Analysts bring context, judgment, and skepticism. When a number looks wrong, they stop and ask. Agents do not stop. They act on the data they get, and they act with confidence. AI-ready data moves that human work into the data itself.
 
 [Pramod Sadalage](https://www.sadalage.com/) and I have worked on this idea all year. It now has five versions. Each version taught us something, and each one changed the next.
@@ -16,13 +18,15 @@ For thirty years, we built data systems for human analysts. Analysts bring conte
 
 We first gave this talk at the [O'Reilly Architecture SuperStream](https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/) in March. It covered four topics side by side. The topics were data contracts, traceability, semantic layers, and agent access. Each topic ended with steps that you could take on Monday morning.
 
-[See the SuperStream deck](/talks/data-ready-for-agentic-ai/).
+<Figure src="/images/blog/ai-ready-data-superstream-title.jpg" alt="Title slide of the SuperStream deck" href="/talks/data-ready-for-agentic-ai/">[See the SuperStream deck](/talks/data-ready-for-agentic-ai/).</Figure>
 
 ## The Article
 
 In August, we published [Making Your Data Ready for Agentic AI](https://martinfowler.com/articles/making-data-ready-for-agentic-ai.html) on martinfowler.com. When we wrote the ideas out in full, the four topics stopped looking separate. They became one stack that you build from the bottom up. A trusted data foundation is at the bottom. A context layer sits on the foundation, and an access layer sits on the context layer. Observability runs alongside every layer from the first day.
 
 The semantic layer also grew into a context layer with three models. The domain model holds entities and relationships. The semantic model holds governed metrics. The capability model holds the reads and actions that an agent may use.
+
+<Figure src="/images/blog/ai-ready-data-context-layer.jpg" alt="The three models of the context layer. A capability model, a domain model, and a semantic model each answer part of the request 'Refund what Acme was overcharged in Q3'.">The three models of the context layer, as the dev2next deck shows them.</Figure>
 
 The article is the complete argument, with the YAML, the SQL, and the references. If you read only one version, read this one.
 
@@ -34,7 +38,7 @@ First, each section follows one worked example. A pricing agent quotes yesterday
 
 Second, the talk shows how to build each layer with open specifications. Data contracts use ODCS. Semantic models use Apache Ossie. Agent access uses APIs and MCP. ODPS describes the whole data product. Our colleague Aleix Vergés suggested Apache Ossie and ODPS to us.
 
-[See the dev2next deck](/talks/data-ready-for-agentic-ai-dev2next/). It includes our speaker notes. Press S to read them.
+<Figure src="/images/blog/ai-ready-data-consumers-changing.jpg" alt="The second slide of the dev2next deck. An agent gets only the query above the waterline. Below it is what a seasoned analyst knows from experience, such as what revenue means and which tables to avoid." href="/talks/data-ready-for-agentic-ai-dev2next/#/1/0/1">[See the dev2next deck](/talks/data-ready-for-agentic-ai-dev2next/). It includes our speaker notes. Press S to read them.</Figure>
 
 ## A Talk in São Paulo
 
@@ -42,6 +46,6 @@ On 5 November, we speak at [XConf Americas](https://www.thoughtworks.com/about-u
 
 ## A Book Chapter
 
-Our upcoming O'Reilly book, [*Data Architecture for Software Architects*](https://www.oreilly.com/library/view/data-architecture-for/9781098181185/), gives this topic a full chapter. The chapter is called "Architecting AI-ready data". The book is in Early Release now, and this chapter comes to Early Release soon. It is the deepest of the five versions.
+<Figure src="/images/blog/data-architecture-for-software-architects-cover.jpg" alt="Cover of Data Architecture for Software Architects, O'Reilly Early Release" href="https://www.oreilly.com/library/view/data-architecture-for/9781098181185/" aside />
 
-<img src="/images/blog/data-architecture-for-software-architects-cover.jpg" alt="Cover of Data Architecture for Software Architects, O'Reilly Early Release" width="220" />
+Our upcoming O'Reilly book, [*Data Architecture for Software Architects*](https://www.oreilly.com/library/view/data-architecture-for/9781098181185/), gives this topic a full chapter. The chapter is called "Architecting AI-ready data". The book is in Early Release now, and this chapter comes to Early Release soon. It is the deepest of the five versions.
