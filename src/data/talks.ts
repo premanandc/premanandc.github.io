@@ -12,6 +12,14 @@ export interface Talk {
 export const talks: Talk[] = [
   {
     title: 'Making Your Data Ready for Agentic AI',
+    event: 'dev2next',
+    date: 'October 2026',
+    description: 'The full-length version of the talk. Four worked examples take data through a trusted foundation, a context layer, and an access layer, with observability alongside each layer. Co-presented with Pramod Sadalage.',
+    url: '/talks/data-ready-for-agentic-ai-dev2next/',
+    eventUrl: 'https://www.dev2next.com/',
+  },
+  {
+    title: 'Making Your Data Ready for Agentic AI',
     event: 'O\'Reilly Architecture SuperStream',
     date: 'March 2026',
     description: 'Making data infrastructure ready for AI agents. Data contracts, quarantines, medallion architecture, and traceability. Co-presented with Pramod Sadalage.',
