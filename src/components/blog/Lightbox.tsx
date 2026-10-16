@@ -14,7 +14,7 @@ export default function Lightbox() {
     const imageExtensions = /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i;
 
     const imageTargets = document.querySelectorAll<HTMLImageElement>(
-      '.cover-image, .article-body img'
+      '.cover-image, .article-body img:not(a img)'
     );
     imageTargets.forEach((img) => {
       img.style.cursor = 'zoom-in';

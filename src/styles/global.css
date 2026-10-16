@@ -323,6 +323,56 @@ th {
   }
 }
 
+/* Image in the body of a post, matched to the cover image */
+.figure {
+  margin: 28px 0 32px;
+}
+
+.figure img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.figure > a {
+  display: block;
+  border-radius: 10px;
+  transition: opacity 0.15s ease;
+}
+
+.figure > a:hover {
+  opacity: 0.9;
+}
+
+.figure figcaption {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.figure-aside {
+  width: 160px;
+  margin: 8px 0 24px;
+}
+
+.figure-aside img {
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 768px) {
+  .figure-aside {
+    float: right;
+    width: 180px;
+    margin: 6px 0 16px 28px;
+  }
+
+  .figure-aside ~ h2 {
+    clear: right;
+  }
+}
+
 .expandable {
   border: 1px solid var(--border);
   border-radius: 8px;

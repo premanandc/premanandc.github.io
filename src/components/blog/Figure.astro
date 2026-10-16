@@ -1,0 +1,24 @@
+---
+// An image in the body of a post, with an optional caption from the slot.
+// Fills the text column by default. "aside" floats it beside the text on wide
+// screens, like a soundbite. With href, the image is a link and does not open
+// in the lightbox.
+interface Props {
+  src: string;
+  alt: string;
+  href?: string;
+  aside?: boolean;
+}
+
+const { src, alt, href, aside = false } = Astro.props;
+const hasCaption = Astro.slots.has('default');
+---
+
+<figure class:list={['figure', { 'figure-aside': aside }]}>
+  {href ? (
+    <a href={href}><img src={src} alt={alt} loading="lazy" /></a>
+  ) : (
+    <img src={src} alt={alt} loading="lazy" />
+  )}
+  {hasCaption && <figcaption><slot /></figcaption>}
+</figure>
