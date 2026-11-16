@@ -1,0 +1,188 @@
+---
+title: "Choosing Engineering Metrics, Six Years On"
+date: 2026-11-16
+excerpt: "I reread an article on engineering metrics that I wrote six years ago. Most of it still holds. I now start with four questions, give each metric one use, and prefer metrics that the author of a change did not write."
+tags: ["Engineering Leadership", "Engineering Metrics", "AI"]
+coverImage: "/images/blog/choosing-engineering-metrics-cover.jpg"
+draft: false
+unlisted: true
+---
+
+import Callout from '../../components/blog/Callout.tsx';
+import Soundbite from '../../components/blog/Soundbite.astro';
+import Figure from '../../components/blog/Figure.astro';
+
+A manager tells a team to get 90% line coverage. After a few weeks, the team reports 94%. Then someone runs [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) on the code. Mutation testing puts small defects into the code and counts the defects that the tests find. The mutation score is a very modest 34%. The tests run most of the code, but they miss two thirds of the small defects.
+
+The two values describe the same tests. The manager asked for coverage, and the team supplied coverage. I invented this example, but the pattern behind it is old.
+
+Six years ago, I wrote an article about how to measure the productivity of software teams. I did not publish it. This month I read it again, before a work session about engineering success metrics. Some parts are still correct. Some parts I now write differently. One large subject is not in the article, because it did not exist then.
+
+The old article made two claims. First, a metric that you read in isolation gives a wrong picture. Second, people game a metric when rewards or penalties depend on it. To game a metric is to change its value and not change the work. Its one solution was a full view of the delivery lifecycle, with small and continuous improvements.
+
+This post examines those claims again. It makes four arguments:
+
+1. There are many metrics. The difficult task is to select a small number of them. I now start with questions.
+2. Give each metric one use. Only outcome metrics get targets.
+3. Raise the floor only when the trend holds, not after one good week.
+4. Coding agents change which metrics you can trust.
+
+It was always difficult to measure the productivity of software teams. Martin Fowler wrote that [productivity cannot be measured](https://martinfowler.com/bliki/CannotMeasureProductivity.html). This post does not try to measure productivity as one number. It selects a few metrics that answer specific questions. Coding agents make a good approach more necessary, because they make activity cheap.
+
+Most of this approach is not new. For many years, I have used the full view, the [ratchet](https://martinfowler.com/articles/useOfMetrics.html#MetricsAsARatchet) and the caution about targets. The questions, the checks and the points about coding agents came from my recent work. I have no outcome data for them yet.
+
+## What Is Still Correct
+
+The primary observation is still correct. A metric gives useful information until a reward or a penalty depends on it. After that, people push the value. Then the value does not describe the work. The usual name for this effect is [Goodhart's law](https://en.wikipedia.org/wiki/Goodhart%27s_law).
+
+Robert Austin gives a full explanation in [Measuring and Managing Performance in Organizations](https://www.oreilly.com/library/view/measuring-and-managing/9780133488425/pref04.html). He divides measurement into two types. Informational measurement gives information. Motivational measurement changes what people do. He shows that motivational measurement works only when the measures cover all the important parts of the work. When they do not, effort moves to the things that are counted. The things that are not counted get less effort.
+
+In the old article, I wrote that rewards and penalties seldom work. Now I make the claim narrower. Targets are safer on outcomes, because an outcome metric comes closest to Austin's condition. It includes most of the important things. Two examples are the delivery of the agreed scope and its acceptance by the users. Targets do not work well on proxies, such as coverage or velocity. They also do not work well on individuals.
+
+## Start With Questions
+
+The old article recommended a full view. You collect metrics from the plan, development, build, test, deployment and production stages. Then you read them together. That recommendation prevents an incorrect diagnosis. For example, a team commits code quickly, but it also breaks the build quickly. A different team is slow because it waits for requirements.
+
+<Soundbite>It is easy to make a complete list. Attention and agreed definitions are in short supply.</Soundbite>
+
+But the recommendation did not help you to select metrics, and selection is the difficult part. There are many metrics. There are many frameworks, such as [DORA](https://dora.dev/guides/dora-metrics/), [SPACE](https://queue.acm.org/detail.cfm?id=3454124) and [Flow](https://getdx.com/blog/flow-metrics/). Many tools report tens of metrics by default. It is easy to make a complete list. Attention and agreed definitions are in short supply.
+
+Now I start with four questions. Each delivery team must answer them. The questions are the same for all teams. The metrics that answer them change with the context.
+
+The [Goal Question Metric approach](https://www.cs.umd.edu/~mvz/handouts/gqm.pdf) from Victor Basili and his colleagues also starts with questions. In GQM, each organization writes its own questions from its goals. Here, the four questions are fixed for every team.
+
+The table shows candidate metrics for two contexts. The first context is teams with software in production. The second context is a new product before its first release.
+
+| Question | Teams with software in production | A new product before its first release |
+| --- | --- | --- |
+| 1. Do we deliver the things that we planned? | Planned work compared with delivered work, for each release. Read it with user acceptance. | Delivered scope compared with the agreed scope list. Read it with first-pass acceptance at showcases. |
+| 2. Does quality stay stable? | Change failure rate. Escaped defects. Mutation score on changed code. | First-pass acceptance at showcases. Mutation score on changed code. |
+| 3. Where does work wait? | Cycle time for each stage. Review queue depth. | Cycle time for each stage. Age of open questions. |
+| 4. Can the team keep the pace and own the result? | Developer pulse survey. Engineers who did not write the code can explain it and change it. | Developer pulse survey. The engineers who get the code later can explain it and change it. |
+
+The DORA metrics explain the difference between the two columns. Change lead time, deployment frequency, change failure rate and failed deployment recovery time all need production. A new product has no values for them before it goes live.
+
+Also, the same metric name can have different meanings in the two columns. Deployment to a demo environment and deployment to production are different metrics. Do not compare teams from different contexts.
+
+For each candidate metric, I do four checks:
+
+1. Which question does the metric answer?
+2. Who takes action when the value changes?
+3. Which other metric do you read with it? A good partner metric either does not move or moves in the wrong direction when people game the first metric. Andy Grove called these paired indicators in [High Output Management](https://en.wikipedia.org/wiki/High_Output_Management). For example, mutation score is a good partner for code coverage.
+4. Which use does the metric have: outcome, improve or watch?
+
+Most candidates fail check 2. Nobody acts differently when the value changes. Use one or two metrics for each question. A total of approximately eight keeps the list easy to read.
+
+Check 3 applies to question 1 too. A team can deliver all of its plan by planning less. User acceptance shows when that happens. In fixed-scope client work, the agreed scope is the outcome that the client buys. The team cannot reduce it alone.
+
+Expect to change the list as the team learns. The frameworks are most useful after the selection. Use them to make sure that the short list has no gaps.
+
+The old article also told you to give equal attention to all parts of the lifecycle. I now remove that advice. Question 3 points your attention to the part where work waits.
+
+## Give Each Metric One Use
+
+Check 4 asks which use a metric has. I divide the uses of a metric into three types. Each metric has one type.
+
+| Use | Contents | How you use it |
+| --- | --- | --- |
+| Outcomes | A small number of metrics for delivered and accepted work | Report them to management. Targets apply. |
+| Improve | Two or three metrics for the current bottleneck | Use a [ratchet](https://martinfowler.com/articles/useOfMetrics.html#MetricsAsARatchet). Each team starts from its own baseline. |
+| Watch | The full view: plan, code, build, test and production | Read them together to find the bottleneck and to see when people game a metric. Set no targets on them. |
+
+<Soundbite>A watched metric got a target, and nobody made that decision on purpose.</Soundbite>
+
+The full view from the old article is now the third row. It is a set of values to read. The short list of about eight holds the outcome and improve metrics. The full view is wider, and nobody reports it. Most of the metric problems that I know started in the same way. A watched metric got a target, and nobody made that decision on purpose. This is the two types of measurement from Austin, applied to one metric at a time.
+
+The second row solves a different problem. Each team improves from its own baseline. Nobody needs to rank teams. People then have less reason to increase a value artificially.
+
+<Callout variant="warning" label="Metrics to Avoid" client:visible>
+
+- Velocity as a target
+- Coverage that you read alone
+- The percentage of code that AI writes
+- The acceptance rate of AI suggestions
+- A metric that you report for each individual person
+
+</Callout>
+
+## Use the Trend for the Ratchet
+
+Six years ago, I described ratcheting as five steps:
+
+1. Set the current level as the floor.
+2. Make a small improvement in a short time.
+3. Set the floor to the new level.
+4. If the level goes below the floor, stop the line until the level is correct again.
+5. Do steps 2 to 4 again.
+
+Step 3 has a defect. One good week sets the floor too high. An unusual effort by the team has the same effect. The team cannot keep that level. Then normal variation starts step 4.
+
+The correction is to read the trend. Move the floor only after the new level stays stable for three or more iterations in a row.
+
+Donald Wheeler's process behavior charts, from his book Understanding Variation, give a formal test for this. They separate a real change from normal variation.
+
+<Figure src="/images/blog/choosing-engineering-metrics-ratchet.svg" alt="A line chart over 24 iterations. The metric level spikes once at iteration 5, and the floor stays where it is. Later the level holds steady three times, at iterations 8 to 10, 14 to 16 and 19 to 21. After each held period, the floor steps up.">Illustrative data, invented to show the mechanism. 24 iterations.</Figure>
+
+<Soundbite>One spike does not move the floor.</Soundbite>
+
+One spike does not move the floor. One dip is a value to understand before you stop the line.
+
+So the corrected steps become:
+
+1. Set the current level as the floor.
+2. Make a small improvement in a short time.
+3. When the new level holds for three or more iterations, set the floor to that level.
+4. If the level goes below the floor, find the cause first. Stop the line only if the dip is more than normal variation.
+5. Do steps 2 to 4 again.
+
+There are two limits. First, a metric can become stable at a good level. Then its work is complete. Move the ratchet to the next bottleneck, and keep the floor of the old metric. The old metric then moves to Watch. Its floor starts a team conversation. It never starts a reward or a penalty. Second, a trend needs history. The first floors of a new team are temporary.
+
+## What Coding Agents Change
+
+Before the rise of coding agents, people wrote the code, the tests and the commit messages. Now coding agents write a large part of all three. This changes the argument in three ways.
+
+**Activity becomes cheap.** A count of lines, commits or tests gave little information before. Now it gives even less, because an agent makes all of them at almost no cost. The coverage example above becomes the usual result. Tell an agent to increase coverage, and it increases coverage. The agent does not intend to mislead you.
+
+<Soundbite>More sources do not give you more independent checks.</Soundbite>
+
+**The full view is less independent.** The full view worked because different people made its sources. One developer wrote the change, its tests and the commit message. A different person wrote the acceptance criteria. Another person reviewed the change, and a tester checked it. Each one was a check on the others. Now agents also write acceptance criteria and review code. Then the same model can write the specification, the change and the check. More sources do not give you more independent checks. For how to keep the gates independent, see [Engineer What Surrounds the Model](/blog/engineer-what-surrounds-the-model).
+
+**The wait moves.** Coding was already a small part of the week. Microsoft ran a [survey of 484 of its developers](https://arxiv.org/html/2502.15287v1). In that survey, coding was approximately 11% of the work week. [Software.com](https://www.software.com/reports) collected telemetry from more than 250,000 developers. The median time for active coding was 52 minutes for each workday. That is also about 11% of an eight-hour day. Two different methods give almost the same number. If coding took no time at all, the rest of the work would still take about 89% of the week.
+
+When coding becomes faster, the queue moves to review, test and decisions. On one of my projects, a feature took a day to build and then sat in review for a week. I describe it in [The Bottlenecks](/blog/ai-sdlc-part-2-bottlenecks). The [2025 DORA report](https://dora.dev/dora-report-2025/) seems to agree with this. It says that AI amplifies the strengths and the weaknesses of an organization.
+
+I now prefer metrics that check the work against a source that the author of the change did not write:
+
+- Mutation score, which is a test of the tests
+- Acceptance by the users of the software
+- Change failure rate, after production starts
+- The ability of the engineers to explain and change the delivered code
+
+An agent can also increase a mutation score. But it can do this only if it writes tests that find defects. That is the behavior that the metric must cause.
+
+There is one exception. An agent can also change the measurement itself. It can exclude a file from coverage, disable a test, skip a mutator or lower a threshold. The measurement configuration is a source that the author of the change must not write. Protect it with code owners, and treat each change to it as a signal to investigate.
+
+The last metric in the list is most important when ownership moves. This occurs when one team builds the software and a different team operates it.
+
+## What I Do Not Know
+
+Three things limit my claims.
+
+First, I have no outcome data for the recent parts. These are the four questions, the four checks and the metrics for coding agents. I have not used them long enough to report results.
+
+Second, the data about AI and productivity continues to change. In 2025, METR ran a [randomized trial](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/). Experienced open-source developers were 19% slower with AI tools in that trial. They had expected AI to make them around 25% faster. In [February 2026](https://metr.org/blog/2026-02-24-uplift-update/), METR gave an update. It said that the newer data probably shows a speedup. It also said that selection effects make the estimate unreliable, and that it will change the study design.
+
+So I do not give productivity percentages. I am also careful with a metric that depends on such a percentage.
+
+Third, I do not have a good method to check that engineers can explain the delivered code. A bad method becomes an assessment of individuals. I listed that above as a candidate not to use.
+
+One method that I want to try is a handover test. During the handover, the receiving team makes a small change without help from the builders. The metric is the time that the team needs for that first change. It measures the team, not one person.
+
+I keep four things from this work:
+
+1. Start with the questions that a team must answer.
+2. Give each metric one use. Only outcome metrics get targets.
+3. Move the floor only after a level stays stable.
+4. Prefer metrics that the author of a change did not write.
+
+Try this. Open your own dashboard. For each metric, name the person who acts when it moves. Remove the metrics with no name. Which metric did you remove first? I want to hear why it was there.
