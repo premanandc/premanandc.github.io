@@ -59,4 +59,12 @@ export const talks: Talk[] = [
     url: '/talks/data-ready-for-agentic-ai/',
     eventUrl: 'https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/',
   },
+  {
+    title: 'Discovering and Evolving Bounded Contexts',
+    event: 'DDD Europe',
+    date: 'June 2025',
+    description: 'Bounded context pitfalls, told as a series in three seasons. Each episode shows a team conversation, what goes wrong, and how to fix it.',
+    url: '/talks/discovering-and-evolving-bounded-contexts/',
+    eventUrl: 'https://2025.dddeurope.com/',
+  },
 ];
