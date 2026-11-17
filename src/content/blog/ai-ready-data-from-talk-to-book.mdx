@@ -1,7 +1,7 @@
 ---
 title: "AI-Ready Data, From Talk to Book"
 date: 2026-10-16
-excerpt: "This year, one idea about agents and data became two talks and an article. A third talk and a book chapter come next. Here is what changed at each step, so that you can pick the version that fits your time."
+excerpt: "This year, one idea about agents and data became three talks and an article. A book chapter comes next. Here is what changed at each step, so that you can pick the version that fits your time."
 tags: ["AI", "Software Architecture", "Data Architecture"]
 coverImage: "/images/blog/ai-ready-data-from-talk-to-book-cover.jpg"
 draft: false
@@ -42,7 +42,13 @@ Second, the talk shows how to build each layer with open specifications. Data co
 
 ## A Talk in São Paulo
 
-On 5 November, we speak at [XConf Americas](https://www.thoughtworks.com/about-us/events/xconf/2026/xconf-americas-2026#speakers) in São Paulo. The talk is called "Implementing AI ready data", and it is 20 minutes long. We will put that deck on this site after the event.
+On 5 November, I gave the third talk at [XConf Americas](https://www.thoughtworks.com/about-us/events/xconf/2026/xconf-americas-2026#speakers) in São Paulo. It is called "What Your Analysts Know That Your Agents Don't", and it is 20 minutes long. Pramod and I built it together, but he could not be there, so I presented it alone.
+
+This version tells one story. Robin is an analyst who fixes the data by hand every Monday morning, and nobody knows. She takes a week off, and an agent covers for her. Each day, the agent fails in a new way. On Monday, it sells at a stale price. On Tuesday, it guesses what "Acme" and "Q3" mean. On Wednesday, it shows a sales rep data that the rep should never see. On Thursday, a hidden line in a ticket tricks it into a $5,000 refund. On Friday, the logs cannot tell the auditor why.
+
+Each day then replays with the fix in place, and each fix has a place in the stack from the article. The talk opens with Air Canada Flight 143, where the crew's sums were right and the unit was wrong. It ends with a small place to start. The agent covers one task, in shadow mode, and gets more only when it earns it.
+
+<Figure src="/images/blog/ai-ready-data-xconf-habits.jpg" alt="A slide from the XConf deck titled 'Her habits, in the data'. Each day's fix sits in a layer of the stack. Monday is the data foundation, Tuesday is the context layer, Thursday is the access layer, and Friday is observability alongside all three. Every layer is marked Governed, which is Wednesday's fix." href="/talks/data-ready-for-agentic-ai-xconf/#/16/0/4">[See the XConf deck](/talks/data-ready-for-agentic-ai-xconf/). It includes the speaker notes. Press S to read them.</Figure>
 
 ## A Book Chapter
 

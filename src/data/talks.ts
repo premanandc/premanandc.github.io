@@ -11,6 +11,14 @@ export interface Talk {
 
 export const talks: Talk[] = [
   {
+    title: "What Your Analysts Know That Your Agents Don't",
+    event: 'XConf Americas',
+    date: 'November 2026',
+    description: "The 20-minute version for XConf Americas in São Paulo. An analyst takes a week off, and the agent that covers for her fails in a new way each day. Each fix has a place in the stack. Built with Pramod Sadalage.",
+    url: '/talks/data-ready-for-agentic-ai-xconf/',
+    eventUrl: 'https://www.thoughtworks.com/about-us/events/xconf/2026/xconf-americas-2026#speakers',
+  },
+  {
     title: 'Making Your Data Ready for Agentic AI',
     event: 'dev2next',
     date: 'October 2026',
@@ -19,17 +27,9 @@ export const talks: Talk[] = [
     eventUrl: 'https://www.dev2next.com/',
   },
   {
-    title: 'Making Your Data Ready for Agentic AI',
-    event: 'O\'Reilly Architecture SuperStream',
-    date: 'March 2026',
-    description: 'Making data infrastructure ready for AI agents. Data contracts, quarantines, medallion architecture, and traceability. Co-presented with Pramod Sadalage.',
-    url: '/talks/data-ready-for-agentic-ai/',
-    eventUrl: 'https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/',
-  },
-  {
     title: "Your Problem Isn't the Monolith. It's the Data.",
     event: 'LDX3 London 2026',
-    date: '2026',
+    date: 'June 2026',
     description: 'Architecture endures when teams align on data lifecycles, not just APIs. A walk through one company that built a disciplined monolith, then decomposed without trauma.',
     url: '/talks/your-problem-isnt-the-monolith/',
     eventUrl: 'https://ldx3.london',
@@ -37,7 +37,7 @@ export const talks: Talk[] = [
   {
     title: 'AI-Assisted Development: What Actually Works',
     event: 'Arc of AI',
-    date: '2026',
+    date: 'May 2026',
     description: 'Lessons from three real projects on where AI coding tools accelerate delivery — and where they just accelerate rework.',
     url: '/talks/ai-assisted-dev/',
     eventUrl: 'https://www.arcofai.com/speaker/b8dcfec104c34a199e5942068bb0f076',
@@ -45,10 +45,18 @@ export const talks: Talk[] = [
   {
     title: 'Graph-Powered Storyworlds',
     event: 'Neo4J Nodes AI',
-    date: '2026',
+    date: 'April 2026',
     description: 'Using Neo4j to keep 1M+ word LitRPG epics coherent with AI — knowledge graphs as narrative immune systems.',
     url: '/talks/graph-powered-storyworlds/',
     eventUrl: 'https://neo4j.com/videos/nodes-ai-2026-graph-powered-storyworlds-using-neo4j-to-keep-1m-word-litrpg-epics-coherent-w-ai/',
     videoUrl: 'https://www.youtube.com/watch?v=S4i6-KZRup8',
+  },
+  {
+    title: 'Making Your Data Ready for Agentic AI',
+    event: 'O\'Reilly Architecture SuperStream',
+    date: 'March 2026',
+    description: 'Making data infrastructure ready for AI agents. Data contracts, quarantines, medallion architecture, and traceability. Co-presented with Pramod Sadalage.',
+    url: '/talks/data-ready-for-agentic-ai/',
+    eventUrl: 'https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/',
   },
 ];
