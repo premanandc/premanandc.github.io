@@ -12,7 +12,7 @@ LDX3 London, June 2026. 28 slides, ~25 minutes of talk.
 
 ## Status
 
-Currently **unlisted**. Listed only at `/talks/drafts`. Flip the `unlisted` flag in `src/data/talks.ts` when ready to publish.
+Published. Listed on `/talks` and included in the sitemap.
 
 ## Images
 

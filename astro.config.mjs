@@ -12,7 +12,6 @@ const UNLISTED_BLOG_SLUGS = [
 // Folder names under public/talks/ for talks marked `unlisted: true` in src/data/talks.ts.
 // Keep in sync when flipping an unlisted talk to published or vice versa.
 const UNLISTED_TALK_SLUGS = [
-  'your-problem-isnt-the-monolith',
 ];
 
 export default defineConfig({

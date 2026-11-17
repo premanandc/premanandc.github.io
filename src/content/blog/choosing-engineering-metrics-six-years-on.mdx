@@ -11,12 +11,13 @@ unlisted: false
 import Callout from '../../components/blog/Callout.tsx';
 import Soundbite from '../../components/blog/Soundbite.astro';
 import Figure from '../../components/blog/Figure.astro';
+import ExpandableSection from '../../components/blog/ExpandableSection.tsx';
 
 A manager tells a team to get 90% line coverage. After a few weeks, the team reports 94%. Then someone runs [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) on the code. Mutation testing puts small defects into the code and counts the defects that the tests find. The mutation score is a very modest 34%. The tests run most of the code, but they miss two thirds of the small defects.
 
 The two values describe the same tests. The manager asked for coverage, and the team supplied coverage. I invented this example, but the pattern behind it is old.
 
-Six years ago, I wrote an article about how to measure the productivity of software teams. I did not publish it. This month I read it again, before a work session about engineering success metrics. Some parts are still correct. Some parts I now write differently. One large subject is not in the article, because it did not exist then.
+Six years ago, I wrote an [article](#the-2020-article) (that I never published) about how to measure the productivity of software teams. This month I read it again, before a work session about engineering success metrics. Some parts are still correct. Some parts I now write differently. One large subject is not in the article, because it did not exist then.
 
 The old article made two claims. First, a metric that you read in isolation gives a wrong picture. Second, people game a metric when rewards or penalties depend on it. To game a metric is to change its value and not change the work. Its one solution was a full view of the delivery lifecycle, with small and continuous improvements.
 
@@ -56,11 +57,11 @@ The table shows candidate metrics for two contexts. The first context is teams w
 | Question | Teams with software in production | A new product before its first release |
 | --- | --- | --- |
 | 1. Do we deliver the things that we planned? | Planned work compared with delivered work, for each release. Read it with user acceptance. | Delivered scope compared with the agreed scope list. Read it with first-pass acceptance at showcases. |
-| 2. Does quality stay stable? | Change failure rate. Escaped defects. Mutation score on changed code. | First-pass acceptance at showcases. Mutation score on changed code. |
+| 2. Does quality stay stable? | Change fail rate. Escaped defects. Mutation score on changed code. | First-pass acceptance at showcases. Mutation score on changed code. |
 | 3. Where does work wait? | Cycle time for each stage. Review queue depth. | Cycle time for each stage. Age of open questions. |
 | 4. Can the team keep the pace and own the result? | Developer pulse survey. Engineers who did not write the code can explain it and change it. | Developer pulse survey. The engineers who get the code later can explain it and change it. |
 
-The DORA metrics explain the difference between the two columns. Change lead time, deployment frequency, change failure rate and failed deployment recovery time all need production. A new product has no values for them before it goes live.
+The DORA metrics explain the difference between the two columns. Change lead time, deployment frequency, change fail rate and failed deployment recovery time all need production. A new product has no values for them before it goes live.
 
 Also, the same metric name can have different meanings in the two columns. Deployment to a demo environment and deployment to production are different metrics. Do not compare teams from different contexts.
 
@@ -123,8 +124,6 @@ Donald Wheeler's process behavior charts, from his book Understanding Variation,
 
 <Figure src="/images/blog/choosing-engineering-metrics-ratchet.svg" alt="A line chart over 24 iterations. The metric level spikes once at iteration 5, and the floor stays where it is. Later the level holds steady three times, at iterations 8 to 10, 14 to 16 and 19 to 21. After each held period, the floor steps up.">Illustrative data, invented to show the mechanism. 24 iterations.</Figure>
 
-<Soundbite>One spike does not move the floor.</Soundbite>
-
 One spike does not move the floor. One dip is a value to understand before you stop the line.
 
 So the corrected steps become:
@@ -155,7 +154,7 @@ I now prefer metrics that check the work against a source that the author of the
 
 - Mutation score, which is a test of the tests
 - Acceptance by the users of the software
-- Change failure rate, after production starts
+- Change fail rate, after production starts
 - The ability of the engineers to explain and change the delivered code
 
 An agent can also increase a mutation score. But it can do this only if it writes tests that find defects. That is the behavior that the metric must cause.
@@ -186,3 +185,81 @@ I keep four things from this work:
 4. Prefer metrics that the author of a change did not write.
 
 Try this. Open your own dashboard. For each metric, name the person who acts when it moves. Remove the metrics with no name. Which metric did you remove first? I want to hear why it was there.
+
+---
+
+## The 2020 Article
+
+This is the article as I wrote it in 2020. I changed only the formatting and fixed a few typos. I left out three images that I do not have the rights to publish, and I updated or removed links that no longer work.
+
+<ExpandableSection title="On Metrics and Team Productivity (2020)" client:load>
+
+*Measuring team productivity - harder than the holy grail quest?*
+
+#### Preamble
+
+In a lot of ways, measuring the productivity of software teams feels like the pursuit of the proverbial [holy grail](https://en.wikipedia.org/wiki/Holy_Grail)! Like in the case of the mysterious and elusive mythological relic, many have claimed to have cracked it. And just like in the case of the holy grail, it is almost impossible to separate fact from fiction! So much so, that industry luminaries like Martin Fowler have famously proclaimed that [productivity cannot be measured](https://martinfowler.com/bliki/CannotMeasureProductivity.html). Not that such proclamations have stopped anyone from continuing to try anyway!
+
+#### A Productivity Primer
+
+One of the definitions of the word productivity that I like, comes from the website businessdictionary.com and it reads:
+
+> "A measure of the efficiency of a person, machine, factory, system, etc., in converting inputs into useful outputs".
+
+From the definition above, in order to measure the productivity of a software team, one needs to first measure the amount of output produced (software in this case). Let's ignore the qualifier "useful" that precedes the word outputs for a minute and assume that all work is equally valuable. It follows then, that teams producing more software with everything else remaining the same, are more productive! So what constitutes more software and how does one go about measuring it?
+
+In this alchemical pursuit to measure software outputs and productivity, many a team (more their managers and stakeholders I daresay) have tried using a variety of measures ranging from the simple like Source Lines of Code (SLoC), Function Point Analysis (FPA), test code coverage, story points, team velocity, sprint burndown, bug counts to the arguably unconventional and exotic like code churn, recidivism, happiness metrics and many more.
+
+#### What's Going Wrong?
+
+Most will likely agree that there isn't much wrong with the metrics above themselves. Each provides a certain amount of information about a certain aspect of a software team. With today's toolset maturity, it is relatively straightforward to obtain the numbers associated with these metrics as well. Furthermore, most if not all of these are fairly easy to communicate and reason about. In theory, each of the metrics above should be able to act as a rough indicator of team productivity. In reality though, they leave a lot to be desired to the extent that any attempts to measure productivity this way continue to meet with mixed results. This notion of not being able to meaningfully pull this off has become so prevalent that it is almost obligatory to not have any conversation on software team productivity without the adjoining [cartoon](https://www.osnews.com/story/19266/wtfsm/) being referenced!
+
+#### Isolated Metrics
+
+Producing complex, valuable software involves quite a bit of hard work. It requires all facets of the engineering organization to come together for magic to happen. Using a small subset of information obtained from a particular area of the organization, while not focusing on information from other parts, or entirely ignoring them, can result in mixed results, or worse still, in drawing the wrong conclusions. The maxim of half knowledge being dangerous definitely holds in this case!
+
+So, developers on the team checking in code at a rapid rate may simply be causing breaking builds at a much more rapid rate or because they don't think of enough scenarios to unit test, thereby producing low quality software. Or on the flip side, a team of developers checking in code very infrequently, may be held up because there isn't a steady stream of well elaborated requirements or because the architects cannot agree on a solution quickly enough.
+
+#### Information Silos and Excessive Hand-offs
+
+Despite all our noble intentions to look at information at hand in a more holistic manner, prevailing organizational and team structures can sometimes get in the way of getting the right metrics and a more complete picture. This may make it much harder to do the right thing - demotivating otherwise well intentioned people to settle for sub-optimal solutions. Assessing the performance of teams that aren't aligned to meet business requirements in the first place, can be very challenging, if not impossible.
+
+While an engineering manager may be able to see that one of his teams is slow in adding new features, they may not be able to access information buried in the project tracking system that would have shone light on the fact that the requirements were not clarified to the desired level of granularity. This can result in a variety of problems such as duplication of effort, delays, loss of context and missed opportunities.
+
+#### Carrot and Stick
+
+Humans are innately emotional, psychological creatures who will go to any lengths towards the pursuit of excellence - and if that is too hard or in the worst case, impossible to attain, at least create a perception thereof. When the stakes are high and we are pushed to a corner, our natural reflex of wanting to defend our own interests instead of bigger, more noble goals kicks in really hard.
+
+So a programmer whose productivity is being measured in lines of code will have the subconscious urge to write unnecessarily verbose code. Similarly, a Scrum Master/Iteration Manager may now be wrongly motivated to project inflated story points or velocity numbers to merely create an outward appearance of good team health. Or an entire team may now run after this quest for impossibly high code coverage numbers without any assertions - thereby adding low value tests. Not only does this set the wrong precedent for high performance, but can become downright dangerous. A team with artificially inflated code coverage numbers acquires this false sense of security about high code quality. [Dan Pink](https://www.danpink.com/) examines the perils of using the carrot-and-stick approach at great length in his seminal book "[Drive: The Surprising Truth About What Motivates Us](https://en.wikipedia.org/wiki/Drive:_The_Surprising_Truth_About_What_Motivates_Us)".
+
+#### Where To Next?
+
+So we get to the million dollar question then. If the metrics above are doomed to be misused, should we give up on our pursuit of trying to measure productivity? Can software team productivity really not be measured after all?
+
+#### Take A Holistic View
+
+Turns out, it may not be all doom and gloom here. Adopting an attitude of constant learning and improvement as opposed to one that looks to police and penalize can go a long way towards instituting a system that can be effective. Further, keeping in mind the need to look at a holistic picture, focusing more or less equally on all aspects of the delivery lifecycle as opposed to focusing on just a particular area can go a long way. If one is able to include information from planning, requirements intake, development, build, test, deploy, and feedback from running production systems, then one may be able to conclude reasonably that you have a high performing team.
+
+#### Employ Ratcheting
+
+Having recognized an improvement area, how does one go about setting oneself up for improvement? Setting clear, objective goals, measurable, trackable (no pun intended) for improvement is paramount to be able to subsequently meet them. In order to ensure that there is continuous incremental improvement, ratcheting is a technique that can be employed. A ratchet is a device that resembles a wrench, but is unique in that it turns in only one direction. In this context, ratcheting involves doing the following:
+
+1. Set the current level as the minimum starting point
+2. Make a small incremental improvement in a relatively small amount of time
+3. Re-adjust the baseline to the new level attained as part of step 2 above
+4. If levels descend below baseline, take stop-the-line action until baselines are restored
+5. Repeat from step 1
+
+Ratcheting allows teams to set incremental milestones as intermediate goals while moving closer to a much better place all the time.
+
+#### Which Metrics Then?
+
+There is no dearth of metrics that one can pick from, when trying to look for improvement areas. However, as mentioned above, one will be best served picking a small assortment of metrics that cover the breadth of the software development cycle. Ideally, you will be able to see these metrics aggregated and visualized in a single dashboard. Tools like [Hygieia](https://github.com/hygieia/hygieia) can help with this. Included below is a suggested list (your own list of such metrics may be different depending on your specific situation) for your consideration.
+
+<Figure src="/images/blog/choosing-engineering-metrics-2020-mind-map.png" alt="A mind map from the 2020 article. Metrics sit in five groups around a central node. Source control: commit frequency, production code churn, code duplication, cyclomatic complexity. Quality: test churn, assertions trend, code coverage. Production: uptime, release frequency, number of requests, response time, exception counts, business effectiveness metrics. Project tracking system: new story addition frequency, lead time, velocity trends, cumulative flow, bug count, recidivism. CI/CD system: good vs. failed builds vs number of tests, release frequency, broken build time, downtime due to deployment.">A set of metrics to adopt a more holistic approach focused on constant improvement</Figure>
+
+#### Conclusion
+
+Measuring software team productivity can be a bit of a wild goose chase with diminishing returns when the focus is on a small subset of metrics, restricted to a specific area of the delivery lifecycle. Establishing an environment that enables continuous incremental improvements, while taking a holistic view of the development lifecycle with the aid of aggregating tools that collate information from various data sources is likely to yield more comprehensive benefits.
+
+</ExpandableSection>
