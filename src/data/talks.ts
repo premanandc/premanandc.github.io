@@ -3,9 +3,11 @@ export interface Talk {
   event: string;
   date: string;
   description: string;
+  tags: string[];
   url: string;
   eventUrl?: string;
   videoUrl?: string;
+  coverImage?: string;
   unlisted?: boolean;
 }
 
@@ -16,6 +18,8 @@ export const talks: Talk[] = [
     date: 'November 2026',
     description: "The 20-minute version for XConf Americas in São Paulo. An analyst takes a week off, and the agent that covers for her fails in a new way each day. Each fix has a place in the stack. Built with Pramod Sadalage.",
     url: '/talks/data-ready-for-agentic-ai-xconf/',
+    tags: ['AI', 'Software Architecture', 'Data Architecture'],
+    coverImage: '/images/talks/data-ready-for-agentic-ai-xconf.jpg',
     eventUrl: 'https://www.thoughtworks.com/about-us/events/xconf/2026/xconf-americas-2026#speakers',
   },
   {
@@ -24,6 +28,8 @@ export const talks: Talk[] = [
     date: 'October 2026',
     description: 'The full-length version of the talk. Four worked examples take data through a trusted foundation, a context layer, and an access layer, with observability alongside each layer. Co-presented with Pramod Sadalage.',
     url: '/talks/data-ready-for-agentic-ai-dev2next/',
+    tags: ['AI', 'Software Architecture', 'Data Architecture'],
+    coverImage: '/images/talks/data-ready-for-agentic-ai-dev2next.jpg',
     eventUrl: 'https://www.dev2next.com/',
   },
   {
@@ -32,6 +38,8 @@ export const talks: Talk[] = [
     date: 'June 2026',
     description: 'Architecture endures when teams align on data lifecycles, not just APIs. A walk through one company that built a disciplined monolith, then decomposed without trauma.',
     url: '/talks/your-problem-isnt-the-monolith/',
+    tags: ['Software Architecture', 'Data Architecture'],
+    coverImage: '/images/talks/your-problem-isnt-the-monolith.jpg',
     eventUrl: 'https://ldx3.london',
   },
   {
@@ -40,6 +48,8 @@ export const talks: Talk[] = [
     date: 'May 2026',
     description: 'Lessons from three real projects on where AI coding tools accelerate delivery, and where they just accelerate rework.',
     url: '/talks/ai-assisted-dev/',
+    tags: ['AI', 'Engineering Leadership', 'Developer Experience'],
+    coverImage: '/images/talks/ai-assisted-dev.jpg',
     eventUrl: 'https://www.arcofai.com/speaker/b8dcfec104c34a199e5942068bb0f076',
   },
   {
@@ -48,6 +58,8 @@ export const talks: Talk[] = [
     date: 'April 2026',
     description: 'Using Neo4j to keep 1M+ word LitRPG epics coherent with AI. Knowledge graphs act as narrative immune systems.',
     url: '/talks/graph-powered-storyworlds/',
+    tags: ['AI', 'Knowledge Graphs'],
+    coverImage: '/images/talks/graph-powered-storyworlds.jpg',
     eventUrl: 'https://neo4j.com/videos/nodes-ai-2026-graph-powered-storyworlds-using-neo4j-to-keep-1m-word-litrpg-epics-coherent-w-ai/',
     videoUrl: 'https://www.youtube.com/watch?v=S4i6-KZRup8',
   },
@@ -57,6 +69,8 @@ export const talks: Talk[] = [
     date: 'March 2026',
     description: 'Making data infrastructure ready for AI agents. Data contracts, quarantines, medallion architecture, and traceability. Co-presented with Pramod Sadalage.',
     url: '/talks/data-ready-for-agentic-ai/',
+    tags: ['AI', 'Software Architecture', 'Data Architecture'],
+    coverImage: '/images/talks/data-ready-for-agentic-ai.jpg',
     eventUrl: 'https://www.oreilly.com/live-events/software-architecture-superstream-software-architecture-and-the-age-of-agentic-ai/0642572277505/',
   },
   {
@@ -65,6 +79,8 @@ export const talks: Talk[] = [
     date: 'June 2025',
     description: 'Bounded context pitfalls, told as a series in three seasons. Each episode shows a team conversation, what goes wrong, and how to fix it.',
     url: '/talks/discovering-and-evolving-bounded-contexts/',
+    tags: ['Domain-Driven Design', 'Software Architecture'],
+    coverImage: '/images/talks/discovering-and-evolving-bounded-contexts.jpg',
     eventUrl: 'https://2025.dddeurope.com/',
   },
 ];

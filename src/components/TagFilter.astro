@@ -1,0 +1,47 @@
+---
+// Filter bar for a list of entry rows. `list` is the id of the element that holds the rows.
+// Each row carries data-tags="Tag A|Tag B"; the script hides rows that lack the active tag.
+interface Props {
+  tags: string[];
+  list: string;
+}
+
+const { tags, list } = Astro.props;
+---
+
+<div class="tag-filter-bar" data-tag-filter={list}>
+  <button type="button" class="filter-tag active" data-tag="" aria-pressed="true">All</button>
+  {tags.map(tag => (
+    <button type="button" class="filter-tag" data-tag={tag} aria-pressed="false">{tag}</button>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tag-filter]').forEach(bar => {
+    const list = document.getElementById(bar.dataset.tagFilter ?? '');
+    if (!list) return;
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('button[data-tag]')];
+    const rows = [...list.querySelectorAll<HTMLElement>('[data-tags]')];
+    let active = '';
+
+    const apply = (tag: string) => {
+      active = tag;
+      buttons.forEach(b => {
+        const on = b.dataset.tag === tag;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      rows.forEach(row => {
+        row.hidden = tag !== '' && !(row.dataset.tags ?? '').split('|').includes(tag);
+      });
+    };
+
+    // Clicking the active tag again goes back to All
+    bar.addEventListener('click', e => {
+      const button = (e.target as Element).closest<HTMLButtonElement>('button[data-tag]');
+      if (!button) return;
+      const tag = button.dataset.tag ?? '';
+      apply(tag === active ? '' : tag);
+    });
+  });
+</script>

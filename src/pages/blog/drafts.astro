@@ -17,7 +17,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft && data.unl
     <h1>Drafts</h1>
     <p>Unlisted posts. Reachable by direct URL but hidden from the public site.</p>
   </div>
-  <div class="posts-list">
+  <div>
     {posts.length === 0 && (
       <p class="posts-empty">No unlisted posts.</p>
     )}

@@ -12,8 +12,12 @@ import { getLastCommitDate } from '../utils/github';
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const posts = allPosts.slice(0, 3);
+const HOME_LIMIT = 4;
+const posts = allPosts.slice(0, HOME_LIMIT);
 const latestPost = allPosts[0];
+
+const publicTalks = talks.filter(t => !t.unlisted);
+const recentTalks = publicTalks.slice(0, HOME_LIMIT);
 
 const lastCommitDate = await getLastCommitDate('premanandc');
 ---
@@ -35,11 +39,8 @@ const lastCommitDate = await getLastCommitDate('premanandc');
     nowUpdated={now.lastUpdated}
   />
 
-  <div class="section-header">
-    <h2>Latest Writing</h2>
-    <a href="/blog">View all &rarr;</a>
-  </div>
-  <div class="posts">
+  <h2 class="section-title">Latest Writing</h2>
+  <div>
     {posts.map(post => (
       <PostCard
         title={post.data.title}
@@ -52,24 +53,17 @@ const lastCommitDate = await getLastCommitDate('premanandc');
       />
     ))}
   </div>
+  {allPosts.length > posts.length && (
+    <a href="/blog" class="section-more">View all articles &rarr;</a>
+  )}
 
-  <div class="section-header">
-    <h2>Recent Talks</h2>
-    <a href="/talks">View all &rarr;</a>
+  <h2 class="section-title">Recent Talks</h2>
+  <div>
+    {recentTalks.map(talk => <TalkCard {...talk} />)}
   </div>
-  <div class="talks-grid">
-    {talks.filter(t => !t.unlisted).map(talk => (
-      <TalkCard
-        title={talk.title}
-        event={talk.event}
-        date={talk.date}
-        description={talk.description}
-        url={talk.url}
-        eventUrl={talk.eventUrl}
-        videoUrl={talk.videoUrl}
-      />
-    ))}
-  </div>
+  {publicTalks.length > recentTalks.length && (
+    <a href="/talks" class="section-more">View all talks &rarr;</a>
+  )}
 
 </BaseLayout>
 
@@ -108,16 +102,10 @@ const lastCommitDate = await getLastCommitDate('premanandc');
     border: 3px solid var(--border);
   }
 
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin: 40px 0 20px;
+  .section-title {
+    margin: 40px 0 0;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
-  }
-
-  .section-header h2 {
     font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
@@ -125,23 +113,11 @@ const lastCommitDate = await getLastCommitDate('premanandc');
     color: var(--text-secondary);
   }
 
-  .section-header a {
+  .section-more {
+    display: inline-block;
+    margin-top: 16px;
     font-size: 13px;
-    color: var(--accent);
-    text-decoration: none;
     font-weight: 500;
-  }
-
-  .talks-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  @media (max-width: 640px) {
-    .talks-grid {
-      grid-template-columns: 1fr;
-    }
   }
 
   /* Narrow screens: photo above the intro text */

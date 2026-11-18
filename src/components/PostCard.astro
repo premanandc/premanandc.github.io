@@ -17,120 +17,18 @@ const formattedDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<a href={`/blog/${slug}`} class:list={['post-card', { 'has-cover': !!coverImage }]}>
-  {coverImage && (
-    <img src={coverImage} alt={title} class="post-cover" />
-  )}
-  <div class="post-card-body">
-    <div class="post-meta">
-      <span class="post-date">{formattedDate}</span>
-      <span class="post-meta-dot">&bull;</span>
-      <span class="post-reading">{readingTime}</span>
+<a href={`/blog/${slug}`} class="entry" data-tags={tags.join('|')}>
+  {coverImage && <img src={coverImage} alt="" class="entry-cover" />}
+  <div class="entry-body">
+    <div class="entry-meta">
+      <span>{formattedDate}</span>
+      <span class="entry-meta-dot">&bull;</span>
+      <span>{readingTime}</span>
     </div>
     <h3>{title}</h3>
     <p>{excerpt}</p>
-    <div class="post-tags">
+    <div class="entry-tags">
       {tags.map(tag => <span class="tag">{tag}</span>)}
     </div>
   </div>
 </a>
-
-<style>
-  .post-card {
-    display: block;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--border);
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.15s;
-  }
-
-  .post-card:hover {
-    background: rgba(13, 148, 136, 0.02);
-    margin: 0 -16px;
-    padding: 24px 16px;
-    border-radius: 8px;
-  }
-
-  .post-card.has-cover {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-
-  .post-cover {
-    width: 160px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-  }
-
-  .post-card-body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* Phones: cover above the text, so the title gets the full width */
-  @media (max-width: 480px) {
-    .post-card.has-cover {
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .post-cover {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 10;
-    }
-  }
-
-  .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .post-date,
-  .post-reading {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .post-meta-dot {
-    color: var(--border);
-    font-size: 10px;
-  }
-
-  h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 6px;
-    line-height: 1.35;
-  }
-
-  p {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    max-width: 680px;
-  }
-
-  .post-tags {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 10px;
-    border-radius: 99px;
-    background: var(--tag-bg);
-    color: var(--accent);
-    border: 1px solid var(--tag-border);
-  }
-</style>

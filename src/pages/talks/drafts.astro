@@ -15,29 +15,19 @@ const drafts = talks.filter(t => t.unlisted);
     <h1>Talk Drafts</h1>
     <p>Unlisted talks. Reachable by direct URL but hidden from the public site.</p>
   </div>
-  <div class="talks-grid">
+  <div>
     {drafts.length === 0 && (
       <p class="talks-empty">No unlisted talks.</p>
     )}
-    {drafts.map(talk => (
-      <TalkCard
-        title={talk.title}
-        event={talk.event}
-        date={talk.date}
-        description={talk.description}
-        url={talk.url}
-        eventUrl={talk.eventUrl}
-        videoUrl={talk.videoUrl}
-      />
-    ))}
+    {drafts.map(talk => <TalkCard {...talk} />)}
   </div>
 </BaseLayout>
 
 <style>
   .talks-header {
-    padding: 40px 0 32px;
+    padding: 40px 0 24px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+    margin-bottom: 8px;
   }
 
   .talks-header h1 {
@@ -47,18 +37,6 @@ const drafts = talks.filter(t => t.unlisted);
   .talks-header p {
     color: var(--text-secondary);
     font-size: 16px;
-  }
-
-  .talks-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  @media (max-width: 640px) {
-    .talks-grid {
-      grid-template-columns: 1fr;
-    }
   }
 
   .talks-empty {

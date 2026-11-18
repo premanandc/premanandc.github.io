@@ -1,23 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TagFilter from '../../components/TagFilter.tsx';
+import PostCard from '../../components/PostCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
 import { getReadingTime } from '../../utils/reading-time';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
-
-const postsForClient = posts.map(post => ({
-  slug: post.id,
-  title: post.data.title,
-  date: post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
-  excerpt: post.data.excerpt,
-  tags: post.data.tags,
-  readingTime: getReadingTime(post.body ?? ''),
-  coverImage: post.data.coverImage,
-}));
 ---
 
 <BaseLayout title="Blog" description="Writing about AI, engineering leadership, and software delivery.">
@@ -25,7 +16,20 @@ const postsForClient = posts.map(post => ({
     <h1>Blog</h1>
     <p>Writing about AI, engineering leadership, and what actually works in software delivery.</p>
   </div>
-  <TagFilter client:load posts={postsForClient} allTags={allTags} />
+  <TagFilter tags={allTags} list="post-list" />
+  <div id="post-list">
+    {posts.map(post => (
+      <PostCard
+        title={post.data.title}
+        date={post.data.date}
+        excerpt={post.data.excerpt}
+        tags={post.data.tags}
+        slug={post.id}
+        readingTime={getReadingTime(post.body ?? '')}
+        coverImage={post.data.coverImage}
+      />
+    ))}
+  </div>
 </BaseLayout>
 
 <style>

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TalkCard from '../components/TalkCard.astro';
+import TagFilter from '../components/TagFilter.astro';
 import { talks } from '../data/talks';
 
 const publicTalks = talks.filter(t => !t.unlisted);
+const allTags = [...new Set(publicTalks.flatMap(t => t.tags))].sort();
 ---
 
 <BaseLayout title="Talks" description="Conference talks and presentations by Prem Chandrasekaran.">
@@ -11,26 +13,17 @@ const publicTalks = talks.filter(t => !t.unlisted);
     <h1>Talks</h1>
     <p>Conference talks and presentations on AI, engineering, and software delivery.</p>
   </div>
-  <div class="talks-grid">
-    {publicTalks.map(talk => (
-      <TalkCard
-        title={talk.title}
-        event={talk.event}
-        date={talk.date}
-        description={talk.description}
-        url={talk.url}
-        eventUrl={talk.eventUrl}
-        videoUrl={talk.videoUrl}
-      />
-    ))}
+  <TagFilter tags={allTags} list="talk-list" />
+  <div id="talk-list">
+    {publicTalks.map(talk => <TalkCard {...talk} />)}
   </div>
 </BaseLayout>
 
 <style>
   .talks-header {
-    padding: 40px 0 32px;
+    padding: 40px 0 24px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+    margin-bottom: 8px;
   }
 
   .talks-header h1 {
@@ -40,17 +33,5 @@ const publicTalks = talks.filter(t => !t.unlisted);
   .talks-header p {
     color: var(--text-secondary);
     font-size: 16px;
-  }
-
-  .talks-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  @media (max-width: 640px) {
-    .talks-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
