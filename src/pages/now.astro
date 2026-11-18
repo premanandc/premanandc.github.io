@@ -1,8 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { now } from '../data/now';
+import { now, type Engagement } from '../data/now';
 import { talks } from '../data/talks';
+
+// A section with no items is left out
+const engagements: [string, Engagement[]][] = [
+  ['Ongoing', now.ongoing],
+  ['Upcoming', now.upcoming],
+];
 
 const latestPost = (await getCollection('blog', ({ data }) => !data.draft && !data.unlisted))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
@@ -14,22 +20,33 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
   <div class="now-page">
     <div class="now-header">
       <h1>Now</h1>
-      <p>What I'm focused on, building, reading, and thinking about right now.</p>
+      <p>What I'm teaching, reading, and thinking about right now.</p>
     </div>
 
-    <div class="now-section">
-      <h2>Currently Building</h2>
-      <ul class="now-list">
-        {now.building.map(item => (
-          <li>
-            <strong>
-              {item.url ? <a href={item.url}>{item.name}</a> : item.name}
-            </strong>
-            <span class="now-desc"> — {item.description}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    {engagements.filter(([, items]) => items.length > 0).map(([title, items]) => (
+      <div class="now-section">
+        <h2>{title}</h2>
+        <ul class="now-list">
+          {items.map(item => (
+            <li class:list={[{ 'has-cover': item.coverImage }]}>
+              {item.coverImage && (
+                <a href={item.url} class="now-cover-link" tabindex="-1" aria-hidden="true">
+                  <img src={item.coverImage} alt="" class="entry-cover" />
+                </a>
+              )}
+              <div>
+                <strong>
+                  {item.url ? <a href={item.url}>{item.name}</a> : item.name}
+                </strong>
+                <span class="now-desc"> — {item.description}{item.coInstructor && (
+                  <> Co-taught with <a href={item.coInstructor.url}>{item.coInstructor.name}</a>.</>
+                )}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
 
     <div class="now-section">
       <h2>Currently Reading</h2>
@@ -62,22 +79,6 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
     </div>
 
     <div class="now-section">
-      <h2>Upcoming</h2>
-      <ul class="now-list">
-        {now.upcoming.map(item => (
-          <li>
-            <strong>
-              {item.url ? <a href={item.url}>{item.name}</a> : item.name}
-            </strong>
-            <span class="now-desc"> — {item.description}{item.coInstructor && (
-              <> Co-taught with <a href={item.coInstructor.url}>{item.coInstructor.name}</a>.</>
-            )}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <div class="now-section">
       <h2>Recently</h2>
       <ul class="now-list">
         {latestPost && (
@@ -94,7 +95,7 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
     </div>
 
     <div class="now-footer">
-      <p>Last updated: {new Date(now.lastUpdated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p>Last updated: {new Date(now.lastUpdated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</p>
       <p class="now-inspired">Inspired by <a href="https://nownownow.com" target="_blank" rel="noopener noreferrer">nownownow.com</a></p>
     </div>
   </div>
@@ -158,6 +159,39 @@ const latestTalk = talks.filter(t => !t.unlisted)[0];
 
   .now-desc {
     color: var(--text-secondary);
+  }
+
+  /* An item with a cover shows the cover in place of the dash, as on the home page rows */
+  .now-list li.has-cover {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding-left: 0;
+  }
+
+  .now-list li.has-cover:not(:first-child) {
+    margin-top: 16px;
+  }
+
+  .now-list li.has-cover::before {
+    content: none;
+  }
+
+  .now-cover-link {
+    display: block;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  @media (max-width: 640px) {
+    .now-list li.has-cover {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .now-cover-link {
+      width: 100%;
+    }
   }
 
   .now-note {
