@@ -18,7 +18,9 @@ export default defineConfig({
   site: 'https://premonition.dev',
   integrations: [
     react(),
-    mdx(),
+    // Astro 6.4 leaves markdown.gfm undefined, and @astrojs/mdx 5.0 then
+    // skips remark-gfm, so MDX tables render as plain text. Set it here.
+    mdx({ gfm: true }),
     sitemap({
       filter: (page) =>
         !page.includes('/blog/drafts') &&
