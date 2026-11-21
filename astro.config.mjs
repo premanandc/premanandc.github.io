@@ -2,7 +2,21 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import rehypeExternalLinks from 'rehype-external-links';
+import { satteri } from '@astrojs/markdown-satteri';
+
+// Open absolute http(s) and protocol-relative links in a new tab.
+const externalLinks = {
+  name: 'external-links',
+  element: {
+    filter: ['a'],
+    visit(node, ctx) {
+      const href = node.properties?.href;
+      if (typeof href !== 'string' || !/^(https?:)?\/\//i.test(href)) return;
+      ctx.setProperty(node, 'target', '_blank');
+      ctx.setProperty(node, 'rel', ['noopener', 'noreferrer']);
+    },
+  },
+};
 
 // Slugs of blog posts marked `unlisted: true` in their frontmatter.
 // Keep in sync when flipping an unlisted post to published or vice versa.
@@ -18,9 +32,7 @@ export default defineConfig({
   site: 'https://premonition.dev',
   integrations: [
     react(),
-    // Astro 6.4 leaves markdown.gfm undefined, and @astrojs/mdx 5.0 then
-    // skips remark-gfm, so MDX tables render as plain text. Set it here.
-    mdx({ gfm: true }),
+    mdx(),
     sitemap({
       filter: (page) =>
         !page.includes('/blog/drafts') &&
@@ -30,11 +42,12 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    rehypePlugins: [
-      [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }],
-    ],
+    processor: satteri({ hastPlugins: [externalLinks] }),
   },
   output: 'static',
+  // Astro 7 defaults to 'jsx', which drops whitespace between elements and
+  // glues words together in pages and in the search index.
+  compressHTML: true,
   // Allow tunneled hostnames (cloudflared, ngrok, etc.) to reach the local
   // server. Applies to both `astro dev` and `astro preview`.
   // Local dev only; production is GitHub Pages and not affected.
